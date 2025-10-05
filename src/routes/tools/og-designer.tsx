@@ -15,7 +15,6 @@ import {
   createSoftwareApplicationSchema,
   SEO,
 } from "@/components/seo";
-import { ToolsNav } from "@/components/tools-nav";
 import { downloadBlob } from "@/utils/image-processing";
 
 interface OGConfig {
@@ -370,50 +369,28 @@ function OGDesignerPage() {
             <div className="absolute top-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
           </div>
 
-          <div className="flex items-center justify-center gap-4 mb-6">
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-purple-500 rounded-2xl blur-xl opacity-50 animate-pulse" />
-              <div className="relative p-4 bg-gradient-to-br from-pink-500 to-purple-500 rounded-2xl shadow-2xl">
-                <Palette className="w-10 h-10 text-white" />
-              </div>
-            </div>
-            <h1 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent leading-tight pb-1">
-              OG Image Designer
-            </h1>
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-pink-500 to-purple-600 mb-6 shadow-lg shadow-pink-500/30 animate-float">
+            <Palette className="w-10 h-10 text-white" />
           </div>
 
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-6 leading-relaxed">
-            Design beautiful{" "}
-            <span className="font-semibold text-pink-600 dark:text-pink-400">
-              Open Graph images
-            </span>{" "}
-            for social media with full control over layout, text, and
-            backgrounds.
+          <h1 className="text-4xl md:text-5xl font-black mb-4 leading-tight pb-2 bg-gradient-to-r from-pink-600 to-purple-600 dark:from-pink-400 dark:to-purple-400 bg-clip-text text-transparent">
+            OG Image Designer
+          </h1>
+          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-6">
+            Design beautiful Open Graph images for social media with full
+            control over layout, text, and backgrounds.
           </p>
 
-          <div className="flex items-center justify-center gap-3 flex-wrap">
-            <Chip
-              color="secondary"
-              variant="shadow"
-              className="px-4 py-1"
-              startContent={<Palette className="w-4 h-4" />}
-            >
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <Chip color="secondary" variant="flat" size="sm">
               Custom Design
             </Chip>
-            <Chip
-              color="warning"
-              variant="shadow"
-              className="px-4 py-1"
-              startContent={<Type className="w-4 h-4" />}
-            >
+            <Chip color="warning" variant="flat" size="sm">
               Text & Images
             </Chip>
-            <Chip color="success" variant="shadow" className="px-4 py-1">
+            <Chip color="success" variant="flat" size="sm">
               1200×630
             </Chip>
-          </div>
-          <div className="my-6">
-            <ToolsNav />
           </div>
         </div>
 

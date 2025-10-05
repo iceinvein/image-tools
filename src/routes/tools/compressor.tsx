@@ -8,7 +8,6 @@ import { ArrowDown, Download, FileArchive, Info } from "lucide-react";
 import { useState } from "react";
 import { ImageUpload } from "@/components/image-upload";
 import { SEO } from "@/components/seo";
-import { ToolsNav } from "@/components/tools-nav";
 import {
   type CompressionOptions,
   type CompressionResult,
@@ -108,7 +107,7 @@ function CompressorPage() {
               <FileArchive className="w-10 h-10 text-white" />
             </div>
 
-            <h1 className="text-4xl md:text-5xl font-black mb-4 bg-gradient-to-r from-orange-600 to-red-600 dark:from-orange-400 dark:to-red-400 bg-clip-text text-transparent">
+            <h1 className="text-4xl md:text-5xl font-black mb-4 leading-tight pb-2 bg-gradient-to-r from-orange-600 to-red-600 dark:from-orange-400 dark:to-red-400 bg-clip-text text-transparent">
               Image Compressor
             </h1>
             <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-6">
@@ -129,19 +128,12 @@ function CompressorPage() {
             </div>
           </div>
 
-          {/* Tools Navigation */}
-          <div className="flex justify-center mb-8">
-            <ToolsNav />
-          </div>
-
           {/* Main Content */}
           <div
-            className={`grid grid-cols-1 ${result ? "lg:grid-cols-2" : ""} gap-6`}
+            className={`grid grid-cols-1 gap-6 ${result ? "lg:grid-cols-2" : ""}`}
           >
             {/* Left Column - Upload & Controls */}
-            <div
-              className={`space-y-6 ${!originalFile ? "max-w-2xl mx-auto" : ""}`}
-            >
+            <div className="space-y-6">
               {!originalFile ? (
                 <ImageUpload
                   onImageSelect={handleImageSelect}

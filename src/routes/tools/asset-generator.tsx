@@ -4,14 +4,7 @@ import { Chip } from "@heroui/chip";
 import { Progress } from "@heroui/progress";
 import { Tab, Tabs } from "@heroui/tabs";
 import { createFileRoute } from "@tanstack/react-router";
-import {
-  CheckCircle2,
-  Download,
-  Globe,
-  Loader2,
-  Package,
-  Smartphone,
-} from "lucide-react";
+import { CheckCircle2, Download, Loader2, Package } from "lucide-react";
 import { useState } from "react";
 
 import { ImageUpload } from "@/components/image-upload";
@@ -20,7 +13,6 @@ import {
   createSoftwareApplicationSchema,
   SEO,
 } from "@/components/seo";
-import { ToolsNav } from "@/components/tools-nav";
 import {
   ASSET_PACKS,
   type AssetPack,
@@ -105,7 +97,7 @@ function AssetGeneratorPage() {
           ]),
         }}
       />
-      <div className="max-w-6xl mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-4">
         {/* Hero Header */}
         <div className="text-center mb-12 relative">
           {/* Animated background gradient */}
@@ -114,55 +106,35 @@ function AssetGeneratorPage() {
             <div className="absolute top-0 right-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
           </div>
 
-          <div className="flex items-center justify-center gap-4 mb-6">
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-pink-500 rounded-2xl blur-xl opacity-50 animate-pulse" />
-              <div className="relative p-4 bg-gradient-to-br from-orange-500 to-pink-500 rounded-2xl shadow-2xl">
-                <Package className="w-10 h-10 text-white" />
-              </div>
-            </div>
-            <h1 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent leading-tight pb-1">
-              Asset Generator
-            </h1>
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-orange-500 to-pink-600 mb-6 shadow-lg shadow-orange-500/30 animate-float">
+            <Package className="w-10 h-10 text-white" />
           </div>
 
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-6 leading-relaxed">
-            Upload a{" "}
-            <span className="font-semibold text-orange-600 dark:text-orange-400">
-              1024×1024 image
-            </span>{" "}
-            and generate all required assets for web and mobile app development
-            in one click.
+          <h1 className="text-4xl md:text-5xl font-black mb-4 leading-tight pb-2 bg-gradient-to-r from-orange-600 to-pink-600 dark:from-orange-400 dark:to-pink-400 bg-clip-text text-transparent">
+            Asset Generator
+          </h1>
+          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-6">
+            Upload a 1024×1024 image and generate all required assets for web
+            and mobile app development in one click.
           </p>
 
-          <div className="flex items-center justify-center gap-3 flex-wrap">
-            <Chip
-              color="warning"
-              variant="shadow"
-              className="px-4 py-1"
-              startContent={<Globe className="w-4 h-4" />}
-            >
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <Chip color="warning" variant="flat" size="sm">
               Web Assets
             </Chip>
-            <Chip
-              color="secondary"
-              variant="shadow"
-              className="px-4 py-1"
-              startContent={<Smartphone className="w-4 h-4" />}
-            >
+            <Chip color="secondary" variant="flat" size="sm">
               iOS & Android
             </Chip>
-            <Chip color="success" variant="shadow" className="px-4 py-1">
+            <Chip color="success" variant="flat" size="sm">
               One-Stop Shop
             </Chip>
-          </div>
-          <div className="my-6">
-            <ToolsNav />
           </div>
         </div>
 
         {/* Main Content */}
-        <div className="grid gap-8 mt-8">
+        <div
+          className={`grid gap-8 mt-8 ${generatedAssets.length > 0 ? "lg:grid-cols-2" : ""}`}
+        >
           {!originalFile ? (
             <ImageUpload
               onImageSelect={handleImageSelect}

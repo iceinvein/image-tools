@@ -2,6 +2,7 @@ import { Tab, Tabs } from "@heroui/tabs";
 import { useLocation, useNavigate } from "@tanstack/react-router";
 import {
   Edit3,
+  Eraser,
   FileArchive,
   Maximize2,
   Package,
@@ -19,6 +20,8 @@ export function ToolsNav() {
   const selectedKey = useMemo(() => {
     if (pathname.includes("/tools/converter")) return "converter";
     if (pathname.includes("/tools/compressor")) return "compressor";
+    if (pathname.includes("/tools/background-remover"))
+      return "background-remover";
     if (pathname.includes("/tools/resizer")) return "resizer";
     if (pathname.includes("/tools/editor")) return "editor";
     if (pathname.includes("/tools/asset-generator")) return "asset-generator";
@@ -58,6 +61,15 @@ export function ToolsNav() {
             <div className="flex items-center gap-2">
               <FileArchive className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
               <span>Compressor</span>
+            </div>
+          }
+        />
+        <Tab
+          key="background-remover"
+          title={
+            <div className="flex items-center gap-2">
+              <Eraser className="w-4 h-4 transition-transform duration-300 group-hover:rotate-12" />
+              <span>BG Remover</span>
             </div>
           }
         />

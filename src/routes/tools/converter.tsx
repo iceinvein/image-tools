@@ -13,7 +13,6 @@ import {
   createSoftwareApplicationSchema,
   SEO,
 } from "@/components/seo";
-import { ToolsNav } from "@/components/tools-nav";
 import { convertFileToIco } from "@/utils/ico-converter";
 import {
   convertImage,
@@ -124,7 +123,7 @@ function ConverterPage() {
           ]),
         }}
       />
-      <div className="max-w-4xl mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-4">
         {/* Hero Header */}
         <div className="text-center mb-12 relative">
           {/* Animated background gradient */}
@@ -133,158 +132,150 @@ function ConverterPage() {
             <div className="absolute top-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
           </div>
 
-          <div className="flex items-center justify-center gap-4 mb-6">
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl blur-xl opacity-50 animate-pulse" />
-              <div className="relative p-4 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl shadow-2xl">
-                <RefreshCw className="w-10 h-10 text-white" />
-              </div>
-            </div>
-            <h1 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent leading-tight pb-1">
-              Image Converter
-            </h1>
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 mb-6 shadow-lg shadow-blue-500/30 animate-float">
+            <RefreshCw className="w-10 h-10 text-white" />
           </div>
 
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-6 leading-relaxed">
-            Transform your images between formats with{" "}
-            <span className="font-semibold text-blue-600 dark:text-blue-400">
-              zero quality loss
-            </span>
-            . Professional-grade conversion with customizable settings.
+          <h1 className="text-4xl md:text-5xl font-black mb-4 leading-tight pb-2 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
+            Image Converter
+          </h1>
+          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-6">
+            Transform your images between formats with zero quality loss.
+            Professional-grade conversion with customizable settings.
           </p>
 
-          <div className="flex items-center justify-center gap-3 flex-wrap">
-            <Chip
-              color="primary"
-              variant="shadow"
-              className="px-4 py-1"
-              startContent={<FileImage className="w-4 h-4" />}
-            >
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <Chip color="primary" variant="flat" size="sm">
               Privacy-first
             </Chip>
-            <Chip color="secondary" variant="shadow" className="px-4 py-1">
+            <Chip color="secondary" variant="flat" size="sm">
               JPEG • PNG • WebP • ICO
             </Chip>
           </div>
-
-          <div className="my-6">
-            <ToolsNav />
-          </div>
         </div>
 
-        <div className="space-y-6">
-          {!originalFile ? (
-            <ImageUpload onImageSelect={handleImageSelect} />
-          ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <ImagePreview
-                imageUrl={originalUrl}
-                title="Original Image"
-                fileName={originalFile.name}
-                fileSize={originalFile.size}
-                dimensions={dimensions ?? undefined}
-                onRemove={handleReset}
-              />
+        {/* Main Content */}
+        <div
+          className={`grid grid-cols-1 gap-6 ${convertedUrl ? "lg:grid-cols-2" : ""}`}
+        >
+          <div className="space-y-6">
+            {!originalFile ? (
+              <ImageUpload onImageSelect={handleImageSelect} />
+            ) : (
+              <>
+                <ImagePreview
+                  imageUrl={originalUrl}
+                  title="Original Image"
+                  fileName={originalFile.name}
+                  fileSize={originalFile.size}
+                  dimensions={dimensions ?? undefined}
+                  onRemove={handleReset}
+                />
 
-              <Card className="border border-gray-200 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all duration-300">
-                <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 border-b border-gray-200 dark:border-gray-700">
-                  <h3 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent leading-tight pb-0.5">
-                    ⚙️ Conversion Settings
-                  </h3>
-                </CardHeader>
-                <CardBody className="space-y-6 p-6">
-                  <div className="space-y-2">
-                    <Select
-                      label="Target Format"
-                      labelPlacement="outside"
-                      placeholder="Select format"
-                      selectedKeys={[targetFormat]}
-                      onSelectionChange={(keys) => {
-                        const selected = Array.from(keys)[0] as string;
-                        setTargetFormat(selected);
-                      }}
-                      classNames={{
-                        trigger:
-                          "border-2 hover:border-primary transition-colors",
-                      }}
-                    >
-                      {formats.map((format) => (
-                        <SelectItem key={format.key}>{format.label}</SelectItem>
-                      ))}
-                    </Select>
-                  </div>
+                <Card className="border border-gray-200 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all duration-300">
+                  <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 border-b border-gray-200 dark:border-gray-700">
+                    <h3 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent leading-tight pb-0.5">
+                      ⚙️ Conversion Settings
+                    </h3>
+                  </CardHeader>
+                  <CardBody className="space-y-6 p-6">
+                    <div className="space-y-2">
+                      <Select
+                        label="Target Format"
+                        labelPlacement="outside"
+                        placeholder="Select format"
+                        selectedKeys={[targetFormat]}
+                        onSelectionChange={(keys) => {
+                          const selected = Array.from(keys)[0] as string;
+                          setTargetFormat(selected);
+                        }}
+                        classNames={{
+                          trigger:
+                            "border-2 hover:border-primary transition-colors",
+                        }}
+                      >
+                        {formats.map((format) => (
+                          <SelectItem key={format.key}>
+                            {format.label}
+                          </SelectItem>
+                        ))}
+                      </Select>
+                    </div>
 
-                  {targetFormat === "image/x-icon" && (
-                    <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-xl border border-blue-200 dark:border-blue-800">
-                      <div className="flex items-start gap-3">
-                        <FileImage className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
-                        <div className="text-sm text-gray-700 dark:text-gray-300">
-                          <p className="font-semibold mb-1">ICO Format Info</p>
-                          <p className="text-xs leading-relaxed">
-                            ICO files will include multiple sizes (16×16, 32×32,
-                            48×48, 64×64, 128×128, 256×256) for optimal display
-                            across different contexts like favicons, desktop
-                            icons, and taskbars.
-                          </p>
+                    {targetFormat === "image/x-icon" && (
+                      <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-xl border border-blue-200 dark:border-blue-800">
+                        <div className="flex items-start gap-3">
+                          <FileImage className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
+                          <div className="text-sm text-gray-700 dark:text-gray-300">
+                            <p className="font-semibold mb-1">
+                              ICO Format Info
+                            </p>
+                            <p className="text-xs leading-relaxed">
+                              ICO files will include multiple sizes (16×16,
+                              32×32, 48×48, 64×64, 128×128, 256×256) for optimal
+                              display across different contexts like favicons,
+                              desktop icons, and taskbars.
+                            </p>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  )}
+                    )}
 
-                  {supportsQuality && (
-                    <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-xl border border-blue-200 dark:border-blue-800">
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="text-sm font-bold text-gray-700 dark:text-gray-300">
-                          Quality
-                        </span>
-                        <span className="text-2xl font-black bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                          {quality}%
-                        </span>
+                    {supportsQuality && (
+                      <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-xl border border-blue-200 dark:border-blue-800">
+                        <div className="flex items-center justify-between mb-3">
+                          <span className="text-sm font-bold text-gray-700 dark:text-gray-300">
+                            Quality
+                          </span>
+                          <span className="text-2xl font-black bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                            {quality}%
+                          </span>
+                        </div>
+                        <Slider
+                          value={quality}
+                          onChange={(value) => setQuality(value as number)}
+                          minValue={10}
+                          maxValue={100}
+                          step={5}
+                          className="w-full"
+                          classNames={{
+                            track:
+                              "bg-gradient-to-r from-blue-200 to-purple-200 dark:from-blue-900 dark:to-purple-900",
+                            filler:
+                              "bg-gradient-to-r from-blue-500 to-purple-500",
+                            thumb:
+                              "bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg",
+                          }}
+                        />
+                        <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-2">
+                          <span>Lower size</span>
+                          <span>Higher quality</span>
+                        </div>
                       </div>
-                      <Slider
-                        value={quality}
-                        onChange={(value) => setQuality(value as number)}
-                        minValue={10}
-                        maxValue={100}
-                        step={5}
-                        className="w-full"
-                        classNames={{
-                          track:
-                            "bg-gradient-to-r from-blue-200 to-purple-200 dark:from-blue-900 dark:to-purple-900",
-                          filler:
-                            "bg-gradient-to-r from-blue-500 to-purple-500",
-                          thumb:
-                            "bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg",
-                        }}
-                      />
-                      <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-2">
-                        <span>Lower size</span>
-                        <span>Higher quality</span>
-                      </div>
-                    </div>
-                  )}
+                    )}
 
-                  <Button
-                    color="primary"
-                    size="lg"
-                    onPress={handleConvert}
-                    isLoading={isProcessing}
-                    className="w-full font-bold text-base bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
-                    startContent={
-                      !isProcessing ? (
-                        <RefreshCw className="w-5 h-5" />
-                      ) : undefined
-                    }
-                  >
-                    {isProcessing ? "Converting..." : "Convert Image"}
-                  </Button>
-                </CardBody>
-              </Card>
-            </div>
-          )}
+                    <Button
+                      color="primary"
+                      size="lg"
+                      onPress={handleConvert}
+                      isLoading={isProcessing}
+                      className="w-full font-bold text-base bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
+                      startContent={
+                        !isProcessing ? (
+                          <RefreshCw className="w-5 h-5" />
+                        ) : undefined
+                      }
+                    >
+                      {isProcessing ? "Converting..." : "Convert Image"}
+                    </Button>
+                  </CardBody>
+                </Card>
+              </>
+            )}
+          </div>
 
           {convertedUrl && (
-            <div className="mt-8 animate-in slide-in-from-bottom-4 duration-500">
+            <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-500">
               <div className="text-center mb-6">
                 <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 border border-blue-200 dark:border-blue-800 rounded-full">
                   <span className="text-2xl">✅</span>

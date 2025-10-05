@@ -4,6 +4,7 @@ import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import {
   Edit3,
+  Eraser,
   FileArchive,
   Maximize2,
   Package,
@@ -174,6 +175,60 @@ export default function IndexPage() {
             viewport={{ once: true, margin: "-50px" }}
             transition={{
               duration: 0.5,
+              delay: 0.3,
+              scale: { type: "spring", visualDuration: 0.4, bounce: 0.5 },
+            }}
+          >
+            <Card className="group relative border-2 border-purple-200/60 dark:border-purple-800/60 hover:border-purple-400/80 dark:hover:border-purple-500/80 hover:shadow-2xl hover:shadow-purple-500/20 bg-gradient-to-br from-white via-purple-50/30 to-pink-50/30 dark:from-gray-900 dark:via-purple-950/20 dark:to-pink-950/20 backdrop-blur-md overflow-hidden transition-all ease-[cubic-bezier(0.34,1.56,0.64,1)]">
+              {/* Animated gradient background */}
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-100/50 via-pink-100/40 to-purple-50/30 dark:from-purple-900/30 dark:via-pink-900/20 dark:to-purple-950/30 opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)]" />
+
+              {/* Glow effect */}
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-500 to-pink-600 rounded-2xl blur-2xl opacity-0 group-hover:opacity-25 transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)]" />
+
+              <CardHeader className="pb-6 pt-10 relative z-10 justify-center">
+                <div className="flex flex-col items-center justify-center text-center">
+                  {/* Icon container with animation */}
+                  <div className="relative mb-5 flex items-center justify-center">
+                    <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-600 rounded-2xl blur-xl opacity-30 group-hover:opacity-50 group-hover:scale-110 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]" />
+                    <div className="relative p-5 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl group-hover:scale-105 group-hover:rotate-2 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] shadow-lg group-hover:shadow-2xl">
+                      <Eraser className="w-10 h-10 text-white group-hover:scale-110 transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]" />
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-center justify-center">
+                    <h2 className="text-2xl font-black text-white mb-2 group-hover:scale-105 transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]">
+                      Background Remover
+                    </h2>
+                    <div className="h-1 w-16 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full group-hover:w-24 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]" />
+                  </div>
+                </div>
+              </CardHeader>
+              <CardBody className="pt-0 pb-8 relative z-10">
+                <p className="text-gray-700 dark:text-gray-300 mb-8 text-center leading-relaxed px-6">
+                  Remove backgrounds automatically with AI
+                </p>
+                <div className="px-6">
+                  <Button
+                    as={Link}
+                    to="/tools/background-remover"
+                    size="lg"
+                    className="w-full font-bold bg-white/90 dark:bg-gray-800/90 text-purple-600 dark:text-purple-400 hover:bg-white dark:hover:bg-gray-800 hover:shadow-xl hover:shadow-purple-500/30 hover:scale-105 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
+                  >
+                    Open BG Remover
+                  </Button>
+                </div>
+              </CardBody>
+            </Card>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            whileHover={{ scale: 1.05, y: -8 }}
+            whileTap={{ scale: 0.98 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{
+              duration: 0.5,
               delay: 0.4,
               scale: { type: "spring", visualDuration: 0.4, bounce: 0.5 },
             }}
@@ -282,7 +337,7 @@ export default function IndexPage() {
             viewport={{ once: true, margin: "-50px" }}
             transition={{
               duration: 0.5,
-              delay: 0.5,
+              delay: 0.6,
               scale: { type: "spring", visualDuration: 0.4, bounce: 0.5 },
             }}
           >
@@ -336,7 +391,7 @@ export default function IndexPage() {
             viewport={{ once: true, margin: "-50px" }}
             transition={{
               duration: 0.5,
-              delay: 0.6,
+              delay: 0.7,
               scale: { type: "spring", visualDuration: 0.4, bounce: 0.5 },
             }}
           >
@@ -391,7 +446,7 @@ export default function IndexPage() {
             viewport={{ once: true, margin: "-50px" }}
             transition={{
               duration: 0.5,
-              delay: 0.7,
+              delay: 0.8,
               scale: { type: "spring", visualDuration: 0.4, bounce: 0.5 },
             }}
           >

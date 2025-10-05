@@ -14,7 +14,6 @@ import {
   RotateCcw,
   RotateCcw as RotateCcwIcon,
   RotateCw,
-  Sparkles,
   Sun,
   Undo2,
 } from "lucide-react";
@@ -25,7 +24,6 @@ import {
   createSoftwareApplicationSchema,
   SEO,
 } from "@/components/seo";
-import { ToolsNav } from "@/components/tools-nav";
 import {
   downloadBlob,
   getImageDimensions,
@@ -276,7 +274,7 @@ function EditorPage() {
           ]),
         }}
       />
-      <div className="max-w-4xl mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-4">
         {/* Hero Header */}
         <div className="text-center mb-12 relative">
           {/* Animated background gradient */}
@@ -285,345 +283,317 @@ function EditorPage() {
             <div className="absolute top-0 right-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
           </div>
 
-          <div className="flex items-center justify-center gap-4 mb-6">
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl blur-xl opacity-50 animate-pulse" />
-              <div className="relative p-4 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl shadow-2xl">
-                <Edit3 className="w-10 h-10 text-white" />
-              </div>
-            </div>
-            <h1 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent leading-tight pb-1">
-              Image Editor
-            </h1>
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-600 mb-6 shadow-lg shadow-purple-500/30 animate-float">
+            <Edit3 className="w-10 h-10 text-white" />
           </div>
 
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-6 leading-relaxed">
-            Edit with{" "}
-            <span className="font-semibold text-purple-600 dark:text-purple-400">
-              live preview
-            </span>
-            . Rotate, flip, and apply filters with instant visual feedback.
+          <h1 className="text-4xl md:text-5xl font-black mb-4 leading-tight pb-2 bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400 bg-clip-text text-transparent">
+            Image Editor
+          </h1>
+          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-6">
+            Edit with live preview. Rotate, flip, and apply filters with instant
+            visual feedback.
           </p>
 
-          <div className="flex items-center justify-center gap-3 flex-wrap">
-            <Chip
-              color="secondary"
-              variant="shadow"
-              className="px-4 py-1"
-              startContent={<Sparkles className="w-4 h-4" />}
-            >
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <Chip color="secondary" variant="flat" size="sm">
               Live Preview
             </Chip>
-            <Chip
-              color="warning"
-              variant="shadow"
-              className="px-4 py-1"
-              startContent={<RotateCw className="w-4 h-4" />}
-            >
+            <Chip color="warning" variant="flat" size="sm">
               Transform
             </Chip>
-            <Chip
-              color="success"
-              variant="shadow"
-              className="px-4 py-1"
-              startContent={<Sun className="w-4 h-4" />}
-            >
+            <Chip color="success" variant="flat" size="sm">
               Filters
             </Chip>
           </div>
-          <div className="my-6">
-            <ToolsNav />
-          </div>
         </div>
 
-        <div className="space-y-6">
-          {!originalFile ? (
-            <ImageUpload onImageSelect={handleImageSelect} />
-          ) : (
-            <div className="space-y-4">
-              {/* Live Preview Canvas with Toolbar */}
-              <Card className="border border-gray-200 dark:border-gray-700 shadow-xl overflow-hidden">
-                <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 border-b border-gray-200 dark:border-gray-700 p-3">
-                  <div className="flex items-center justify-between w-full gap-4">
-                    {/* Left: Image info */}
-                    <div className="flex items-center gap-3 min-w-0 flex-1">
-                      <ImageIcon className="w-5 h-5 text-purple-600 dark:text-purple-400 flex-shrink-0" />
-                      {dimensions && (
-                        <div className="flex items-center gap-3 text-xs text-gray-600 dark:text-gray-400 truncate">
-                          <span className="truncate font-medium">
-                            {originalFile.name}
-                          </span>
-                          <span className="text-gray-400">•</span>
-                          <span className="whitespace-nowrap">
-                            {getCurrentDimensions()?.width} ×{" "}
-                            {getCurrentDimensions()?.height}
-                            {rotation !== 0 && (
-                              <span className="ml-1 text-purple-600 dark:text-purple-400 font-semibold">
-                                ({rotation}°)
-                              </span>
-                            )}
-                          </span>
-                          {hasAnyAdjustments() && (
-                            <>
-                              <span className="text-gray-400">•</span>
-                              <Chip
-                                size="sm"
-                                color="warning"
-                                variant="flat"
-                                className="h-5"
-                              >
-                                Modified
-                              </Chip>
-                            </>
+        {/* Main Content */}
+        {!originalFile ? (
+          <ImageUpload onImageSelect={handleImageSelect} />
+        ) : (
+          <div className="space-y-6">
+            {/* Live Preview Canvas with Toolbar */}
+            <Card className="border border-gray-200 dark:border-gray-700 shadow-xl overflow-hidden">
+              <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 border-b border-gray-200 dark:border-gray-700 p-3">
+                <div className="flex items-center justify-between w-full gap-4">
+                  {/* Left: Image info */}
+                  <div className="flex items-center gap-3 min-w-0 flex-1">
+                    <ImageIcon className="w-5 h-5 text-purple-600 dark:text-purple-400 flex-shrink-0" />
+                    {dimensions && (
+                      <div className="flex items-center gap-3 text-xs text-gray-600 dark:text-gray-400 truncate">
+                        <span className="truncate font-medium">
+                          {originalFile.name}
+                        </span>
+                        <span className="text-gray-400">•</span>
+                        <span className="whitespace-nowrap">
+                          {getCurrentDimensions()?.width} ×{" "}
+                          {getCurrentDimensions()?.height}
+                          {rotation !== 0 && (
+                            <span className="ml-1 text-purple-600 dark:text-purple-400 font-semibold">
+                              ({rotation}°)
+                            </span>
                           )}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Center: Quick action toolbar */}
-                    <div className="flex items-center gap-1 bg-white dark:bg-gray-900 rounded-lg p-1 border border-gray-200 dark:border-gray-700">
-                      <Button
-                        size="sm"
-                        variant="light"
-                        isIconOnly
-                        onPress={() => rotateImage(-90)}
-                        className="min-w-8 h-8"
-                        title="Rotate 90° Left"
-                      >
-                        <RotateCcwIcon className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="light"
-                        isIconOnly
-                        onPress={() => rotateImage(90)}
-                        className="min-w-8 h-8"
-                        title="Rotate 90° Right"
-                      >
-                        <RotateCw className="w-4 h-4" />
-                      </Button>
-                      <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-1" />
-                      <Button
-                        size="sm"
-                        variant="light"
-                        isIconOnly
-                        color={flipHorizontal ? "primary" : "default"}
-                        onPress={() => setFlipHorizontal(!flipHorizontal)}
-                        className="min-w-8 h-8"
-                        title="Flip Horizontal"
-                      >
-                        <FlipHorizontal className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="light"
-                        isIconOnly
-                        color={flipVertical ? "primary" : "default"}
-                        onPress={() => setFlipVertical(!flipVertical)}
-                        className="min-w-8 h-8"
-                        title="Flip Vertical"
-                      >
-                        <FlipVertical className="w-4 h-4" />
-                      </Button>
-                      {hasAnyAdjustments() && (
-                        <>
-                          <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-1" />
-                          <Button
-                            size="sm"
-                            variant="light"
-                            isIconOnly
-                            color="warning"
-                            onPress={resetAllAdjustments}
-                            className="min-w-8 h-8"
-                            title="Reset All"
-                          >
-                            <Undo2 className="w-4 h-4" />
-                          </Button>
-                        </>
-                      )}
-                    </div>
-
-                    {/* Right: Actions */}
-                    <div className="flex items-center gap-2">
-                      <Button
-                        size="sm"
-                        onPress={handleDownload}
-                        isLoading={isProcessing}
-                        className="bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 font-bold"
-                        startContent={
-                          !isProcessing ? (
-                            <Download className="w-4 h-4" />
-                          ) : undefined
-                        }
-                      >
-                        Download
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="flat"
-                        color="danger"
-                        onPress={handleReset}
-                        isIconOnly
-                        title="New Image"
-                      >
-                        <RotateCcw className="w-4 h-4" />
-                      </Button>
-                    </div>
+                        </span>
+                        {hasAnyAdjustments() && (
+                          <>
+                            <span className="text-gray-400">•</span>
+                            <Chip
+                              size="sm"
+                              color="warning"
+                              variant="flat"
+                              className="h-5"
+                            >
+                              Modified
+                            </Chip>
+                          </>
+                        )}
+                      </div>
+                    )}
                   </div>
-                </CardHeader>
-                <CardBody className="p-0">
-                  <div className="relative bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 p-6 flex items-center justify-center min-h-[400px] overflow-auto">
-                    {/* Checkerboard pattern for transparency */}
-                    <div className="absolute inset-0 opacity-10 checkerboard" />
 
-                    <div className="relative z-10 max-w-full max-h-[600px] flex items-center justify-center">
-                      <canvas
-                        ref={canvasRef}
-                        className="rounded-lg shadow-2xl"
-                        style={{
-                          maxWidth: "100%",
-                          maxHeight: "600px",
-                          width: "auto",
-                          height: "auto",
-                        }}
-                      />
-                    </div>
-                  </div>
-                </CardBody>
-              </Card>
-
-              {/* Filters - Compact Single Card */}
-              <Card className="border border-gray-200 dark:border-gray-700 shadow-xl">
-                <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 border-b border-gray-200 dark:border-gray-700 p-4">
-                  <div className="w-full space-y-3">
-                    <h3 className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent leading-tight pb-0.5">
-                      🎨 Filters & Adjustments
-                    </h3>
-
-                    {/* Filter Presets - Compact chips */}
-                    <div className="flex flex-wrap gap-2">
-                      {filterPresets.map((preset) => (
-                        <Chip
-                          key={preset.key}
-                          variant={
-                            selectedPreset === preset.key ? "solid" : "bordered"
-                          }
-                          color={
-                            selectedPreset === preset.key
-                              ? "secondary"
-                              : "default"
-                          }
-                          className="cursor-pointer font-semibold"
-                          onClick={() => applyPreset(preset.key)}
+                  {/* Center: Quick action toolbar */}
+                  <div className="flex items-center gap-1 bg-white dark:bg-gray-900 rounded-lg p-1 border border-gray-200 dark:border-gray-700">
+                    <Button
+                      size="sm"
+                      variant="light"
+                      isIconOnly
+                      onPress={() => rotateImage(-90)}
+                      className="min-w-8 h-8"
+                      title="Rotate 90° Left"
+                    >
+                      <RotateCcwIcon className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="light"
+                      isIconOnly
+                      onPress={() => rotateImage(90)}
+                      className="min-w-8 h-8"
+                      title="Rotate 90° Right"
+                    >
+                      <RotateCw className="w-4 h-4" />
+                    </Button>
+                    <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-1" />
+                    <Button
+                      size="sm"
+                      variant="light"
+                      isIconOnly
+                      color={flipHorizontal ? "primary" : "default"}
+                      onPress={() => setFlipHorizontal(!flipHorizontal)}
+                      className="min-w-8 h-8"
+                      title="Flip Horizontal"
+                    >
+                      <FlipHorizontal className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="light"
+                      isIconOnly
+                      color={flipVertical ? "primary" : "default"}
+                      onPress={() => setFlipVertical(!flipVertical)}
+                      className="min-w-8 h-8"
+                      title="Flip Vertical"
+                    >
+                      <FlipVertical className="w-4 h-4" />
+                    </Button>
+                    {hasAnyAdjustments() && (
+                      <>
+                        <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-1" />
+                        <Button
+                          size="sm"
+                          variant="light"
+                          isIconOnly
+                          color="warning"
+                          onPress={resetAllAdjustments}
+                          className="min-w-8 h-8"
+                          title="Reset All"
                         >
-                          {preset.label}
-                        </Chip>
-                      ))}
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardBody className="p-4 space-y-3">
-                  {/* Brightness - Compact */}
-                  <div className="space-y-1">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Sun className="w-4 h-4 text-yellow-500" />
-                        <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
-                          Brightness
-                        </span>
-                      </div>
-                      <span className="text-sm font-bold text-yellow-600 dark:text-yellow-400">
-                        {brightness}%
-                      </span>
-                    </div>
-                    <Slider
-                      value={brightness}
-                      onChange={(value) => {
-                        setBrightness(value as number);
-                        setSelectedPreset("none");
-                      }}
-                      minValue={0}
-                      maxValue={200}
-                      step={1}
-                      size="sm"
-                      classNames={{
-                        track:
-                          "bg-gradient-to-r from-yellow-200 to-orange-200 dark:from-yellow-900 dark:to-orange-900",
-                        filler:
-                          "bg-gradient-to-r from-yellow-500 to-orange-500",
-                        thumb: "bg-gradient-to-r from-yellow-600 to-orange-600",
-                      }}
-                    />
+                          <Undo2 className="w-4 h-4" />
+                        </Button>
+                      </>
+                    )}
                   </div>
 
-                  {/* Contrast - Compact */}
-                  <div className="space-y-1">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <ContrastIcon className="w-4 h-4 text-gray-600 dark:text-gray-400" />
-                        <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
-                          Contrast
-                        </span>
-                      </div>
-                      <span className="text-sm font-bold text-gray-600 dark:text-gray-400">
-                        {contrast}%
-                      </span>
-                    </div>
-                    <Slider
-                      value={contrast}
-                      onChange={(value) => {
-                        setContrast(value as number);
-                        setSelectedPreset("none");
-                      }}
-                      minValue={0}
-                      maxValue={200}
-                      step={1}
+                  {/* Right: Actions */}
+                  <div className="flex items-center gap-2">
+                    <Button
                       size="sm"
-                      classNames={{
-                        track:
-                          "bg-gradient-to-r from-gray-200 to-slate-200 dark:from-gray-900 dark:to-slate-900",
-                        filler: "bg-gradient-to-r from-gray-500 to-slate-500",
-                        thumb: "bg-gradient-to-r from-gray-600 to-slate-600",
-                      }}
-                    />
+                      onPress={handleDownload}
+                      isLoading={isProcessing}
+                      className="bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 font-bold"
+                      startContent={
+                        !isProcessing ? (
+                          <Download className="w-4 h-4" />
+                        ) : undefined
+                      }
+                    >
+                      Download
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="flat"
+                      color="danger"
+                      onPress={handleReset}
+                      isIconOnly
+                      title="New Image"
+                    >
+                      <RotateCcw className="w-4 h-4" />
+                    </Button>
                   </div>
+                </div>
+              </CardHeader>
+              <CardBody className="p-0">
+                <div className="relative bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 p-6 flex items-center justify-center min-h-[400px] overflow-auto">
+                  {/* Checkerboard pattern for transparency */}
+                  <div className="absolute inset-0 opacity-10 checkerboard" />
 
-                  {/* Saturation - Compact */}
-                  <div className="space-y-1">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Droplets className="w-4 h-4 text-blue-500" />
-                        <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
-                          Saturation
-                        </span>
-                      </div>
-                      <span className="text-sm font-bold text-blue-600 dark:text-blue-400">
-                        {saturation}%
-                      </span>
-                    </div>
-                    <Slider
-                      value={saturation}
-                      onChange={(value) => {
-                        setSaturation(value as number);
-                        setSelectedPreset("none");
-                      }}
-                      minValue={0}
-                      maxValue={200}
-                      step={1}
-                      size="sm"
-                      classNames={{
-                        track:
-                          "bg-gradient-to-r from-blue-200 to-cyan-200 dark:from-blue-900 dark:to-cyan-900",
-                        filler: "bg-gradient-to-r from-blue-500 to-cyan-500",
-                        thumb: "bg-gradient-to-r from-blue-600 to-cyan-600",
+                  <div className="relative z-10 max-w-full max-h-[600px] flex items-center justify-center">
+                    <canvas
+                      ref={canvasRef}
+                      className="rounded-lg shadow-2xl"
+                      style={{
+                        maxWidth: "100%",
+                        maxHeight: "600px",
+                        width: "auto",
+                        height: "auto",
                       }}
                     />
                   </div>
-                </CardBody>
-              </Card>
-            </div>
-          )}
-        </div>
+                </div>
+              </CardBody>
+            </Card>
+
+            {/* Filters - Compact Single Card */}
+            <Card className="border border-gray-200 dark:border-gray-700 shadow-xl">
+              <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 border-b border-gray-200 dark:border-gray-700 p-4">
+                <div className="w-full space-y-3">
+                  <h3 className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent leading-tight pb-0.5">
+                    🎨 Filters & Adjustments
+                  </h3>
+
+                  {/* Filter Presets - Compact chips */}
+                  <div className="flex flex-wrap gap-2">
+                    {filterPresets.map((preset) => (
+                      <Chip
+                        key={preset.key}
+                        variant={
+                          selectedPreset === preset.key ? "solid" : "bordered"
+                        }
+                        color={
+                          selectedPreset === preset.key
+                            ? "secondary"
+                            : "default"
+                        }
+                        className="cursor-pointer font-semibold"
+                        onClick={() => applyPreset(preset.key)}
+                      >
+                        {preset.label}
+                      </Chip>
+                    ))}
+                  </div>
+                </div>
+              </CardHeader>
+              <CardBody className="p-4 space-y-3">
+                {/* Brightness - Compact */}
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Sun className="w-4 h-4 text-yellow-500" />
+                      <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
+                        Brightness
+                      </span>
+                    </div>
+                    <span className="text-sm font-bold text-yellow-600 dark:text-yellow-400">
+                      {brightness}%
+                    </span>
+                  </div>
+                  <Slider
+                    value={brightness}
+                    onChange={(value) => {
+                      setBrightness(value as number);
+                      setSelectedPreset("none");
+                    }}
+                    minValue={0}
+                    maxValue={200}
+                    step={1}
+                    size="sm"
+                    classNames={{
+                      track:
+                        "bg-gradient-to-r from-yellow-200 to-orange-200 dark:from-yellow-900 dark:to-orange-900",
+                      filler: "bg-gradient-to-r from-yellow-500 to-orange-500",
+                      thumb: "bg-gradient-to-r from-yellow-600 to-orange-600",
+                    }}
+                  />
+                </div>
+
+                {/* Contrast - Compact */}
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <ContrastIcon className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+                      <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
+                        Contrast
+                      </span>
+                    </div>
+                    <span className="text-sm font-bold text-gray-600 dark:text-gray-400">
+                      {contrast}%
+                    </span>
+                  </div>
+                  <Slider
+                    value={contrast}
+                    onChange={(value) => {
+                      setContrast(value as number);
+                      setSelectedPreset("none");
+                    }}
+                    minValue={0}
+                    maxValue={200}
+                    step={1}
+                    size="sm"
+                    classNames={{
+                      track:
+                        "bg-gradient-to-r from-gray-200 to-slate-200 dark:from-gray-900 dark:to-slate-900",
+                      filler: "bg-gradient-to-r from-gray-500 to-slate-500",
+                      thumb: "bg-gradient-to-r from-gray-600 to-slate-600",
+                    }}
+                  />
+                </div>
+
+                {/* Saturation - Compact */}
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Droplets className="w-4 h-4 text-blue-500" />
+                      <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
+                        Saturation
+                      </span>
+                    </div>
+                    <span className="text-sm font-bold text-blue-600 dark:text-blue-400">
+                      {saturation}%
+                    </span>
+                  </div>
+                  <Slider
+                    value={saturation}
+                    onChange={(value) => {
+                      setSaturation(value as number);
+                      setSelectedPreset("none");
+                    }}
+                    minValue={0}
+                    maxValue={200}
+                    step={1}
+                    size="sm"
+                    classNames={{
+                      track:
+                        "bg-gradient-to-r from-blue-200 to-cyan-200 dark:from-blue-900 dark:to-cyan-900",
+                      filler: "bg-gradient-to-r from-blue-500 to-cyan-500",
+                      thumb: "bg-gradient-to-r from-blue-600 to-cyan-600",
+                    }}
+                  />
+                </div>
+              </CardBody>
+            </Card>
+          </div>
+        )}
       </div>
     </section>
   );

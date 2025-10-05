@@ -1,4 +1,4 @@
-import { removeBackground, type Config } from "@imgly/background-removal";
+import { type Config, removeBackground } from "@imgly/background-removal";
 
 export interface RemovalResult {
   blob: Blob;
@@ -152,4 +152,3 @@ export async function replaceBackground(
     img.src = imageUrl;
   });
 }
-
