@@ -10,10 +10,14 @@ import { SEO } from "@/components/seo";
 import {
   downloadBlob,
   getFileNameWithoutExtension,
+  getFileExtension,
   type RemovalProgress,
   type RemovalResult,
+  type BackgroundRemovalSettings,
   removeBg,
+  defaultSettings,
 } from "@/utils/background-remover";
+import { BackgroundRemovalSettings as SettingsComponent } from "@/components/BackgroundRemovalSettings";
 
 export const Route = createFileRoute("/tools/background-remover")({
   component: BackgroundRemoverPage,
@@ -26,15 +30,14 @@ function BackgroundRemoverPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState<RemovalProgress | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [settings, setSettings] = useState<BackgroundRemovalSettings>(defaultSettings);
 
   const handleImageSelect = async (file: File, imageUrl: string) => {
     setOriginalFile(file);
     setOriginalUrl(imageUrl);
     setResult(null);
     setError(null);
-
-    // Auto-process
-    await handleRemoveBackground(file);
+    setProgress(null);
   };
 
   const handleRemoveBackground = async (file?: File) => {
@@ -50,7 +53,7 @@ function BackgroundRemoverPage() {
     });
 
     try {
-      const removed = await removeBg(fileToProcess, (prog) => {
+      const removed = await removeBg(fileToProcess, settings, (prog: RemovalProgress) => {
         setProgress(prog);
       });
       setResult(removed);
@@ -68,7 +71,10 @@ function BackgroundRemoverPage() {
     if (!result || !originalFile) return;
 
     const baseName = getFileNameWithoutExtension(originalFile.name);
-    downloadBlob(result.blob, `${baseName}-no-bg.png`);
+    const extension = getFileExtension(settings.outputFormat);
+    const suffix = settings.outputType === 'foreground' ? 'no-bg' :
+                   settings.outputType === 'background' ? 'bg-only' : 'mask';
+    downloadBlob(result.blob, `${baseName}-${suffix}.${extension}`);
   };
 
   return (
@@ -142,19 +148,31 @@ function BackgroundRemoverPage() {
                         className="w-full h-full object-contain"
                       />
                     </div>
-                    <Button
-                      size="sm"
-                      variant="flat"
-                      onPress={() => {
-                        setOriginalFile(null);
-                        setOriginalUrl("");
-                        setResult(null);
-                        setError(null);
-                        setProgress(null);
-                      }}
-                    >
-                      Change Image
-                    </Button>
+                    <div className="flex gap-3">
+                      <Button
+                        color="primary"
+                        size="md"
+                        onPress={() => handleRemoveBackground()}
+                        isDisabled={isProcessing}
+                        isLoading={isProcessing}
+                        className="flex-1"
+                      >
+                        {isProcessing ? "Removing Background..." : "Remove Background"}
+                      </Button>
+                      <Button
+                        size="md"
+                        variant="flat"
+                        onPress={() => {
+                          setOriginalFile(null);
+                          setOriginalUrl("");
+                          setResult(null);
+                          setError(null);
+                          setProgress(null);
+                        }}
+                      >
+                        Change Image
+                      </Button>
+                    </div>
                   </CardBody>
                 </Card>
               )}
@@ -204,16 +222,24 @@ function BackgroundRemoverPage() {
                       <Info className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
                       <div className="text-sm text-gray-600 dark:text-gray-400">
                         <p className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
-                          First-time use
+                          Ready to remove background
                         </p>
                         <p>
-                          The AI model (~50MB) will be downloaded and cached on
-                          first use. Subsequent uses will be much faster!
+                          Click "Remove Background" to start processing. The AI model (~50MB) will be downloaded on first use and cached for faster subsequent processing.
                         </p>
                       </div>
                     </div>
                   </CardBody>
                 </Card>
+              )}
+
+              {/* Advanced Settings */}
+              {originalFile && (
+                <SettingsComponent
+                  settings={settings}
+                  onSettingsChange={setSettings}
+                  isProcessing={isProcessing}
+                />
               )}
             </div>
 

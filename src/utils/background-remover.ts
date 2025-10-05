@@ -1,5 +1,14 @@
 import { type Config, removeBackground } from "@imgly/background-removal";
 
+// Extended config type to include all documented options
+interface ExtendedConfig extends Omit<Config, 'output'> {
+  output?: {
+    format?: 'image/png' | 'image/jpeg' | 'image/webp';
+    quality?: number;
+    type?: 'foreground' | 'background' | 'mask';
+  };
+}
+
 export interface RemovalResult {
   blob: Blob;
   url: string;
@@ -13,11 +22,34 @@ export interface RemovalProgress {
   message: string;
 }
 
+export interface BackgroundRemovalSettings {
+  model: 'isnet' | 'isnet_fp16' | 'isnet_quint8';
+  outputFormat: 'image/png' | 'image/jpeg' | 'image/webp';
+  outputType: 'foreground' | 'background' | 'mask';
+  quality: number; // 0.0 - 1.0
+  device: 'auto' | 'gpu' | 'cpu';
+}
+
+export const defaultSettings: BackgroundRemovalSettings = {
+  model: 'isnet_fp16', // Good balance of speed/quality
+  outputFormat: 'image/png',
+  outputType: 'foreground',
+  quality: 0.9,
+  device: 'auto'
+};
+
+export const modelPresets = {
+  fast: { model: 'isnet_quint8' as const, description: 'Fastest processing, good quality' },
+  balanced: { model: 'isnet_fp16' as const, description: 'Balanced speed and quality (recommended)' },
+  quality: { model: 'isnet' as const, description: 'Best quality, slower processing' }
+};
+
 /**
  * Remove background from an image
  */
 export async function removeBg(
   file: File,
+  settings: BackgroundRemovalSettings = defaultSettings,
   onProgress?: (progress: RemovalProgress) => void,
 ): Promise<RemovalResult> {
   try {
@@ -29,7 +61,7 @@ export async function removeBg(
     });
 
     // Configure background removal
-    const config: Config = {
+    const config: ExtendedConfig = {
       progress: (_key, current, total) => {
         const progressPercent = Math.round((current / total) * 100);
         onProgress?.({
@@ -38,10 +70,12 @@ export async function removeBg(
           message: `Processing image... ${progressPercent}%`,
         });
       },
-      model: "isnet", // Options: isnet, isnet_fp16, isnet_quint8
+      model: settings.model,
+      device: settings.device === 'auto' ? 'gpu' : settings.device,
       output: {
-        format: "image/png",
-        quality: 1.0,
+        format: settings.outputFormat,
+        quality: settings.quality,
+        type: settings.outputType,
       },
     };
 
@@ -111,6 +145,38 @@ export function downloadBlob(blob: Blob, filename: string): void {
  */
 export function getFileNameWithoutExtension(filename: string): string {
   return filename.replace(/\.[^/.]+$/, "");
+}
+
+/**
+ * Get file extension based on output format
+ */
+export function getFileExtension(format: BackgroundRemovalSettings['outputFormat']): string {
+  switch (format) {
+    case 'image/png':
+      return 'png';
+    case 'image/jpeg':
+      return 'jpg';
+    case 'image/webp':
+      return 'webp';
+    default:
+      return 'png';
+  }
+}
+
+/**
+ * Get output type description
+ */
+export function getOutputTypeDescription(type: BackgroundRemovalSettings['outputType']): string {
+  switch (type) {
+    case 'foreground':
+      return 'Subject only (transparent background)';
+    case 'background':
+      return 'Background only';
+    case 'mask':
+      return 'Black and white mask';
+    default:
+      return 'Subject only';
+  }
 }
 
 /**
