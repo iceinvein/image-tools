@@ -177,6 +177,7 @@ export function getFileExtension(mimeType: string): string {
     "image/gif": "gif",
     "image/bmp": "bmp",
     "image/tiff": "tiff",
+    "image/x-icon": "ico",
   };
 
   return extensions[mimeType] || "jpg";

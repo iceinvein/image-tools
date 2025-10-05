@@ -20,6 +20,11 @@ import {
 import React, { useCallback, useState } from "react";
 import { ImagePreview } from "@/components/image-preview";
 import { ImageUpload } from "@/components/image-upload";
+import {
+  createBreadcrumbSchema,
+  createSoftwareApplicationSchema,
+  SEO,
+} from "@/components/seo";
 import { ToolsNav } from "@/components/tools-nav";
 import {
   calculateDimensions,
@@ -192,6 +197,25 @@ function ResizerPage() {
 
   return (
     <section className="py-8 md:py-10 min-h-screen">
+      <SEO
+        title="Image Resizer - Resize Images Online with Smart Presets | Image Tools"
+        description="Free online image resizer. Resize images by pixels, percentage, or use smart presets. Maintain aspect ratio or customize dimensions. 100% browser-based."
+        keywords="image resizer, resize image, scale image, image dimensions, resize photo, image size, aspect ratio, online image resizer"
+        canonicalUrl="https://image-utilities.netlify.app/tools/resizer"
+        structuredData={{
+          ...createSoftwareApplicationSchema(
+            "Image Resizer",
+            "Resize images by pixels, percentage, or use smart presets with aspect ratio control",
+          ),
+          ...createBreadcrumbSchema([
+            { name: "Home", url: "https://image-utilities.netlify.app/" },
+            {
+              name: "Image Resizer",
+              url: "https://image-utilities.netlify.app/tools/resizer",
+            },
+          ]),
+        }}
+      />
       <div className="max-w-4xl mx-auto px-4">
         {/* Hero Header */}
         <div className="text-center mb-12 relative">

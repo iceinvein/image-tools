@@ -20,6 +20,11 @@ import {
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { ImageUpload } from "@/components/image-upload";
+import {
+  createBreadcrumbSchema,
+  createSoftwareApplicationSchema,
+  SEO,
+} from "@/components/seo";
 import { ToolsNav } from "@/components/tools-nav";
 import {
   downloadBlob,
@@ -252,6 +257,25 @@ function EditorPage() {
 
   return (
     <section className="py-8 md:py-10 min-h-screen">
+      <SEO
+        title="Image Editor - Crop, Rotate, Filter & Enhance Images | Image Tools"
+        description="Free online image editor. Crop, rotate, flip, and apply filters to your images. Adjust brightness, contrast, and saturation. 100% browser-based editing."
+        keywords="image editor, crop image, rotate image, flip image, image filters, brightness, contrast, saturation, online photo editor"
+        canonicalUrl="https://image-utilities.netlify.app/tools/editor"
+        structuredData={{
+          ...createSoftwareApplicationSchema(
+            "Image Editor",
+            "Crop, rotate, flip, and apply filters to images with adjustable brightness, contrast, and saturation",
+          ),
+          ...createBreadcrumbSchema([
+            { name: "Home", url: "https://image-utilities.netlify.app/" },
+            {
+              name: "Image Editor",
+              url: "https://image-utilities.netlify.app/tools/editor",
+            },
+          ]),
+        }}
+      />
       <div className="max-w-4xl mx-auto px-4">
         {/* Hero Header */}
         <div className="text-center mb-12 relative">

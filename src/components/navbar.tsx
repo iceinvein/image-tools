@@ -17,18 +17,20 @@ export const Navbar = () => {
             <p className="font-bold text-inherit">{siteConfig.name}</p>
           </RouterLink>
         </NavbarBrand>
-        <div className="hidden sm:flex gap-4 ml-4">
-          {siteConfig.navItems.map((item) => (
-            <NavbarItem key={item.href}>
-              <RouterLink
-                to={item.href}
-                className="text-foreground hover:text-primary transition-colors"
-              >
-                {item.label}
-              </RouterLink>
-            </NavbarItem>
-          ))}
-        </div>
+        {siteConfig.navItems.length > 0 && (
+          <div className="hidden sm:flex gap-4 ml-4">
+            {siteConfig.navItems.map((item) => (
+              <NavbarItem key={item.href}>
+                <RouterLink
+                  to={item.href}
+                  className="text-foreground hover:text-primary transition-colors"
+                >
+                  {item.label}
+                </RouterLink>
+              </NavbarItem>
+            ))}
+          </div>
+        )}
       </NavbarContent>
 
       <NavbarContent justify="end">

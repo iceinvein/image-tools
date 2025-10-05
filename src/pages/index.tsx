@@ -2,12 +2,19 @@ import { Button } from "@heroui/button";
 import { Card, CardBody, CardHeader } from "@heroui/card";
 import { Link } from "@tanstack/react-router";
 import { Edit3, Maximize2, RefreshCw, Sparkles } from "lucide-react";
-
+import { createWebApplicationSchema, SEO } from "@/components/seo";
 import DefaultLayout from "@/layouts/default";
 
 export default function IndexPage() {
   return (
     <DefaultLayout>
+      <SEO
+        title="Image Tools - Free Online Image Converter, Resizer & Editor"
+        description="Professional-grade image processing tools that run entirely in your browser. Convert, resize, crop, rotate, and enhance images with complete privacy. No uploads, 100% free."
+        keywords="image converter, image resizer, image editor, online image tools, convert images, resize images, crop images, browser-based image processing, free image tools, privacy-focused image editor"
+        canonicalUrl="https://image-utilities.netlify.app/"
+        structuredData={createWebApplicationSchema()}
+      />
       <section className="flex flex-col items-center justify-center gap-12 py-12 md:py-20 min-h-[80vh] relative overflow-hidden">
         {/* Animated background gradients */}
         <div className="absolute inset-0 -z-10">
