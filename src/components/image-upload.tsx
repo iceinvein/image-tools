@@ -1,0 +1,167 @@
+import { Button } from "@heroui/button";
+import { Card, CardBody } from "@heroui/card";
+import { useCallback, useState } from "react";
+import { Upload, Image as ImageIcon, Sparkles } from "lucide-react";
+
+interface ImageUploadProps {
+  onImageSelect: (file: File, imageUrl: string) => void;
+  acceptedFormats?: string[];
+  maxSize?: number; // in MB
+  className?: string;
+}
+
+export function ImageUpload({
+  onImageSelect,
+  acceptedFormats = ["image/jpeg", "image/png", "image/webp", "image/gif"],
+  maxSize = 10,
+  className = "",
+}: ImageUploadProps) {
+  const [isDragOver, setIsDragOver] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const validateFile = (file: File): string | null => {
+    if (!acceptedFormats.includes(file.type)) {
+      return `Unsupported format. Please use: ${acceptedFormats
+        .map((format) => format.split("/")[1].toUpperCase())
+        .join(", ")}`;
+    }
+
+    if (file.size > maxSize * 1024 * 1024) {
+      return `File too large. Maximum size is ${maxSize}MB`;
+    }
+
+    return null;
+  };
+
+  const handleFile = useCallback(
+    (file: File) => {
+      const validationError = validateFile(file);
+      if (validationError) {
+        setError(validationError);
+        return;
+      }
+
+      setError(null);
+      const imageUrl = URL.createObjectURL(file);
+      onImageSelect(file, imageUrl);
+    },
+    [onImageSelect, acceptedFormats, maxSize],
+  );
+
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      setIsDragOver(false);
+
+      const files = Array.from(e.dataTransfer.files);
+      if (files.length > 0) {
+        handleFile(files[0]);
+      }
+    },
+    [handleFile],
+  );
+
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(true);
+  }, []);
+
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+  }, []);
+
+  const handleFileInput = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const files = e.target.files;
+      if (files && files.length > 0) {
+        handleFile(files[0]);
+      }
+    },
+    [handleFile],
+  );
+
+  return (
+    <div className={className}>
+      <Card
+        className={`relative overflow-hidden border-2 border-dashed transition-all duration-300 ${
+          isDragOver
+            ? "border-primary bg-gradient-to-br from-primary/10 via-secondary/10 to-primary/10 scale-[1.02] shadow-xl"
+            : "border-gray-300 dark:border-gray-600 hover:border-primary/50 dark:hover:border-primary/50 hover:shadow-lg"
+        }`}
+      >
+        {/* Animated background gradient */}
+        <div className={`absolute inset-0 bg-gradient-to-br from-blue-50/50 via-purple-50/50 to-pink-50/50 dark:from-blue-950/20 dark:via-purple-950/20 dark:to-pink-950/20 transition-opacity duration-300 ${isDragOver ? 'opacity-100' : 'opacity-0'}`} />
+
+        <CardBody
+          className="relative p-12 text-center"
+          onDrop={handleDrop}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+        >
+          <div className="space-y-6">
+            {/* Icon with animation */}
+            <div className="relative inline-block">
+              <div className={`absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full blur-xl opacity-20 transition-all duration-300 ${isDragOver ? 'scale-150 opacity-40' : 'scale-100'}`} />
+              <div className={`relative p-6 bg-gradient-to-br from-blue-500/10 to-purple-500/10 dark:from-blue-500/20 dark:to-purple-500/20 rounded-2xl border border-blue-200/50 dark:border-blue-700/50 transition-all duration-300 ${isDragOver ? 'scale-110 rotate-6' : 'scale-100 rotate-0'}`}>
+                {isDragOver ? (
+                  <Sparkles className="w-12 h-12 text-primary animate-pulse" />
+                ) : (
+                  <Upload className="w-12 h-12 text-primary" />
+                )}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-2xl font-bold mb-2 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
+                {isDragOver ? "Drop it like it's hot! 🔥" : "Upload Your Image"}
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400 mb-6">
+                Drag and drop your image here, or click to browse
+              </p>
+            </div>
+
+            <Button
+              color="primary"
+              size="lg"
+              className="px-8 font-semibold shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+              onClick={() => document.getElementById("file-input")?.click()}
+              startContent={<ImageIcon className="w-5 h-5" />}
+            >
+              Choose File
+            </Button>
+
+            <input
+              id="file-input"
+              type="file"
+              accept={acceptedFormats.join(",")}
+              onChange={handleFileInput}
+              className="hidden"
+            />
+
+            <div className="flex items-center justify-center gap-2 text-sm text-gray-500 dark:text-gray-400 pt-4 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex flex-wrap justify-center gap-2">
+                {acceptedFormats.map((format) => (
+                  <span
+                    key={format}
+                    className="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded-md text-xs font-medium"
+                  >
+                    {format.split("/")[1].toUpperCase()}
+                  </span>
+                ))}
+              </div>
+              <span className="mx-2">•</span>
+              <span className="font-medium">Max {maxSize}MB</span>
+            </div>
+          </div>
+        </CardBody>
+      </Card>
+
+      {error && (
+        <div className="mt-4 p-4 bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 rounded-lg text-red-700 dark:text-red-400 animate-in slide-in-from-top-2 duration-300">
+          <p className="font-medium">{error}</p>
+        </div>
+      )}
+    </div>
+  );
+}
