@@ -1,11 +1,11 @@
 import { type Config, removeBackground } from "@imgly/background-removal";
 
 // Extended config type to include all documented options
-interface ExtendedConfig extends Omit<Config, 'output'> {
+interface ExtendedConfig extends Omit<Config, "output"> {
   output?: {
-    format?: 'image/png' | 'image/jpeg' | 'image/webp';
+    format?: "image/png" | "image/jpeg" | "image/webp";
     quality?: number;
-    type?: 'foreground' | 'background' | 'mask';
+    type?: "foreground" | "background" | "mask";
   };
 }
 
@@ -23,25 +23,34 @@ export interface RemovalProgress {
 }
 
 export interface BackgroundRemovalSettings {
-  model: 'isnet' | 'isnet_fp16' | 'isnet_quint8';
-  outputFormat: 'image/png' | 'image/jpeg' | 'image/webp';
-  outputType: 'foreground' | 'background' | 'mask';
+  model: "isnet" | "isnet_fp16" | "isnet_quint8";
+  outputFormat: "image/png" | "image/jpeg" | "image/webp";
+  outputType: "foreground" | "background" | "mask";
   quality: number; // 0.0 - 1.0
-  device: 'auto' | 'gpu' | 'cpu';
+  device: "auto" | "gpu" | "cpu";
 }
 
 export const defaultSettings: BackgroundRemovalSettings = {
-  model: 'isnet_fp16', // Good balance of speed/quality
-  outputFormat: 'image/png',
-  outputType: 'foreground',
+  model: "isnet_fp16", // Good balance of speed/quality
+  outputFormat: "image/png",
+  outputType: "foreground",
   quality: 0.9,
-  device: 'auto'
+  device: "auto",
 };
 
 export const modelPresets = {
-  fast: { model: 'isnet_quint8' as const, description: 'Fastest processing, good quality' },
-  balanced: { model: 'isnet_fp16' as const, description: 'Balanced speed and quality (recommended)' },
-  quality: { model: 'isnet' as const, description: 'Best quality, slower processing' }
+  fast: {
+    model: "isnet_quint8" as const,
+    description: "Fastest processing, good quality",
+  },
+  balanced: {
+    model: "isnet_fp16" as const,
+    description: "Balanced speed and quality (recommended)",
+  },
+  quality: {
+    model: "isnet" as const,
+    description: "Best quality, slower processing",
+  },
 };
 
 /**
@@ -71,7 +80,7 @@ export async function removeBg(
         });
       },
       model: settings.model,
-      device: settings.device === 'auto' ? 'gpu' : settings.device,
+      device: settings.device === "auto" ? "gpu" : settings.device,
       output: {
         format: settings.outputFormat,
         quality: settings.quality,
@@ -150,32 +159,36 @@ export function getFileNameWithoutExtension(filename: string): string {
 /**
  * Get file extension based on output format
  */
-export function getFileExtension(format: BackgroundRemovalSettings['outputFormat']): string {
+export function getFileExtension(
+  format: BackgroundRemovalSettings["outputFormat"],
+): string {
   switch (format) {
-    case 'image/png':
-      return 'png';
-    case 'image/jpeg':
-      return 'jpg';
-    case 'image/webp':
-      return 'webp';
+    case "image/png":
+      return "png";
+    case "image/jpeg":
+      return "jpg";
+    case "image/webp":
+      return "webp";
     default:
-      return 'png';
+      return "png";
   }
 }
 
 /**
  * Get output type description
  */
-export function getOutputTypeDescription(type: BackgroundRemovalSettings['outputType']): string {
+export function getOutputTypeDescription(
+  type: BackgroundRemovalSettings["outputType"],
+): string {
   switch (type) {
-    case 'foreground':
-      return 'Subject only (transparent background)';
-    case 'background':
-      return 'Background only';
-    case 'mask':
-      return 'Black and white mask';
+    case "foreground":
+      return "Subject only (transparent background)";
+    case "background":
+      return "Background only";
+    case "mask":
+      return "Black and white mask";
     default:
-      return 'Subject only';
+      return "Subject only";
   }
 }
 

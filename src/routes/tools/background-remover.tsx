@@ -5,19 +5,19 @@ import { Progress } from "@heroui/progress";
 import { createFileRoute } from "@tanstack/react-router";
 import { Download, Eraser, Info, Sparkles } from "lucide-react";
 import { useState } from "react";
+import { BackgroundRemovalSettings as SettingsComponent } from "@/components/BackgroundRemovalSettings";
 import { ImageUpload } from "@/components/image-upload";
 import { SEO } from "@/components/seo";
 import {
+  type BackgroundRemovalSettings,
+  defaultSettings,
   downloadBlob,
-  getFileNameWithoutExtension,
   getFileExtension,
+  getFileNameWithoutExtension,
   type RemovalProgress,
   type RemovalResult,
-  type BackgroundRemovalSettings,
   removeBg,
-  defaultSettings,
 } from "@/utils/background-remover";
-import { BackgroundRemovalSettings as SettingsComponent } from "@/components/BackgroundRemovalSettings";
 
 export const Route = createFileRoute("/tools/background-remover")({
   component: BackgroundRemoverPage,
@@ -30,7 +30,8 @@ function BackgroundRemoverPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState<RemovalProgress | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [settings, setSettings] = useState<BackgroundRemovalSettings>(defaultSettings);
+  const [settings, setSettings] =
+    useState<BackgroundRemovalSettings>(defaultSettings);
 
   const handleImageSelect = async (file: File, imageUrl: string) => {
     setOriginalFile(file);
@@ -53,9 +54,13 @@ function BackgroundRemoverPage() {
     });
 
     try {
-      const removed = await removeBg(fileToProcess, settings, (prog: RemovalProgress) => {
-        setProgress(prog);
-      });
+      const removed = await removeBg(
+        fileToProcess,
+        settings,
+        (prog: RemovalProgress) => {
+          setProgress(prog);
+        },
+      );
       setResult(removed);
     } catch (err) {
       console.error("Background removal failed:", err);
@@ -72,8 +77,12 @@ function BackgroundRemoverPage() {
 
     const baseName = getFileNameWithoutExtension(originalFile.name);
     const extension = getFileExtension(settings.outputFormat);
-    const suffix = settings.outputType === 'foreground' ? 'no-bg' :
-                   settings.outputType === 'background' ? 'bg-only' : 'mask';
+    const suffix =
+      settings.outputType === "foreground"
+        ? "no-bg"
+        : settings.outputType === "background"
+          ? "bg-only"
+          : "mask";
     downloadBlob(result.blob, `${baseName}-${suffix}.${extension}`);
   };
 
@@ -157,7 +166,9 @@ function BackgroundRemoverPage() {
                         isLoading={isProcessing}
                         className="flex-1"
                       >
-                        {isProcessing ? "Removing Background..." : "Remove Background"}
+                        {isProcessing
+                          ? "Removing Background..."
+                          : "Remove Background"}
                       </Button>
                       <Button
                         size="md"
@@ -225,7 +236,9 @@ function BackgroundRemoverPage() {
                           Ready to remove background
                         </p>
                         <p>
-                          Click "Remove Background" to start processing. The AI model (~50MB) will be downloaded on first use and cached for faster subsequent processing.
+                          Click "Remove Background" to start processing. The AI
+                          model (~50MB) will be downloaded on first use and
+                          cached for faster subsequent processing.
                         </p>
                       </div>
                     </div>
