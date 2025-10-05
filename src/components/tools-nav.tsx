@@ -1,6 +1,6 @@
 import { Tab, Tabs } from "@heroui/tabs";
 import { useLocation, useNavigate } from "@tanstack/react-router";
-import { Edit3, Maximize2, Package, RefreshCw } from "lucide-react";
+import { Edit3, Maximize2, Package, Palette, RefreshCw } from "lucide-react";
 import { useMemo } from "react";
 
 export function ToolsNav() {
@@ -13,6 +13,7 @@ export function ToolsNav() {
     if (pathname.includes("/tools/resizer")) return "resizer";
     if (pathname.includes("/tools/editor")) return "editor";
     if (pathname.includes("/tools/asset-generator")) return "asset-generator";
+    if (pathname.includes("/tools/og-designer")) return "og-designer";
     return "converter";
   }, [pathname]);
 
@@ -62,6 +63,15 @@ export function ToolsNav() {
             <div className="flex items-center gap-2">
               <Package className="w-4 h-4" />
               <span>Asset Generator</span>
+            </div>
+          }
+        />
+        <Tab
+          key="og-designer"
+          title={
+            <div className="flex items-center gap-2">
+              <Palette className="w-4 h-4" />
+              <span>OG Designer</span>
             </div>
           }
         />

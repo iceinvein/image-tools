@@ -15,6 +15,7 @@ import { Route as ToolsRouteImport } from "./routes/tools";
 import { Route as ToolsAssetGeneratorRouteImport } from "./routes/tools/asset-generator";
 import { Route as ToolsConverterRouteImport } from "./routes/tools/converter";
 import { Route as ToolsEditorRouteImport } from "./routes/tools/editor";
+import { Route as ToolsOgDesignerRouteImport } from "./routes/tools/og-designer";
 import { Route as ToolsResizerRouteImport } from "./routes/tools/resizer";
 
 const ToolsRoute = ToolsRouteImport.update({
@@ -35,6 +36,11 @@ const IndexRoute = IndexRouteImport.update({
 const ToolsResizerRoute = ToolsResizerRouteImport.update({
   id: "/resizer",
   path: "/resizer",
+  getParentRoute: () => ToolsRoute,
+} as any);
+const ToolsOgDesignerRoute = ToolsOgDesignerRouteImport.update({
+  id: "/og-designer",
+  path: "/og-designer",
   getParentRoute: () => ToolsRoute,
 } as any);
 const ToolsEditorRoute = ToolsEditorRouteImport.update({
@@ -60,6 +66,7 @@ export interface FileRoutesByFullPath {
   "/tools/asset-generator": typeof ToolsAssetGeneratorRoute;
   "/tools/converter": typeof ToolsConverterRoute;
   "/tools/editor": typeof ToolsEditorRoute;
+  "/tools/og-designer": typeof ToolsOgDesignerRoute;
   "/tools/resizer": typeof ToolsResizerRoute;
 }
 export interface FileRoutesByTo {
@@ -69,6 +76,7 @@ export interface FileRoutesByTo {
   "/tools/asset-generator": typeof ToolsAssetGeneratorRoute;
   "/tools/converter": typeof ToolsConverterRoute;
   "/tools/editor": typeof ToolsEditorRoute;
+  "/tools/og-designer": typeof ToolsOgDesignerRoute;
   "/tools/resizer": typeof ToolsResizerRoute;
 }
 export interface FileRoutesById {
@@ -79,6 +87,7 @@ export interface FileRoutesById {
   "/tools/asset-generator": typeof ToolsAssetGeneratorRoute;
   "/tools/converter": typeof ToolsConverterRoute;
   "/tools/editor": typeof ToolsEditorRoute;
+  "/tools/og-designer": typeof ToolsOgDesignerRoute;
   "/tools/resizer": typeof ToolsResizerRoute;
 }
 export interface FileRouteTypes {
@@ -90,6 +99,7 @@ export interface FileRouteTypes {
     | "/tools/asset-generator"
     | "/tools/converter"
     | "/tools/editor"
+    | "/tools/og-designer"
     | "/tools/resizer";
   fileRoutesByTo: FileRoutesByTo;
   to:
@@ -99,6 +109,7 @@ export interface FileRouteTypes {
     | "/tools/asset-generator"
     | "/tools/converter"
     | "/tools/editor"
+    | "/tools/og-designer"
     | "/tools/resizer";
   id:
     | "__root__"
@@ -108,6 +119,7 @@ export interface FileRouteTypes {
     | "/tools/asset-generator"
     | "/tools/converter"
     | "/tools/editor"
+    | "/tools/og-designer"
     | "/tools/resizer";
   fileRoutesById: FileRoutesById;
 }
@@ -147,6 +159,13 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof ToolsResizerRouteImport;
       parentRoute: typeof ToolsRoute;
     };
+    "/tools/og-designer": {
+      id: "/tools/og-designer";
+      path: "/og-designer";
+      fullPath: "/tools/og-designer";
+      preLoaderRoute: typeof ToolsOgDesignerRouteImport;
+      parentRoute: typeof ToolsRoute;
+    };
     "/tools/editor": {
       id: "/tools/editor";
       path: "/editor";
@@ -175,6 +194,7 @@ interface ToolsRouteChildren {
   ToolsAssetGeneratorRoute: typeof ToolsAssetGeneratorRoute;
   ToolsConverterRoute: typeof ToolsConverterRoute;
   ToolsEditorRoute: typeof ToolsEditorRoute;
+  ToolsOgDesignerRoute: typeof ToolsOgDesignerRoute;
   ToolsResizerRoute: typeof ToolsResizerRoute;
 }
 
@@ -182,6 +202,7 @@ const ToolsRouteChildren: ToolsRouteChildren = {
   ToolsAssetGeneratorRoute: ToolsAssetGeneratorRoute,
   ToolsConverterRoute: ToolsConverterRoute,
   ToolsEditorRoute: ToolsEditorRoute,
+  ToolsOgDesignerRoute: ToolsOgDesignerRoute,
   ToolsResizerRoute: ToolsResizerRoute,
 };
 
