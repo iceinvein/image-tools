@@ -86,12 +86,12 @@ export function ImageUpload({
   );
 
   return (
-    <div className={className}>
+    <div className={`${className} animate-scale-in`}>
       <Card
         className={`relative overflow-hidden border-2 border-dashed transition-all duration-300 ${
           isDragOver
-            ? "border-primary bg-gradient-to-br from-primary/10 via-secondary/10 to-primary/10 scale-[1.02] shadow-xl"
-            : "border-gray-300 dark:border-gray-600 hover:border-primary/50 dark:hover:border-primary/50 hover:shadow-lg"
+            ? "border-primary bg-gradient-to-br from-primary/10 via-secondary/10 to-primary/10 scale-[1.02] shadow-xl animate-pulse"
+            : "border-gray-300 dark:border-gray-600 hover:border-primary/50 dark:hover:border-primary/50 hover:shadow-lg hover:scale-[1.01]"
         }`}
       >
         {/* Animated background gradient */}
@@ -133,9 +133,11 @@ export function ImageUpload({
 
             <Button
               size="lg"
-              className="brand-btn px-8 font-semibold"
+              className="brand-btn px-8 font-semibold transition-all duration-300 hover:scale-105 hover:shadow-xl active:scale-95"
               onPress={() => inputRef.current?.click()}
-              startContent={<ImageIcon className="w-5 h-5" />}
+              startContent={
+                <ImageIcon className="w-5 h-5 transition-transform group-hover:rotate-12" />
+              }
             >
               Choose File
             </Button>

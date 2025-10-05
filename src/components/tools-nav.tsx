@@ -27,23 +27,25 @@ export function ToolsNav() {
   }, [pathname]);
 
   return (
-    <div className="inline-flex">
+    <div className="inline-flex animate-scale-in">
       <Tabs
         selectedKey={selectedKey}
         onSelectionChange={(key) => navigate({ to: `/tools/${String(key)}` })}
         aria-label="Tools navigation"
         classNames={{
           tabList: "gap-2 bg-gray-100 dark:bg-gray-900 p-1 rounded-xl w-auto",
-          cursor: "bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg",
-          tab: "px-3 py-2 font-semibold text-sm",
-          tabContent: "group-data-[selected=true]:text-white",
+          cursor:
+            "bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg transition-all duration-300",
+          tab: "px-3 py-2 font-semibold text-sm transition-all duration-300 hover:scale-105",
+          tabContent:
+            "group-data-[selected=true]:text-white transition-colors duration-300",
         }}
       >
         <Tab
           key="converter"
           title={
             <div className="flex items-center gap-2">
-              <RefreshCw className="w-4 h-4" />
+              <RefreshCw className="w-4 h-4 transition-transform duration-300 group-hover:rotate-180" />
               <span>Converter</span>
             </div>
           }
@@ -52,7 +54,7 @@ export function ToolsNav() {
           key="resizer"
           title={
             <div className="flex items-center gap-2">
-              <Maximize2 className="w-4 h-4" />
+              <Maximize2 className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
               <span>Resizer</span>
             </div>
           }
@@ -61,7 +63,7 @@ export function ToolsNav() {
           key="editor"
           title={
             <div className="flex items-center gap-2">
-              <Edit3 className="w-4 h-4" />
+              <Edit3 className="w-4 h-4 transition-transform duration-300 group-hover:rotate-12" />
               <span>Editor</span>
             </div>
           }
@@ -70,7 +72,7 @@ export function ToolsNav() {
           key="asset-generator"
           title={
             <div className="flex items-center gap-2">
-              <Package className="w-4 h-4" />
+              <Package className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
               <span>Asset Generator</span>
             </div>
           }
@@ -79,7 +81,7 @@ export function ToolsNav() {
           key="og-designer"
           title={
             <div className="flex items-center gap-2">
-              <Palette className="w-4 h-4" />
+              <Palette className="w-4 h-4 transition-transform duration-300 group-hover:rotate-12" />
               <span>OG Designer</span>
             </div>
           }
@@ -88,7 +90,7 @@ export function ToolsNav() {
           key="playstore-designer"
           title={
             <div className="flex items-center gap-2">
-              <Smartphone className="w-4 h-4" />
+              <Smartphone className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
               <span>Play Store</span>
             </div>
           }
