@@ -200,7 +200,7 @@ function ResizerPage() {
       <SEO
         title="Image Resizer - Resize Images Online with Smart Presets | Image Tools"
         description="Free online image resizer. Resize images by pixels, percentage, or use smart presets. Maintain aspect ratio or customize dimensions. 100% browser-based."
-        keywords="image resizer, resize image, scale image, image dimensions, resize photo, image size, aspect ratio, online image resizer"
+        keywords="image resizer, image, scale image, image dimensions, resize photo, image size, aspect ratio, online image resizer"
         canonicalUrl="https://image-utilities.netlify.app/tools/resizer"
         structuredData={{
           ...createSoftwareApplicationSchema(

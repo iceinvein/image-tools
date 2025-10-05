@@ -1,17 +1,20 @@
 import { Tab, Tabs } from "@heroui/tabs";
 import { useLocation, useNavigate } from "@tanstack/react-router";
-import { Edit3, Maximize2, RefreshCw } from "lucide-react";
+import { Edit3, Maximize2, Package, RefreshCw } from "lucide-react";
+import { useMemo } from "react";
 
 export function ToolsNav() {
   const location = useLocation();
   const navigate = useNavigate();
 
   const pathname = location.pathname;
-  const selectedKey = pathname.includes("/tools/resizer")
-    ? "resizer"
-    : pathname.includes("/tools/editor")
-      ? "editor"
-      : "converter";
+  const selectedKey = useMemo(() => {
+    if (pathname.includes("/tools/converter")) return "converter";
+    if (pathname.includes("/tools/resizer")) return "resizer";
+    if (pathname.includes("/tools/editor")) return "editor";
+    if (pathname.includes("/tools/asset-generator")) return "asset-generator";
+    return "converter";
+  }, [pathname]);
 
   return (
     <div className="inline-flex">
@@ -50,6 +53,15 @@ export function ToolsNav() {
             <div className="flex items-center gap-2">
               <Edit3 className="w-4 h-4" />
               <span>Editor</span>
+            </div>
+          }
+        />
+        <Tab
+          key="asset-generator"
+          title={
+            <div className="flex items-center gap-2">
+              <Package className="w-4 h-4" />
+              <span>Asset Generator</span>
             </div>
           }
         />
