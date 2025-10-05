@@ -1,6 +1,13 @@
 import { Tab, Tabs } from "@heroui/tabs";
 import { useLocation, useNavigate } from "@tanstack/react-router";
-import { Edit3, Maximize2, Package, Palette, RefreshCw } from "lucide-react";
+import {
+  Edit3,
+  Maximize2,
+  Package,
+  Palette,
+  RefreshCw,
+  Smartphone,
+} from "lucide-react";
 import { useMemo } from "react";
 
 export function ToolsNav() {
@@ -14,6 +21,8 @@ export function ToolsNav() {
     if (pathname.includes("/tools/editor")) return "editor";
     if (pathname.includes("/tools/asset-generator")) return "asset-generator";
     if (pathname.includes("/tools/og-designer")) return "og-designer";
+    if (pathname.includes("/tools/playstore-designer"))
+      return "playstore-designer";
     return "converter";
   }, [pathname]);
 
@@ -72,6 +81,15 @@ export function ToolsNav() {
             <div className="flex items-center gap-2">
               <Palette className="w-4 h-4" />
               <span>OG Designer</span>
+            </div>
+          }
+        />
+        <Tab
+          key="playstore-designer"
+          title={
+            <div className="flex items-center gap-2">
+              <Smartphone className="w-4 h-4" />
+              <span>Play Store</span>
             </div>
           }
         />

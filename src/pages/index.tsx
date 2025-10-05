@@ -7,6 +7,7 @@ import {
   Package,
   Palette,
   RefreshCw,
+  Smartphone,
   Sparkles,
 } from "lucide-react";
 import { createWebApplicationSchema, SEO } from "@/components/seo";
@@ -16,9 +17,9 @@ export default function IndexPage() {
   return (
     <DefaultLayout>
       <SEO
-        title="Image Tools - Free Online Image Converter, Resizer, Editor, Asset Generator & OG Designer"
-        description="Professional-grade image processing tools that run entirely in your browser. Convert, resize, crop, rotate, enhance images, generate web/app assets, and design custom Open Graph images with complete privacy. No uploads, 100% free."
-        keywords="image converter, image resizer, image editor, asset generator, og image designer, open graph generator, favicon generator, app icon generator, online image tools, convert images, resize images, crop images, browser-based image processing, free image tools, privacy-focused image editor"
+        title="Image Tools - Free Online Image Converter, Resizer, Editor, Asset Generator, OG & Play Store Designer"
+        description="Professional-grade image processing tools that run entirely in your browser. Convert, resize, crop, rotate, enhance images, generate web/app assets, design Open Graph images, and create Play Store feature graphics with complete privacy. No uploads, 100% free."
+        keywords="image converter, image resizer, image editor, asset generator, og image designer, play store designer, feature graphic, open graph generator, favicon generator, app icon generator, online image tools, convert images, resize images, crop images, browser-based image processing, free image tools, privacy-focused image editor"
         canonicalUrl="https://image-utilities.netlify.app/"
         structuredData={createWebApplicationSchema()}
       />
@@ -48,12 +49,13 @@ export default function IndexPage() {
             <span className="font-bold text-blue-600 dark:text-blue-400">
               entirely in your browser
             </span>
-            . Convert, resize, crop, and enhance with complete privacy.
+            . Convert, resize, edit, generate assets, and design promotional
+            graphics with complete privacy.
           </p>
         </div>
 
         {/* Tool Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8 max-w-[1600px] w-full px-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 max-w-6xl w-full px-4">
           <Card className="group relative border-2 border-blue-200/60 dark:border-blue-800/60 hover:border-blue-400/80 dark:hover:border-blue-500/80 hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-2 bg-gradient-to-br from-white via-blue-50/30 to-purple-50/30 dark:from-gray-900 dark:via-blue-950/20 dark:to-purple-950/20 backdrop-blur-md overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-700 delay-500 transition-all ease-[cubic-bezier(0.34,1.56,0.64,1)]">
             {/* Animated gradient background */}
             <div className="absolute inset-0 bg-gradient-to-br from-blue-100/50 via-purple-100/40 to-blue-50/30 dark:from-blue-900/30 dark:via-purple-900/20 dark:to-blue-950/30 opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)]" />
@@ -252,6 +254,47 @@ export default function IndexPage() {
                   to="/tools/og-designer"
                   size="lg"
                   className="w-full font-bold bg-white/90 dark:bg-gray-800/90 text-pink-600 dark:text-pink-400 hover:bg-white dark:hover:bg-gray-800 hover:shadow-xl hover:shadow-pink-500/30 hover:scale-105 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
+                >
+                  Open Designer
+                </Button>
+              </div>
+            </CardBody>
+          </Card>
+
+          <Card className="group relative border-2 border-green-200/60 dark:border-green-800/60 hover:border-green-400/80 dark:hover:border-green-500/80 hover:shadow-2xl hover:shadow-green-500/20 hover:-translate-y-2 bg-gradient-to-br from-white via-green-50/30 to-teal-50/30 dark:from-gray-900 dark:via-green-950/20 dark:to-teal-950/20 backdrop-blur-md overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-700 delay-1500 transition-all ease-[cubic-bezier(0.34,1.56,0.64,1)]">
+            {/* Animated gradient background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-green-100/50 via-teal-100/40 to-green-50/30 dark:from-green-900/30 dark:via-teal-900/20 dark:to-green-950/30 opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)]" />
+
+            {/* Glow effect */}
+            <div className="absolute -inset-1 bg-gradient-to-r from-green-500 to-teal-600 rounded-2xl blur-2xl opacity-0 group-hover:opacity-25 transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)]" />
+
+            <CardHeader className="pb-6 pt-10 relative z-10 justify-center">
+              <div className="flex flex-col items-center justify-center text-center">
+                {/* Icon container with animation */}
+                <div className="relative mb-5 flex items-center justify-center">
+                  <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-teal-600 rounded-2xl blur-xl opacity-30 group-hover:opacity-50 group-hover:scale-110 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]" />
+                  <div className="relative p-5 bg-gradient-to-br from-green-500 to-teal-600 rounded-2xl group-hover:scale-105 group-hover:rotate-2 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] shadow-lg group-hover:shadow-2xl">
+                    <Smartphone className="w-10 h-10 text-white group-hover:rotate-12 transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]" />
+                  </div>
+                </div>
+                <div className="flex flex-col items-center justify-center">
+                  <h2 className="text-2xl font-black text-white mb-2 group-hover:scale-105 transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]">
+                    Play Store Designer
+                  </h2>
+                  <div className="h-1 w-16 bg-gradient-to-r from-green-400 to-teal-500 rounded-full group-hover:w-24 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]" />
+                </div>
+              </div>
+            </CardHeader>
+            <CardBody className="pt-0 pb-8 relative z-10">
+              <p className="text-gray-700 dark:text-gray-300 mb-8 text-center leading-relaxed px-6">
+                Create Google Play Store feature graphics for app listings
+              </p>
+              <div className="px-6">
+                <Button
+                  as={Link}
+                  to="/tools/playstore-designer"
+                  size="lg"
+                  className="w-full font-bold bg-white/90 dark:bg-gray-800/90 text-green-600 dark:text-green-400 hover:bg-white dark:hover:bg-gray-800 hover:shadow-xl hover:shadow-green-500/30 hover:scale-105 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
                 >
                   Open Designer
                 </Button>
