@@ -2,6 +2,7 @@ import { Tab, Tabs } from "@heroui/tabs";
 import { useLocation, useNavigate } from "@tanstack/react-router";
 import {
   Edit3,
+  FileArchive,
   Maximize2,
   Package,
   Palette,
@@ -17,6 +18,7 @@ export function ToolsNav() {
   const pathname = location.pathname;
   const selectedKey = useMemo(() => {
     if (pathname.includes("/tools/converter")) return "converter";
+    if (pathname.includes("/tools/compressor")) return "compressor";
     if (pathname.includes("/tools/resizer")) return "resizer";
     if (pathname.includes("/tools/editor")) return "editor";
     if (pathname.includes("/tools/asset-generator")) return "asset-generator";
@@ -47,6 +49,15 @@ export function ToolsNav() {
             <div className="flex items-center gap-2">
               <RefreshCw className="w-4 h-4 transition-transform duration-300 group-hover:rotate-180" />
               <span>Converter</span>
+            </div>
+          }
+        />
+        <Tab
+          key="compressor"
+          title={
+            <div className="flex items-center gap-2">
+              <FileArchive className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
+              <span>Compressor</span>
             </div>
           }
         />

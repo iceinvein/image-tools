@@ -13,6 +13,7 @@ import { Route as AboutRouteImport } from "./routes/about";
 import { Route as IndexRouteImport } from "./routes/index";
 import { Route as ToolsRouteImport } from "./routes/tools";
 import { Route as ToolsAssetGeneratorRouteImport } from "./routes/tools/asset-generator";
+import { Route as ToolsCompressorRouteImport } from "./routes/tools/compressor";
 import { Route as ToolsConverterRouteImport } from "./routes/tools/converter";
 import { Route as ToolsEditorRouteImport } from "./routes/tools/editor";
 import { Route as ToolsOgDesignerRouteImport } from "./routes/tools/og-designer";
@@ -59,6 +60,11 @@ const ToolsConverterRoute = ToolsConverterRouteImport.update({
   path: "/converter",
   getParentRoute: () => ToolsRoute,
 } as any);
+const ToolsCompressorRoute = ToolsCompressorRouteImport.update({
+  id: "/compressor",
+  path: "/compressor",
+  getParentRoute: () => ToolsRoute,
+} as any);
 const ToolsAssetGeneratorRoute = ToolsAssetGeneratorRouteImport.update({
   id: "/asset-generator",
   path: "/asset-generator",
@@ -70,6 +76,7 @@ export interface FileRoutesByFullPath {
   "/about": typeof AboutRoute;
   "/tools": typeof ToolsRouteWithChildren;
   "/tools/asset-generator": typeof ToolsAssetGeneratorRoute;
+  "/tools/compressor": typeof ToolsCompressorRoute;
   "/tools/converter": typeof ToolsConverterRoute;
   "/tools/editor": typeof ToolsEditorRoute;
   "/tools/og-designer": typeof ToolsOgDesignerRoute;
@@ -81,6 +88,7 @@ export interface FileRoutesByTo {
   "/about": typeof AboutRoute;
   "/tools": typeof ToolsRouteWithChildren;
   "/tools/asset-generator": typeof ToolsAssetGeneratorRoute;
+  "/tools/compressor": typeof ToolsCompressorRoute;
   "/tools/converter": typeof ToolsConverterRoute;
   "/tools/editor": typeof ToolsEditorRoute;
   "/tools/og-designer": typeof ToolsOgDesignerRoute;
@@ -93,6 +101,7 @@ export interface FileRoutesById {
   "/about": typeof AboutRoute;
   "/tools": typeof ToolsRouteWithChildren;
   "/tools/asset-generator": typeof ToolsAssetGeneratorRoute;
+  "/tools/compressor": typeof ToolsCompressorRoute;
   "/tools/converter": typeof ToolsConverterRoute;
   "/tools/editor": typeof ToolsEditorRoute;
   "/tools/og-designer": typeof ToolsOgDesignerRoute;
@@ -106,6 +115,7 @@ export interface FileRouteTypes {
     | "/about"
     | "/tools"
     | "/tools/asset-generator"
+    | "/tools/compressor"
     | "/tools/converter"
     | "/tools/editor"
     | "/tools/og-designer"
@@ -117,6 +127,7 @@ export interface FileRouteTypes {
     | "/about"
     | "/tools"
     | "/tools/asset-generator"
+    | "/tools/compressor"
     | "/tools/converter"
     | "/tools/editor"
     | "/tools/og-designer"
@@ -128,6 +139,7 @@ export interface FileRouteTypes {
     | "/about"
     | "/tools"
     | "/tools/asset-generator"
+    | "/tools/compressor"
     | "/tools/converter"
     | "/tools/editor"
     | "/tools/og-designer"
@@ -199,6 +211,13 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof ToolsConverterRouteImport;
       parentRoute: typeof ToolsRoute;
     };
+    "/tools/compressor": {
+      id: "/tools/compressor";
+      path: "/compressor";
+      fullPath: "/tools/compressor";
+      preLoaderRoute: typeof ToolsCompressorRouteImport;
+      parentRoute: typeof ToolsRoute;
+    };
     "/tools/asset-generator": {
       id: "/tools/asset-generator";
       path: "/asset-generator";
@@ -211,6 +230,7 @@ declare module "@tanstack/react-router" {
 
 interface ToolsRouteChildren {
   ToolsAssetGeneratorRoute: typeof ToolsAssetGeneratorRoute;
+  ToolsCompressorRoute: typeof ToolsCompressorRoute;
   ToolsConverterRoute: typeof ToolsConverterRoute;
   ToolsEditorRoute: typeof ToolsEditorRoute;
   ToolsOgDesignerRoute: typeof ToolsOgDesignerRoute;
@@ -220,6 +240,7 @@ interface ToolsRouteChildren {
 
 const ToolsRouteChildren: ToolsRouteChildren = {
   ToolsAssetGeneratorRoute: ToolsAssetGeneratorRoute,
+  ToolsCompressorRoute: ToolsCompressorRoute,
   ToolsConverterRoute: ToolsConverterRoute,
   ToolsEditorRoute: ToolsEditorRoute,
   ToolsOgDesignerRoute: ToolsOgDesignerRoute,
