@@ -1,6 +1,6 @@
 import { Button } from "@heroui/button";
 import { Card, CardBody, CardHeader } from "@heroui/card";
-import { X, FileImage, Ruler, HardDrive } from "lucide-react";
+import { FileImage, HardDrive, Ruler, X } from "lucide-react";
 
 interface ImagePreviewProps {
   imageUrl: string;
@@ -26,13 +26,15 @@ export function ImagePreview({
     const k = 1024;
     const sizes = ["Bytes", "KB", "MB", "GB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / k ** i).toFixed(2)) + " " + sizes[i];
+    return `${parseFloat((bytes / k ** i).toFixed(2))} ${sizes[i]}`;
   };
 
   return (
-    <Card className={`${className} group hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700 overflow-hidden`}>
-      <CardHeader className="flex justify-between items-center bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 border-b border-gray-200 dark:border-gray-700">
-        <h3 className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
+    <Card
+      className={`${className} group hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700 overflow-hidden`}
+    >
+      <CardHeader className="flex justify-between items-center bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 border-b border-gray-200 dark:border-gray-700">
+        <h3 className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
           {title}
         </h3>
         {onRemove && (
@@ -71,7 +73,9 @@ export function ImagePreview({
                 <div className="flex items-start gap-3 p-3 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800">
                   <FileImage className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Filename</p>
+                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
+                      Filename
+                    </p>
                     <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">
                       {fileName}
                     </p>
@@ -81,10 +85,12 @@ export function ImagePreview({
 
               <div className="grid grid-cols-2 gap-3">
                 {fileSize && (
-                  <div className="flex items-start gap-2 p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
+                  <div className="flex items-start gap-2 p-3 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-lg border border-blue-200 dark:border-blue-800">
                     <HardDrive className="w-4 h-4 text-purple-500 flex-shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-0.5">Size</p>
+                      <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+                        Size
+                      </p>
                       <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
                         {formatFileSize(fileSize)}
                       </p>
@@ -93,10 +99,12 @@ export function ImagePreview({
                 )}
 
                 {dimensions && (
-                  <div className="flex items-start gap-2 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+                  <div className="flex items-start gap-2 p-3 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-lg border border-blue-200 dark:border-blue-800">
                     <Ruler className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-0.5">Dimensions</p>
+                      <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-0.5">
+                        Dimensions
+                      </p>
                       <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
                         {dimensions.width} × {dimensions.height}
                       </p>

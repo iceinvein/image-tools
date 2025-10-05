@@ -8,87 +8,87 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from "./routes/__root"
-import { Route as ToolsRouteImport } from "./routes/tools"
-import { Route as AboutRouteImport } from "./routes/about"
-import { Route as IndexRouteImport } from "./routes/index"
-import { Route as ToolsResizerRouteImport } from "./routes/tools/resizer"
-import { Route as ToolsEditorRouteImport } from "./routes/tools/editor"
-import { Route as ToolsConverterRouteImport } from "./routes/tools/converter"
+import { Route as rootRouteImport } from "./routes/__root";
+import { Route as AboutRouteImport } from "./routes/about";
+import { Route as IndexRouteImport } from "./routes/index";
+import { Route as ToolsRouteImport } from "./routes/tools";
+import { Route as ToolsConverterRouteImport } from "./routes/tools/converter";
+import { Route as ToolsEditorRouteImport } from "./routes/tools/editor";
+import { Route as ToolsResizerRouteImport } from "./routes/tools/resizer";
 
 const ToolsRoute = ToolsRouteImport.update({
   id: "/tools",
   path: "/tools",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const AboutRoute = AboutRouteImport.update({
   id: "/about",
   path: "/about",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const IndexRoute = IndexRouteImport.update({
   id: "/",
   path: "/",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ToolsResizerRoute = ToolsResizerRouteImport.update({
   id: "/resizer",
   path: "/resizer",
   getParentRoute: () => ToolsRoute,
-} as any)
+} as any);
 const ToolsEditorRoute = ToolsEditorRouteImport.update({
   id: "/editor",
   path: "/editor",
   getParentRoute: () => ToolsRoute,
-} as any)
+} as any);
 const ToolsConverterRoute = ToolsConverterRouteImport.update({
   id: "/converter",
   path: "/converter",
   getParentRoute: () => ToolsRoute,
-} as any)
+} as any);
 
 export interface FileRoutesByFullPath {
-  "/": typeof IndexRoute
-  "/about": typeof AboutRoute
-  "/tools": typeof ToolsRouteWithChildren
-  "/tools/converter": typeof ToolsConverterRoute
-  "/tools/editor": typeof ToolsEditorRoute
-  "/tools/resizer": typeof ToolsResizerRoute
+  "/": typeof IndexRoute;
+  "/about": typeof AboutRoute;
+  "/tools": typeof ToolsRouteWithChildren;
+  "/tools/converter": typeof ToolsConverterRoute;
+  "/tools/editor": typeof ToolsEditorRoute;
+  "/tools/resizer": typeof ToolsResizerRoute;
 }
 export interface FileRoutesByTo {
-  "/": typeof IndexRoute
-  "/about": typeof AboutRoute
-  "/tools": typeof ToolsRouteWithChildren
-  "/tools/converter": typeof ToolsConverterRoute
-  "/tools/editor": typeof ToolsEditorRoute
-  "/tools/resizer": typeof ToolsResizerRoute
+  "/": typeof IndexRoute;
+  "/about": typeof AboutRoute;
+  "/tools": typeof ToolsRouteWithChildren;
+  "/tools/converter": typeof ToolsConverterRoute;
+  "/tools/editor": typeof ToolsEditorRoute;
+  "/tools/resizer": typeof ToolsResizerRoute;
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport
-  "/": typeof IndexRoute
-  "/about": typeof AboutRoute
-  "/tools": typeof ToolsRouteWithChildren
-  "/tools/converter": typeof ToolsConverterRoute
-  "/tools/editor": typeof ToolsEditorRoute
-  "/tools/resizer": typeof ToolsResizerRoute
+  __root__: typeof rootRouteImport;
+  "/": typeof IndexRoute;
+  "/about": typeof AboutRoute;
+  "/tools": typeof ToolsRouteWithChildren;
+  "/tools/converter": typeof ToolsConverterRoute;
+  "/tools/editor": typeof ToolsEditorRoute;
+  "/tools/resizer": typeof ToolsResizerRoute;
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
+  fileRoutesByFullPath: FileRoutesByFullPath;
   fullPaths:
     | "/"
     | "/about"
     | "/tools"
     | "/tools/converter"
     | "/tools/editor"
-    | "/tools/resizer"
-  fileRoutesByTo: FileRoutesByTo
+    | "/tools/resizer";
+  fileRoutesByTo: FileRoutesByTo;
   to:
     | "/"
     | "/about"
     | "/tools"
     | "/tools/converter"
     | "/tools/editor"
-    | "/tools/resizer"
+    | "/tools/resizer";
   id:
     | "__root__"
     | "/"
@@ -96,81 +96,81 @@ export interface FileRouteTypes {
     | "/tools"
     | "/tools/converter"
     | "/tools/editor"
-    | "/tools/resizer"
-  fileRoutesById: FileRoutesById
+    | "/tools/resizer";
+  fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AboutRoute: typeof AboutRoute
-  ToolsRoute: typeof ToolsRouteWithChildren
+  IndexRoute: typeof IndexRoute;
+  AboutRoute: typeof AboutRoute;
+  ToolsRoute: typeof ToolsRouteWithChildren;
 }
 
 declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
     "/tools": {
-      id: "/tools"
-      path: "/tools"
-      fullPath: "/tools"
-      preLoaderRoute: typeof ToolsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: "/tools";
+      path: "/tools";
+      fullPath: "/tools";
+      preLoaderRoute: typeof ToolsRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     "/about": {
-      id: "/about"
-      path: "/about"
-      fullPath: "/about"
-      preLoaderRoute: typeof AboutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: "/about";
+      path: "/about";
+      fullPath: "/about";
+      preLoaderRoute: typeof AboutRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     "/": {
-      id: "/"
-      path: "/"
-      fullPath: "/"
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: "/";
+      path: "/";
+      fullPath: "/";
+      preLoaderRoute: typeof IndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     "/tools/resizer": {
-      id: "/tools/resizer"
-      path: "/resizer"
-      fullPath: "/tools/resizer"
-      preLoaderRoute: typeof ToolsResizerRouteImport
-      parentRoute: typeof ToolsRoute
-    }
+      id: "/tools/resizer";
+      path: "/resizer";
+      fullPath: "/tools/resizer";
+      preLoaderRoute: typeof ToolsResizerRouteImport;
+      parentRoute: typeof ToolsRoute;
+    };
     "/tools/editor": {
-      id: "/tools/editor"
-      path: "/editor"
-      fullPath: "/tools/editor"
-      preLoaderRoute: typeof ToolsEditorRouteImport
-      parentRoute: typeof ToolsRoute
-    }
+      id: "/tools/editor";
+      path: "/editor";
+      fullPath: "/tools/editor";
+      preLoaderRoute: typeof ToolsEditorRouteImport;
+      parentRoute: typeof ToolsRoute;
+    };
     "/tools/converter": {
-      id: "/tools/converter"
-      path: "/converter"
-      fullPath: "/tools/converter"
-      preLoaderRoute: typeof ToolsConverterRouteImport
-      parentRoute: typeof ToolsRoute
-    }
+      id: "/tools/converter";
+      path: "/converter";
+      fullPath: "/tools/converter";
+      preLoaderRoute: typeof ToolsConverterRouteImport;
+      parentRoute: typeof ToolsRoute;
+    };
   }
 }
 
 interface ToolsRouteChildren {
-  ToolsConverterRoute: typeof ToolsConverterRoute
-  ToolsEditorRoute: typeof ToolsEditorRoute
-  ToolsResizerRoute: typeof ToolsResizerRoute
+  ToolsConverterRoute: typeof ToolsConverterRoute;
+  ToolsEditorRoute: typeof ToolsEditorRoute;
+  ToolsResizerRoute: typeof ToolsResizerRoute;
 }
 
 const ToolsRouteChildren: ToolsRouteChildren = {
   ToolsConverterRoute: ToolsConverterRoute,
   ToolsEditorRoute: ToolsEditorRoute,
   ToolsResizerRoute: ToolsResizerRoute,
-}
+};
 
-const ToolsRouteWithChildren = ToolsRoute._addFileChildren(ToolsRouteChildren)
+const ToolsRouteWithChildren = ToolsRoute._addFileChildren(ToolsRouteChildren);
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   ToolsRoute: ToolsRouteWithChildren,
-}
+};
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();

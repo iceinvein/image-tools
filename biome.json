@@ -13,21 +13,6 @@
       "src/**/*.js",
       "src/**/*.jsx",
       "*.json"
-    ],
-    "experimentalScannerIgnores": [
-      "node_modules/**",
-      "dist/**",
-      "build/**",
-      "coverage/**",
-      ".next/**",
-      "public/**",
-      "*.config.js",
-      "*.config.ts",
-      "*.config.mjs",
-      "vite.config.ts",
-      "tailwind.config.js",
-      "postcss.config.js",
-      "src/routeTree.gen.ts"
     ]
   },
   "formatter": {
@@ -46,10 +31,6 @@
       "a11y": {
         "recommended": true,
         "noSvgWithoutTitle": "off"
-      },
-      "complexity": {
-        "recommended": true,
-        "noExcessiveCognitiveComplexity": "warn"
       },
       "correctness": {
         "recommended": true,
@@ -92,5 +73,17 @@
     "formatter": {
       "enabled": true
     }
-  }
+  },
+  "overrides": [
+    {
+      "includes": ["src/routeTree.gen.ts"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noExplicitAny": "off"
+          }
+        }
+      }
+    }
+  ]
 }
