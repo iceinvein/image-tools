@@ -8,253 +8,274 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from "./routes/__root";
-import { Route as AboutRouteImport } from "./routes/about";
-import { Route as IndexRouteImport } from "./routes/index";
-import { Route as ToolsRouteImport } from "./routes/tools";
-import { Route as ToolsAssetGeneratorRouteImport } from "./routes/tools/asset-generator";
-import { Route as ToolsCompressorRouteImport } from "./routes/tools/compressor";
-import { Route as ToolsConverterRouteImport } from "./routes/tools/converter";
-import { Route as ToolsEditorRouteImport } from "./routes/tools/editor";
-import { Route as ToolsOgDesignerRouteImport } from "./routes/tools/og-designer";
-import { Route as ToolsPlaystoreDesignerRouteImport } from "./routes/tools/playstore-designer";
-import { Route as ToolsResizerRouteImport } from "./routes/tools/resizer";
+import { Route as rootRouteImport } from "./routes/__root"
+import { Route as ToolsRouteImport } from "./routes/tools"
+import { Route as AboutRouteImport } from "./routes/about"
+import { Route as IndexRouteImport } from "./routes/index"
+import { Route as ToolsResizerRouteImport } from "./routes/tools/resizer"
+import { Route as ToolsPlaystoreDesignerRouteImport } from "./routes/tools/playstore-designer"
+import { Route as ToolsOgDesignerRouteImport } from "./routes/tools/og-designer"
+import { Route as ToolsEditorRouteImport } from "./routes/tools/editor"
+import { Route as ToolsConverterRouteImport } from "./routes/tools/converter"
+import { Route as ToolsCompressorRouteImport } from "./routes/tools/compressor"
+import { Route as ToolsBackgroundRemoverRouteImport } from "./routes/tools/background-remover"
+import { Route as ToolsAssetGeneratorRouteImport } from "./routes/tools/asset-generator"
 
 const ToolsRoute = ToolsRouteImport.update({
   id: "/tools",
   path: "/tools",
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: "/about",
   path: "/about",
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: "/",
   path: "/",
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const ToolsResizerRoute = ToolsResizerRouteImport.update({
   id: "/resizer",
   path: "/resizer",
   getParentRoute: () => ToolsRoute,
-} as any);
+} as any)
 const ToolsPlaystoreDesignerRoute = ToolsPlaystoreDesignerRouteImport.update({
   id: "/playstore-designer",
   path: "/playstore-designer",
   getParentRoute: () => ToolsRoute,
-} as any);
+} as any)
 const ToolsOgDesignerRoute = ToolsOgDesignerRouteImport.update({
   id: "/og-designer",
   path: "/og-designer",
   getParentRoute: () => ToolsRoute,
-} as any);
+} as any)
 const ToolsEditorRoute = ToolsEditorRouteImport.update({
   id: "/editor",
   path: "/editor",
   getParentRoute: () => ToolsRoute,
-} as any);
+} as any)
 const ToolsConverterRoute = ToolsConverterRouteImport.update({
   id: "/converter",
   path: "/converter",
   getParentRoute: () => ToolsRoute,
-} as any);
+} as any)
 const ToolsCompressorRoute = ToolsCompressorRouteImport.update({
   id: "/compressor",
   path: "/compressor",
   getParentRoute: () => ToolsRoute,
-} as any);
+} as any)
+const ToolsBackgroundRemoverRoute = ToolsBackgroundRemoverRouteImport.update({
+  id: "/background-remover",
+  path: "/background-remover",
+  getParentRoute: () => ToolsRoute,
+} as any)
 const ToolsAssetGeneratorRoute = ToolsAssetGeneratorRouteImport.update({
   id: "/asset-generator",
   path: "/asset-generator",
   getParentRoute: () => ToolsRoute,
-} as any);
+} as any)
 
 export interface FileRoutesByFullPath {
-  "/": typeof IndexRoute;
-  "/about": typeof AboutRoute;
-  "/tools": typeof ToolsRouteWithChildren;
-  "/tools/asset-generator": typeof ToolsAssetGeneratorRoute;
-  "/tools/compressor": typeof ToolsCompressorRoute;
-  "/tools/converter": typeof ToolsConverterRoute;
-  "/tools/editor": typeof ToolsEditorRoute;
-  "/tools/og-designer": typeof ToolsOgDesignerRoute;
-  "/tools/playstore-designer": typeof ToolsPlaystoreDesignerRoute;
-  "/tools/resizer": typeof ToolsResizerRoute;
+  "/": typeof IndexRoute
+  "/about": typeof AboutRoute
+  "/tools": typeof ToolsRouteWithChildren
+  "/tools/asset-generator": typeof ToolsAssetGeneratorRoute
+  "/tools/background-remover": typeof ToolsBackgroundRemoverRoute
+  "/tools/compressor": typeof ToolsCompressorRoute
+  "/tools/converter": typeof ToolsConverterRoute
+  "/tools/editor": typeof ToolsEditorRoute
+  "/tools/og-designer": typeof ToolsOgDesignerRoute
+  "/tools/playstore-designer": typeof ToolsPlaystoreDesignerRoute
+  "/tools/resizer": typeof ToolsResizerRoute
 }
 export interface FileRoutesByTo {
-  "/": typeof IndexRoute;
-  "/about": typeof AboutRoute;
-  "/tools": typeof ToolsRouteWithChildren;
-  "/tools/asset-generator": typeof ToolsAssetGeneratorRoute;
-  "/tools/compressor": typeof ToolsCompressorRoute;
-  "/tools/converter": typeof ToolsConverterRoute;
-  "/tools/editor": typeof ToolsEditorRoute;
-  "/tools/og-designer": typeof ToolsOgDesignerRoute;
-  "/tools/playstore-designer": typeof ToolsPlaystoreDesignerRoute;
-  "/tools/resizer": typeof ToolsResizerRoute;
+  "/": typeof IndexRoute
+  "/about": typeof AboutRoute
+  "/tools": typeof ToolsRouteWithChildren
+  "/tools/asset-generator": typeof ToolsAssetGeneratorRoute
+  "/tools/background-remover": typeof ToolsBackgroundRemoverRoute
+  "/tools/compressor": typeof ToolsCompressorRoute
+  "/tools/converter": typeof ToolsConverterRoute
+  "/tools/editor": typeof ToolsEditorRoute
+  "/tools/og-designer": typeof ToolsOgDesignerRoute
+  "/tools/playstore-designer": typeof ToolsPlaystoreDesignerRoute
+  "/tools/resizer": typeof ToolsResizerRoute
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport;
-  "/": typeof IndexRoute;
-  "/about": typeof AboutRoute;
-  "/tools": typeof ToolsRouteWithChildren;
-  "/tools/asset-generator": typeof ToolsAssetGeneratorRoute;
-  "/tools/compressor": typeof ToolsCompressorRoute;
-  "/tools/converter": typeof ToolsConverterRoute;
-  "/tools/editor": typeof ToolsEditorRoute;
-  "/tools/og-designer": typeof ToolsOgDesignerRoute;
-  "/tools/playstore-designer": typeof ToolsPlaystoreDesignerRoute;
-  "/tools/resizer": typeof ToolsResizerRoute;
+  __root__: typeof rootRouteImport
+  "/": typeof IndexRoute
+  "/about": typeof AboutRoute
+  "/tools": typeof ToolsRouteWithChildren
+  "/tools/asset-generator": typeof ToolsAssetGeneratorRoute
+  "/tools/background-remover": typeof ToolsBackgroundRemoverRoute
+  "/tools/compressor": typeof ToolsCompressorRoute
+  "/tools/converter": typeof ToolsConverterRoute
+  "/tools/editor": typeof ToolsEditorRoute
+  "/tools/og-designer": typeof ToolsOgDesignerRoute
+  "/tools/playstore-designer": typeof ToolsPlaystoreDesignerRoute
+  "/tools/resizer": typeof ToolsResizerRoute
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
+  fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | "/"
     | "/about"
     | "/tools"
     | "/tools/asset-generator"
+    | "/tools/background-remover"
     | "/tools/compressor"
     | "/tools/converter"
     | "/tools/editor"
     | "/tools/og-designer"
     | "/tools/playstore-designer"
-    | "/tools/resizer";
-  fileRoutesByTo: FileRoutesByTo;
+    | "/tools/resizer"
+  fileRoutesByTo: FileRoutesByTo
   to:
     | "/"
     | "/about"
     | "/tools"
     | "/tools/asset-generator"
+    | "/tools/background-remover"
     | "/tools/compressor"
     | "/tools/converter"
     | "/tools/editor"
     | "/tools/og-designer"
     | "/tools/playstore-designer"
-    | "/tools/resizer";
+    | "/tools/resizer"
   id:
     | "__root__"
     | "/"
     | "/about"
     | "/tools"
     | "/tools/asset-generator"
+    | "/tools/background-remover"
     | "/tools/compressor"
     | "/tools/converter"
     | "/tools/editor"
     | "/tools/og-designer"
     | "/tools/playstore-designer"
-    | "/tools/resizer";
-  fileRoutesById: FileRoutesById;
+    | "/tools/resizer"
+  fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute;
-  AboutRoute: typeof AboutRoute;
-  ToolsRoute: typeof ToolsRouteWithChildren;
+  IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  ToolsRoute: typeof ToolsRouteWithChildren
 }
 
 declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
     "/tools": {
-      id: "/tools";
-      path: "/tools";
-      fullPath: "/tools";
-      preLoaderRoute: typeof ToolsRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: "/tools"
+      path: "/tools"
+      fullPath: "/tools"
+      preLoaderRoute: typeof ToolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     "/about": {
-      id: "/about";
-      path: "/about";
-      fullPath: "/about";
-      preLoaderRoute: typeof AboutRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: "/about"
+      path: "/about"
+      fullPath: "/about"
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     "/": {
-      id: "/";
-      path: "/";
-      fullPath: "/";
-      preLoaderRoute: typeof IndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: "/"
+      path: "/"
+      fullPath: "/"
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     "/tools/resizer": {
-      id: "/tools/resizer";
-      path: "/resizer";
-      fullPath: "/tools/resizer";
-      preLoaderRoute: typeof ToolsResizerRouteImport;
-      parentRoute: typeof ToolsRoute;
-    };
+      id: "/tools/resizer"
+      path: "/resizer"
+      fullPath: "/tools/resizer"
+      preLoaderRoute: typeof ToolsResizerRouteImport
+      parentRoute: typeof ToolsRoute
+    }
     "/tools/playstore-designer": {
-      id: "/tools/playstore-designer";
-      path: "/playstore-designer";
-      fullPath: "/tools/playstore-designer";
-      preLoaderRoute: typeof ToolsPlaystoreDesignerRouteImport;
-      parentRoute: typeof ToolsRoute;
-    };
+      id: "/tools/playstore-designer"
+      path: "/playstore-designer"
+      fullPath: "/tools/playstore-designer"
+      preLoaderRoute: typeof ToolsPlaystoreDesignerRouteImport
+      parentRoute: typeof ToolsRoute
+    }
     "/tools/og-designer": {
-      id: "/tools/og-designer";
-      path: "/og-designer";
-      fullPath: "/tools/og-designer";
-      preLoaderRoute: typeof ToolsOgDesignerRouteImport;
-      parentRoute: typeof ToolsRoute;
-    };
+      id: "/tools/og-designer"
+      path: "/og-designer"
+      fullPath: "/tools/og-designer"
+      preLoaderRoute: typeof ToolsOgDesignerRouteImport
+      parentRoute: typeof ToolsRoute
+    }
     "/tools/editor": {
-      id: "/tools/editor";
-      path: "/editor";
-      fullPath: "/tools/editor";
-      preLoaderRoute: typeof ToolsEditorRouteImport;
-      parentRoute: typeof ToolsRoute;
-    };
+      id: "/tools/editor"
+      path: "/editor"
+      fullPath: "/tools/editor"
+      preLoaderRoute: typeof ToolsEditorRouteImport
+      parentRoute: typeof ToolsRoute
+    }
     "/tools/converter": {
-      id: "/tools/converter";
-      path: "/converter";
-      fullPath: "/tools/converter";
-      preLoaderRoute: typeof ToolsConverterRouteImport;
-      parentRoute: typeof ToolsRoute;
-    };
+      id: "/tools/converter"
+      path: "/converter"
+      fullPath: "/tools/converter"
+      preLoaderRoute: typeof ToolsConverterRouteImport
+      parentRoute: typeof ToolsRoute
+    }
     "/tools/compressor": {
-      id: "/tools/compressor";
-      path: "/compressor";
-      fullPath: "/tools/compressor";
-      preLoaderRoute: typeof ToolsCompressorRouteImport;
-      parentRoute: typeof ToolsRoute;
-    };
+      id: "/tools/compressor"
+      path: "/compressor"
+      fullPath: "/tools/compressor"
+      preLoaderRoute: typeof ToolsCompressorRouteImport
+      parentRoute: typeof ToolsRoute
+    }
+    "/tools/background-remover": {
+      id: "/tools/background-remover"
+      path: "/background-remover"
+      fullPath: "/tools/background-remover"
+      preLoaderRoute: typeof ToolsBackgroundRemoverRouteImport
+      parentRoute: typeof ToolsRoute
+    }
     "/tools/asset-generator": {
-      id: "/tools/asset-generator";
-      path: "/asset-generator";
-      fullPath: "/tools/asset-generator";
-      preLoaderRoute: typeof ToolsAssetGeneratorRouteImport;
-      parentRoute: typeof ToolsRoute;
-    };
+      id: "/tools/asset-generator"
+      path: "/asset-generator"
+      fullPath: "/tools/asset-generator"
+      preLoaderRoute: typeof ToolsAssetGeneratorRouteImport
+      parentRoute: typeof ToolsRoute
+    }
   }
 }
 
 interface ToolsRouteChildren {
-  ToolsAssetGeneratorRoute: typeof ToolsAssetGeneratorRoute;
-  ToolsCompressorRoute: typeof ToolsCompressorRoute;
-  ToolsConverterRoute: typeof ToolsConverterRoute;
-  ToolsEditorRoute: typeof ToolsEditorRoute;
-  ToolsOgDesignerRoute: typeof ToolsOgDesignerRoute;
-  ToolsPlaystoreDesignerRoute: typeof ToolsPlaystoreDesignerRoute;
-  ToolsResizerRoute: typeof ToolsResizerRoute;
+  ToolsAssetGeneratorRoute: typeof ToolsAssetGeneratorRoute
+  ToolsBackgroundRemoverRoute: typeof ToolsBackgroundRemoverRoute
+  ToolsCompressorRoute: typeof ToolsCompressorRoute
+  ToolsConverterRoute: typeof ToolsConverterRoute
+  ToolsEditorRoute: typeof ToolsEditorRoute
+  ToolsOgDesignerRoute: typeof ToolsOgDesignerRoute
+  ToolsPlaystoreDesignerRoute: typeof ToolsPlaystoreDesignerRoute
+  ToolsResizerRoute: typeof ToolsResizerRoute
 }
 
 const ToolsRouteChildren: ToolsRouteChildren = {
   ToolsAssetGeneratorRoute: ToolsAssetGeneratorRoute,
+  ToolsBackgroundRemoverRoute: ToolsBackgroundRemoverRoute,
   ToolsCompressorRoute: ToolsCompressorRoute,
   ToolsConverterRoute: ToolsConverterRoute,
   ToolsEditorRoute: ToolsEditorRoute,
   ToolsOgDesignerRoute: ToolsOgDesignerRoute,
   ToolsPlaystoreDesignerRoute: ToolsPlaystoreDesignerRoute,
   ToolsResizerRoute: ToolsResizerRoute,
-};
+}
 
-const ToolsRouteWithChildren = ToolsRoute._addFileChildren(ToolsRouteChildren);
+const ToolsRouteWithChildren = ToolsRoute._addFileChildren(ToolsRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   ToolsRoute: ToolsRouteWithChildren,
-};
+}
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>();
+  ._addFileTypes<FileRouteTypes>()
