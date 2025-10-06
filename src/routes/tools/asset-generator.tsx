@@ -79,9 +79,9 @@ function AssetGeneratorPage() {
   return (
     <section className="py-8 md:py-10 min-h-screen">
       <SEO
-        title="Asset Generator - Generate Web & App Icons | Image Tools"
-        description="Generate all required image assets for web and mobile app development from a single 1024x1024 image. Create favicons, PWA icons, iOS app icons, Android icons, and social media images."
-        keywords="asset generator, favicon generator, app icon generator, pwa icons, ios app icons, android icons, web development, app development"
+        title="Free Asset Generator - Generate Web & App Icons | Image Tools"
+        description="Free online asset generator. Generate all required image assets for web and mobile app development from a single 1024x1024 image. Create favicons, PWA icons, iOS app icons, Android icons, and social media images. 100% browser-based, no uploads required."
+        keywords="free asset generator, favicon generator, app icon generator, pwa icons, ios app icons, android icons, web development, app development"
         canonicalUrl="https://image-utilities.netlify.app/tools/asset-generator"
         structuredData={{
           ...createSoftwareApplicationSchema(

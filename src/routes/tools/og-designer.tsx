@@ -343,9 +343,9 @@ function OGDesignerPage() {
   return (
     <section className="py-8 md:py-10 min-h-screen">
       <SEO
-        title="OG Image Designer - Create Custom Open Graph Images | Image Tools"
-        description="Design beautiful Open Graph images for social media. Customize backgrounds, add text, images, and gradients. Perfect for Twitter Cards, Facebook, and LinkedIn."
-        keywords="og image designer, open graph generator, social media image creator, twitter card designer, facebook image generator, custom og image"
+        title="Free OG Image Designer - Create Custom Open Graph Images | Image Tools"
+        description="Free online OG image designer. Design beautiful Open Graph images for social media. Customize backgrounds, add text, images, and gradients. Perfect for Twitter Cards, Facebook, and LinkedIn. 100% browser-based, no uploads required."
+        keywords="free og image designer, open graph generator, social media image creator, twitter card designer, facebook image generator, custom og image"
         canonicalUrl="https://image-utilities.netlify.app/tools/og-designer"
         structuredData={{
           ...createSoftwareApplicationSchema(

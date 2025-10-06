@@ -340,9 +340,9 @@ function PlayStoreDesigner() {
   return (
     <section className="py-8 md:py-10 min-h-screen">
       <SEO
-        title="Play Store Feature Graphic Designer - Create Promotional Images"
-        description="Design professional Play Store feature graphics (1024×500) with custom backgrounds, images, and text. Perfect for app store listings."
-        keywords="play store designer, feature graphic, promotional image, app store graphics, android app marketing"
+        title="Free Play Store Feature Graphic Designer - Create Promotional Images"
+        description="Free online Play Store feature graphic designer. Design professional Play Store feature graphics (1024×500) with custom backgrounds, images, and text. Perfect for app store listings. 100% browser-based, no uploads required."
+        keywords="free play store designer, feature graphic, promotional image, app store graphics, android app marketing"
         canonicalUrl="https://image-utilities.netlify.app/tools/playstore-designer"
         structuredData={[
           createSoftwareApplicationSchema(
