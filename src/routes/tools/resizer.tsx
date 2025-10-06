@@ -369,242 +369,255 @@ function ResizerPage() {
             <ImageUpload onImageSelect={handleImageSelect} />
           </div>
         ) : (
-          <div className="mx-auto max-w-7xl space-y-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="mx-auto max-w-7xl space-y-6"
+          >
             {/* Compact Side-by-Side Layout */}
-            <Card className="border-2 border-gray-200 dark:border-gray-700">
-              <CardBody className="p-6">
-                <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-                  {/* Left: Live Preview */}
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <h3 className="font-semibold text-gray-700 text-sm dark:text-gray-300">
-                        Live Preview
-                      </h3>
-                      <div className="flex items-center gap-2">
-                        <Chip size="sm" variant="flat" color="success">
-                          {targetWidth} × {targetHeight}
-                        </Chip>
-                        {originalDimensions && (
-                          <Chip size="sm" variant="flat" color="default">
-                            {Math.round(
-                              (targetWidth / originalDimensions.width) * 100,
-                            )}
-                            %
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.1 }}
+            >
+              <Card className="border-2 border-gray-200 dark:border-gray-700">
+                <CardBody className="p-6">
+                  <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                    {/* Left: Live Preview */}
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <h3 className="font-semibold text-gray-700 text-sm dark:text-gray-300">
+                          Live Preview
+                        </h3>
+                        <div className="flex items-center gap-2">
+                          <Chip size="sm" variant="flat" color="success">
+                            {targetWidth} × {targetHeight}
                           </Chip>
+                          {originalDimensions && (
+                            <Chip size="sm" variant="flat" color="default">
+                              {Math.round(
+                                (targetWidth / originalDimensions.width) * 100,
+                              )}
+                              %
+                            </Chip>
+                          )}
+                        </div>
+                      </div>
+                      <div className="relative overflow-hidden rounded-lg border-2 border-gray-200 bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
+                        {originalDimensions && (
+                          <AnimatedPreview
+                            imageUrl={originalUrl}
+                            originalDimensions={originalDimensions}
+                            targetWidth={targetWidth}
+                            targetHeight={targetHeight}
+                          />
                         )}
                       </div>
                     </div>
-                    <div className="relative overflow-hidden rounded-lg border-2 border-gray-200 bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
-                      {originalDimensions && (
-                        <AnimatedPreview
-                          imageUrl={originalUrl}
-                          originalDimensions={originalDimensions}
-                          targetWidth={targetWidth}
-                          targetHeight={targetHeight}
+
+                    {/* Right: Controls */}
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <h3 className="font-semibold text-gray-700 text-sm dark:text-gray-300">
+                          Resize Settings
+                        </h3>
+                        <Switch
+                          size="sm"
+                          isSelected={maintainAspectRatio}
+                          onValueChange={setMaintainAspectRatio}
+                        >
+                          <span className="text-xs">Lock Aspect</span>
+                        </Switch>
+                      </div>
+
+                      {/* Quick Scale Buttons */}
+                      <div>
+                        <p className="mb-2 font-medium text-gray-600 text-xs dark:text-gray-400">
+                          Quick Scale
+                        </p>
+                        <div className="grid grid-cols-3 gap-2">
+                          {scalePresets.map((preset) => (
+                            <Button
+                              key={preset.value}
+                              size="sm"
+                              variant={
+                                scalePercentage === preset.value
+                                  ? "solid"
+                                  : "bordered"
+                              }
+                              color={
+                                scalePercentage === preset.value
+                                  ? "success"
+                                  : "default"
+                              }
+                              onPress={() => handleScaleChange(preset.value)}
+                              className="text-xs"
+                            >
+                              {preset.label}
+                            </Button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Scale Slider */}
+                      <div>
+                        <div className="mb-2 flex items-center justify-between">
+                          <span className="font-medium text-gray-600 text-xs dark:text-gray-400">
+                            Custom Scale
+                          </span>
+                          <span className="font-bold text-green-600 text-sm dark:text-green-400">
+                            {scalePercentage}%
+                          </span>
+                        </div>
+                        <Slider
+                          size="sm"
+                          value={scalePercentage}
+                          onChange={(value) =>
+                            handleScaleChange(value as number)
+                          }
+                          minValue={10}
+                          maxValue={300}
+                          step={5}
+                          aria-label="Scale percentage"
+                          classNames={{
+                            track: "bg-gray-200 dark:bg-gray-700",
+                            filler:
+                              "bg-gradient-to-r from-green-500 to-emerald-500",
+                            thumb: "bg-green-600",
+                          }}
                         />
+                        <div className="mt-1 flex justify-between text-gray-400 text-xs">
+                          <span>10%</span>
+                          <span>300%</span>
+                        </div>
+                      </div>
+
+                      {/* Dimension Inputs */}
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="mb-1 block font-medium text-gray-600 text-xs dark:text-gray-400">
+                            Width (px)
+                          </label>
+                          <Input
+                            type="number"
+                            size="sm"
+                            value={targetWidth.toString()}
+                            onChange={(e) =>
+                              handleWidthChange(Number(e.target.value))
+                            }
+                            min={1}
+                          />
+                        </div>
+                        <div>
+                          <label className="mb-1 block font-medium text-gray-600 text-xs dark:text-gray-400">
+                            Height (px)
+                          </label>
+                          <Input
+                            type="number"
+                            size="sm"
+                            value={targetHeight.toString()}
+                            onChange={(e) =>
+                              handleHeightChange(Number(e.target.value))
+                            }
+                            min={1}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Presets */}
+                      <div>
+                        <label className="mb-2 block font-medium text-gray-600 text-xs dark:text-gray-400">
+                          Common Presets
+                        </label>
+                        <Select
+                          size="sm"
+                          selectedKeys={[selectedPreset]}
+                          onChange={(e) => handlePresetChange(e.target.value)}
+                          aria-label="Preset sizes"
+                        >
+                          {presets.map((preset) => (
+                            <SelectItem key={preset.key}>
+                              {preset.label}
+                            </SelectItem>
+                          ))}
+                        </Select>
+                      </div>
+
+                      {/* Target Size Display */}
+                      {newDimensions && originalDimensions && (
+                        <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 dark:border-blue-800 dark:bg-blue-950/20">
+                          <div className="flex items-center justify-between text-xs">
+                            <span className="text-gray-600 dark:text-gray-400">
+                              {originalDimensions.width} ×{" "}
+                              {originalDimensions.height}
+                            </span>
+                            <span className="text-gray-400">→</span>
+                            <span className="font-bold text-blue-600 dark:text-blue-400">
+                              {newDimensions.width} × {newDimensions.height}
+                            </span>
+                          </div>
+                        </div>
                       )}
                     </div>
                   </div>
+                </CardBody>
+              </Card>
 
-                  {/* Right: Controls */}
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <h3 className="font-semibold text-gray-700 text-sm dark:text-gray-300">
-                        Resize Settings
-                      </h3>
-                      <Switch
-                        size="sm"
-                        isSelected={maintainAspectRatio}
-                        onValueChange={setMaintainAspectRatio}
-                      >
-                        <span className="text-xs">Lock Aspect</span>
-                      </Switch>
-                    </div>
-
-                    {/* Quick Scale Buttons */}
-                    <div>
-                      <p className="mb-2 font-medium text-gray-600 text-xs dark:text-gray-400">
-                        Quick Scale
-                      </p>
-                      <div className="grid grid-cols-3 gap-2">
-                        {scalePresets.map((preset) => (
-                          <Button
-                            key={preset.value}
-                            size="sm"
-                            variant={
-                              scalePercentage === preset.value
-                                ? "solid"
-                                : "bordered"
-                            }
-                            color={
-                              scalePercentage === preset.value
-                                ? "success"
-                                : "default"
-                            }
-                            onPress={() => handleScaleChange(preset.value)}
-                            className="text-xs"
-                          >
-                            {preset.label}
-                          </Button>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Scale Slider */}
-                    <div>
-                      <div className="mb-2 flex items-center justify-between">
-                        <span className="font-medium text-gray-600 text-xs dark:text-gray-400">
-                          Custom Scale
+              {/* Compact Action Bar */}
+              <Card className="border-2 border-gray-200 dark:border-gray-700">
+                <CardBody className="p-4">
+                  <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
+                    <div className="flex-1 text-gray-600 text-sm dark:text-gray-400">
+                      {resizedUrl ? (
+                        <span className="font-medium text-green-600 dark:text-green-400">
+                          ✓ Image resized successfully
                         </span>
-                        <span className="font-bold text-green-600 text-sm dark:text-green-400">
-                          {scalePercentage}%
-                        </span>
-                      </div>
-                      <Slider
-                        size="sm"
-                        value={scalePercentage}
-                        onChange={(value) => handleScaleChange(value as number)}
-                        minValue={10}
-                        maxValue={300}
-                        step={5}
-                        aria-label="Scale percentage"
-                        classNames={{
-                          track: "bg-gray-200 dark:bg-gray-700",
-                          filler:
-                            "bg-gradient-to-r from-green-500 to-emerald-500",
-                          thumb: "bg-green-600",
-                        }}
-                      />
-                      <div className="mt-1 flex justify-between text-gray-400 text-xs">
-                        <span>10%</span>
-                        <span>300%</span>
-                      </div>
+                      ) : (
+                        <span>Adjust settings and click resize</span>
+                      )}
                     </div>
-
-                    {/* Dimension Inputs */}
-                    <div className="grid grid-cols-2 gap-3">
-                      <div>
-                        <label className="mb-1 block font-medium text-gray-600 text-xs dark:text-gray-400">
-                          Width (px)
-                        </label>
-                        <Input
-                          type="number"
-                          size="sm"
-                          value={targetWidth.toString()}
-                          onChange={(e) =>
-                            handleWidthChange(Number(e.target.value))
-                          }
-                          min={1}
-                        />
-                      </div>
-                      <div>
-                        <label className="mb-1 block font-medium text-gray-600 text-xs dark:text-gray-400">
-                          Height (px)
-                        </label>
-                        <Input
-                          type="number"
-                          size="sm"
-                          value={targetHeight.toString()}
-                          onChange={(e) =>
-                            handleHeightChange(Number(e.target.value))
-                          }
-                          min={1}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Presets */}
-                    <div>
-                      <label className="mb-2 block font-medium text-gray-600 text-xs dark:text-gray-400">
-                        Common Presets
-                      </label>
-                      <Select
-                        size="sm"
-                        selectedKeys={[selectedPreset]}
-                        onChange={(e) => handlePresetChange(e.target.value)}
-                        aria-label="Preset sizes"
-                      >
-                        {presets.map((preset) => (
-                          <SelectItem key={preset.key}>
-                            {preset.label}
-                          </SelectItem>
-                        ))}
-                      </Select>
-                    </div>
-
-                    {/* Target Size Display */}
-                    {newDimensions && originalDimensions && (
-                      <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 dark:border-blue-800 dark:bg-blue-950/20">
-                        <div className="flex items-center justify-between text-xs">
-                          <span className="text-gray-600 dark:text-gray-400">
-                            {originalDimensions.width} ×{" "}
-                            {originalDimensions.height}
-                          </span>
-                          <span className="text-gray-400">→</span>
-                          <span className="font-bold text-blue-600 dark:text-blue-400">
-                            {newDimensions.width} × {newDimensions.height}
-                          </span>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </CardBody>
-            </Card>
-
-            {/* Compact Action Bar */}
-            <Card className="border-2 border-gray-200 dark:border-gray-700">
-              <CardBody className="p-4">
-                <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
-                  <div className="flex-1 text-gray-600 text-sm dark:text-gray-400">
-                    {resizedUrl ? (
-                      <span className="font-medium text-green-600 dark:text-green-400">
-                        ✓ Image resized successfully
-                      </span>
-                    ) : (
-                      <span>Adjust settings and click resize</span>
-                    )}
-                  </div>
-                  <div className="flex gap-2">
-                    <Button
-                      size="lg"
-                      variant="bordered"
-                      onPress={handleReset}
-                      startContent={<RotateCcw className="h-4 w-4" />}
-                      className="flex-1 sm:flex-initial"
-                    >
-                      New
-                    </Button>
-                    <Button
-                      size="lg"
-                      color="primary"
-                      onPress={handleResize}
-                      isLoading={isProcessing}
-                      className="flex-1 font-bold sm:flex-initial"
-                      startContent={
-                        !isProcessing ? (
-                          <Maximize2 className="h-4 w-4" />
-                        ) : undefined
-                      }
-                    >
-                      {isProcessing ? "Resizing..." : "Resize"}
-                    </Button>
-                    {resizedUrl && (
+                    <div className="flex gap-2">
                       <Button
                         size="lg"
-                        color="success"
-                        onPress={handleDownload}
-                        startContent={<Download className="h-4 w-4" />}
-                        className="flex-1 font-bold sm:flex-initial"
+                        variant="bordered"
+                        onPress={handleReset}
+                        startContent={<RotateCcw className="h-4 w-4" />}
+                        className="flex-1 sm:flex-initial"
                       >
-                        Download
+                        New
                       </Button>
-                    )}
+                      <Button
+                        size="lg"
+                        color="primary"
+                        onPress={handleResize}
+                        isLoading={isProcessing}
+                        className="flex-1 font-bold sm:flex-initial"
+                        startContent={
+                          !isProcessing ? (
+                            <Maximize2 className="h-4 w-4" />
+                          ) : undefined
+                        }
+                      >
+                        {isProcessing ? "Resizing..." : "Resize"}
+                      </Button>
+                      {resizedUrl && (
+                        <Button
+                          size="lg"
+                          color="success"
+                          onPress={handleDownload}
+                          startContent={<Download className="h-4 w-4" />}
+                          className="flex-1 font-bold sm:flex-initial"
+                        >
+                          Download
+                        </Button>
+                      )}
+                    </div>
                   </div>
-                </div>
-              </CardBody>
-            </Card>
-          </div>
+                </CardBody>
+              </Card>
+            </motion.div>
+          </motion.div>
         )}
       </div>
     </section>

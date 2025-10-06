@@ -1,5 +1,6 @@
 import { Button } from "@heroui/button";
 import { Card, CardBody } from "@heroui/card";
+import { motion } from "framer-motion";
 import { Image as ImageIcon, Sparkles, Upload } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 
@@ -17,6 +18,7 @@ export function ImageUpload({
   className = "",
 }: ImageUploadProps) {
   const [isDragOver, setIsDragOver] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -46,8 +48,14 @@ export function ImageUpload({
       }
 
       setError(null);
-      const imageUrl = URL.createObjectURL(file);
-      onImageSelect(file, imageUrl);
+      setIsProcessing(true);
+
+      // Simulate a brief processing delay for animation
+      setTimeout(() => {
+        const imageUrl = URL.createObjectURL(file);
+        onImageSelect(file, imageUrl);
+        setIsProcessing(false);
+      }, 300);
     },
     [onImageSelect, validateFile],
   );
@@ -105,64 +113,93 @@ export function ImageUpload({
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
         >
-          <div className="space-y-6">
-            {/* Icon with animation */}
-            <div className="relative inline-block">
-              <div
-                className={`absolute inset-0 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 opacity-20 blur-xl transition-all duration-300 ${isDragOver ? "scale-150 opacity-40" : "scale-100"}`}
-              />
-              <div
-                className={`relative rounded-2xl border border-blue-200/50 bg-gradient-to-br from-blue-500/10 to-purple-500/10 p-6 transition-all duration-300 dark:border-blue-700/50 dark:from-blue-500/20 dark:to-purple-500/20 ${isDragOver ? "rotate-6 scale-110" : "rotate-0 scale-100"}`}
-              >
-                {isDragOver ? (
-                  <Sparkles className="h-12 w-12 animate-pulse text-primary" />
-                ) : (
-                  <Upload className="h-12 w-12 text-primary" />
-                )}
-              </div>
-            </div>
-
-            <div>
-              <h3 className="brand-text-gradient mb-2 font-bold text-2xl">
-                {isDragOver ? "Drop it like it's hot! 🔥" : "Upload Your Image"}
-              </h3>
-              <p className="mb-6 text-gray-600 dark:text-gray-400">
-                Drag and drop your image here, or click to browse
-              </p>
-            </div>
-
-            <Button
-              size="lg"
-              className="brand-btn px-8 font-semibold transition-all duration-300 hover:scale-105 hover:shadow-xl active:scale-95"
-              onPress={() => inputRef.current?.click()}
-              startContent={
-                <ImageIcon className="h-5 w-5 transition-transform group-hover:rotate-12" />
-              }
+          {isProcessing ? (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="space-y-6"
             >
-              Choose File
-            </Button>
-
-            <input
-              ref={inputRef}
-              type="file"
-              accept={acceptedFormats.join(",")}
-              onChange={handleFileInput}
-              aria-label="Upload image file"
-              className="hidden"
-            />
-
-            <div className="flex items-center justify-center gap-2 border-gray-200 border-t pt-4 text-gray-500 text-sm dark:border-gray-700 dark:text-gray-400">
-              <div className="flex flex-wrap justify-center gap-2">
-                {acceptedFormats.map((format) => (
-                  <span key={format} className="brand-chip text-xs">
-                    {format.split("/")[1].toUpperCase()}
-                  </span>
-                ))}
+              <div className="relative inline-block">
+                <div className="absolute inset-0 animate-pulse rounded-full bg-gradient-to-r from-blue-500 to-purple-500 opacity-30 blur-xl" />
+                <motion.div
+                  className="relative rounded-2xl border border-blue-200/50 bg-gradient-to-br from-blue-500/10 to-purple-500/10 p-6 dark:border-blue-700/50 dark:from-blue-500/20 dark:to-purple-500/20"
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                >
+                  <Sparkles className="h-12 w-12 text-primary" />
+                </motion.div>
               </div>
-              <span className="mx-2">•</span>
-              <span className="font-medium">Max {maxSize}MB</span>
+              <div>
+                <h3 className="brand-text-gradient mb-2 font-bold text-2xl">
+                  Processing...
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400">
+                  Loading your image
+                </p>
+              </div>
+            </motion.div>
+          ) : (
+            <div className="space-y-6">
+              {/* Icon with animation */}
+              <div className="relative inline-block">
+                <div
+                  className={`absolute inset-0 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 opacity-20 blur-xl transition-all duration-300 ${isDragOver ? "scale-150 opacity-40" : "scale-100"}`}
+                />
+                <div
+                  className={`relative rounded-2xl border border-blue-200/50 bg-gradient-to-br from-blue-500/10 to-purple-500/10 p-6 transition-all duration-300 dark:border-blue-700/50 dark:from-blue-500/20 dark:to-purple-500/20 ${isDragOver ? "rotate-6 scale-110" : "rotate-0 scale-100"}`}
+                >
+                  {isDragOver ? (
+                    <Sparkles className="h-12 w-12 animate-pulse text-primary" />
+                  ) : (
+                    <Upload className="h-12 w-12 text-primary" />
+                  )}
+                </div>
+              </div>
+
+              <div>
+                <h3 className="brand-text-gradient mb-2 font-bold text-2xl">
+                  {isDragOver
+                    ? "Drop it like it's hot! 🔥"
+                    : "Upload Your Image"}
+                </h3>
+                <p className="mb-6 text-gray-600 dark:text-gray-400">
+                  Drag and drop your image here, or click to browse
+                </p>
+              </div>
+
+              <Button
+                size="lg"
+                className="brand-btn px-8 font-semibold transition-all duration-300 hover:scale-105 hover:shadow-xl active:scale-95"
+                onPress={() => inputRef.current?.click()}
+                startContent={
+                  <ImageIcon className="h-5 w-5 transition-transform group-hover:rotate-12" />
+                }
+              >
+                Choose File
+              </Button>
+
+              <input
+                ref={inputRef}
+                type="file"
+                accept={acceptedFormats.join(",")}
+                onChange={handleFileInput}
+                aria-label="Upload image file"
+                className="hidden"
+              />
+
+              <div className="flex items-center justify-center gap-2 border-gray-200 border-t pt-4 text-gray-500 text-sm dark:border-gray-700 dark:text-gray-400">
+                <div className="flex flex-wrap justify-center gap-2">
+                  {acceptedFormats.map((format) => (
+                    <span key={format} className="brand-chip text-xs">
+                      {format.split("/")[1].toUpperCase()}
+                    </span>
+                  ))}
+                </div>
+                <span className="mx-2">•</span>
+                <span className="font-medium">Max {maxSize}MB</span>
+              </div>
             </div>
-          </div>
+          )}
         </CardBody>
       </Card>
 

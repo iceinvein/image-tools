@@ -4,6 +4,7 @@ import { Chip } from "@heroui/chip";
 import { Progress } from "@heroui/progress";
 import { Tab, Tabs } from "@heroui/tabs";
 import { createFileRoute } from "@tanstack/react-router";
+import { AnimatePresence, motion } from "framer-motion";
 import { CheckCircle2, Download, Loader2, Package } from "lucide-react";
 import { useState } from "react";
 
@@ -24,6 +25,7 @@ import { downloadBlob } from "@/utils/image-processing";
 function AssetGeneratorPage() {
   const [originalFile, setOriginalFile] = useState<File | null>(null);
   const [selectedPack, setSelectedPack] = useState<AssetPack>(ASSET_PACKS[0]);
+  const [prevPack, setPrevPack] = useState<AssetPack>(ASSET_PACKS[0]);
   const [generatedAssets, setGeneratedAssets] = useState<GeneratedAsset[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [progress, setProgress] = useState({ current: 0, total: 0 });
@@ -140,157 +142,266 @@ function AssetGeneratorPage() {
             />
           </div>
         ) : (
-          <div
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
             className={`mt-8 grid gap-8 ${generatedAssets.length > 0 ? "lg:grid-cols-2" : ""}`}
           >
             {/* Pack Selection */}
-            <Card className="border-2 border-gray-200 dark:border-gray-700">
-              <CardHeader className="border-gray-200 border-b bg-gradient-to-r from-orange-50 to-pink-50 dark:border-gray-700 dark:from-orange-950/30 dark:to-pink-950/30">
-                <h2 className="font-bold text-xl">Select Asset Pack</h2>
-              </CardHeader>
-              <CardBody className="p-6">
-                <Tabs
-                  selectedKey={selectedPack.id}
-                  onSelectionChange={(key) => {
-                    const pack = ASSET_PACKS.find((p) => p.id === key);
-                    if (pack) setSelectedPack(pack);
-                  }}
-                  classNames={{
-                    tabList: "w-full",
-                    tab: "flex-1",
-                  }}
-                >
-                  {ASSET_PACKS.map((pack) => (
-                    <Tab key={pack.id} title={pack.name}>
-                      <div className="mt-4 rounded-lg bg-gray-50 p-4 dark:bg-gray-800/50">
-                        <p className="mb-3 text-gray-600 text-sm dark:text-gray-300">
-                          {pack.description}
-                        </p>
-                        <p className="mb-3 text-gray-500 text-xs dark:text-gray-400">
-                          Generates {pack.sizes.length} images
-                          {pack.includeIco && " + 1 ICO file"}
-                        </p>
-                        {(pack.id === "web" || pack.id === "complete") && (
-                          <div className="mt-3 rounded-lg border border-blue-200 bg-blue-50 p-3 dark:border-blue-800 dark:bg-blue-950/30">
-                            <p className="text-gray-600 text-xs dark:text-gray-400">
-                              <span className="font-semibold text-blue-600 dark:text-blue-400">
-                                Note:
-                              </span>{" "}
-                              Social media images (Open Graph, Twitter Card)
-                              will feature your icon on the left with a
-                              blue-to-purple gradient background, creating a
-                              professional card design.
-                            </p>
-                          </div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.1 }}
+            >
+              <Card className="border-2 border-gray-200 dark:border-gray-700">
+                <CardHeader className="border-gray-200 border-b bg-gradient-to-r from-orange-50 to-pink-50 dark:border-gray-700 dark:from-orange-950/30 dark:to-pink-950/30">
+                  <h2 className="font-bold text-xl">Select Asset Pack</h2>
+                </CardHeader>
+                <CardBody className="p-6">
+                  <Tabs
+                    selectedKey={selectedPack.id}
+                    onSelectionChange={(key) => {
+                      const pack = ASSET_PACKS.find((p) => p.id === key);
+                      if (pack) {
+                        setPrevPack(selectedPack);
+                        setSelectedPack(pack);
+                      }
+                    }}
+                    classNames={{
+                      tabList: "w-full",
+                      tab: "flex-1",
+                    }}
+                  >
+                    {ASSET_PACKS.map((pack) => (
+                      <Tab key={pack.id} title={pack.name} />
+                    ))}
+                  </Tabs>
+
+                  {/* Animated Tab Content with Two-Layer Crossover */}
+                  <div className="relative mt-4 min-h-[120px] overflow-hidden">
+                    <div className="relative">
+                      <AnimatePresence initial={false}>
+                        {/* Outgoing layer */}
+                        {prevPack.id !== selectedPack.id && (
+                          <motion.div
+                            key={`out-${prevPack.id}`}
+                            className="absolute inset-0"
+                            custom={
+                              ASSET_PACKS.findIndex(
+                                (p) => p.id === selectedPack.id,
+                              ) >=
+                              ASSET_PACKS.findIndex((p) => p.id === prevPack.id)
+                                ? 1
+                                : -1
+                            }
+                            variants={{
+                              initial: { x: 0, opacity: 1 },
+                              animate: (direction: number) => ({
+                                x: -200 * direction,
+                                opacity: 0,
+                              }),
+                            }}
+                            initial="initial"
+                            animate="animate"
+                            transition={{
+                              x: {
+                                type: "spring",
+                                stiffness: 300,
+                                damping: 25,
+                              },
+                              opacity: { duration: 0.2 },
+                            }}
+                          >
+                            <div className="rounded-lg bg-gray-50 p-4 dark:bg-gray-800/50">
+                              <p className="mb-3 text-gray-600 text-sm dark:text-gray-300">
+                                {prevPack.description}
+                              </p>
+                              <p className="mb-3 text-gray-500 text-xs dark:text-gray-400">
+                                Generates {prevPack.sizes.length} images
+                                {prevPack.includeIco && " + 1 ICO file"}
+                              </p>
+                              {(prevPack.id === "web" ||
+                                prevPack.id === "complete") && (
+                                <div className="mt-3 rounded-lg border border-blue-200 bg-blue-50 p-3 dark:border-blue-800 dark:bg-blue-950/30">
+                                  <p className="text-gray-600 text-xs dark:text-gray-400">
+                                    <span className="font-semibold text-blue-600 dark:text-blue-400">
+                                      Note:
+                                    </span>{" "}
+                                    Social media images (Open Graph, Twitter
+                                    Card) will feature your icon on the left
+                                    with a blue-to-purple gradient background,
+                                    creating a professional card design.
+                                  </p>
+                                </div>
+                              )}
+                            </div>
+                          </motion.div>
                         )}
-                      </div>
-                    </Tab>
-                  ))}
-                </Tabs>
+                      </AnimatePresence>
 
-                <div className="mt-6 flex gap-3">
-                  <Button
-                    color="primary"
-                    size="lg"
-                    onPress={handleGenerate}
-                    isDisabled={isGenerating}
-                    startContent={
-                      isGenerating ? (
-                        <Loader2 className="h-5 w-5 animate-spin" />
-                      ) : (
-                        <Package className="h-5 w-5" />
-                      )
-                    }
-                    className="flex-1"
-                  >
-                    {isGenerating ? "Generating..." : "Generate Assets"}
-                  </Button>
-                  <Button
-                    color="default"
-                    variant="bordered"
-                    size="lg"
-                    onPress={handleReset}
-                  >
-                    Reset
-                  </Button>
-                </div>
-
-                {isGenerating && (
-                  <div className="mt-4">
-                    <Progress
-                      value={progressPercent}
-                      className="w-full"
-                      color="primary"
-                      label={`Generating ${progress.current} of ${progress.total}...`}
-                      showValueLabel
-                      classNames={{
-                        track: "bg-gray-200 dark:bg-gray-700",
-                        indicator:
-                          "bg-gradient-to-r from-blue-500 to-purple-500",
-                      }}
-                    />
+                      {/* Incoming layer (always on top) */}
+                      <motion.div
+                        key={`in-${selectedPack.id}`}
+                        custom={
+                          ASSET_PACKS.findIndex(
+                            (p) => p.id === selectedPack.id,
+                          ) >=
+                          ASSET_PACKS.findIndex((p) => p.id === prevPack.id)
+                            ? 1
+                            : -1
+                        }
+                        variants={{
+                          initial: (direction: number) => ({
+                            x: 200 * direction,
+                            opacity: 0,
+                          }),
+                          animate: { x: 0, opacity: 1 },
+                        }}
+                        initial="initial"
+                        animate="animate"
+                        transition={{
+                          x: { type: "spring", stiffness: 300, damping: 20 },
+                          opacity: { duration: 0.25 },
+                        }}
+                      >
+                        <div className="rounded-lg bg-gray-50 p-4 dark:bg-gray-800/50">
+                          <p className="mb-3 text-gray-600 text-sm dark:text-gray-300">
+                            {selectedPack.description}
+                          </p>
+                          <p className="mb-3 text-gray-500 text-xs dark:text-gray-400">
+                            Generates {selectedPack.sizes.length} images
+                            {selectedPack.includeIco && " + 1 ICO file"}
+                          </p>
+                          {(selectedPack.id === "web" ||
+                            selectedPack.id === "complete") && (
+                            <div className="mt-3 rounded-lg border border-blue-200 bg-blue-50 p-3 dark:border-blue-800 dark:bg-blue-950/30">
+                              <p className="text-gray-600 text-xs dark:text-gray-400">
+                                <span className="font-semibold text-blue-600 dark:text-blue-400">
+                                  Note:
+                                </span>{" "}
+                                Social media images (Open Graph, Twitter Card)
+                                will feature your icon on the left with a
+                                blue-to-purple gradient background, creating a
+                                professional card design.
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      </motion.div>
+                    </div>
                   </div>
-                )}
-              </CardBody>
-            </Card>
+
+                  <div className="mt-6 flex gap-3">
+                    <Button
+                      color="primary"
+                      size="lg"
+                      onPress={handleGenerate}
+                      isDisabled={isGenerating}
+                      startContent={
+                        isGenerating ? (
+                          <Loader2 className="h-5 w-5 animate-spin" />
+                        ) : (
+                          <Package className="h-5 w-5" />
+                        )
+                      }
+                      className="flex-1"
+                    >
+                      {isGenerating ? "Generating..." : "Generate Assets"}
+                    </Button>
+                    <Button
+                      color="default"
+                      variant="bordered"
+                      size="lg"
+                      onPress={handleReset}
+                    >
+                      Reset
+                    </Button>
+                  </div>
+
+                  {isGenerating && (
+                    <div className="mt-4">
+                      <Progress
+                        value={progressPercent}
+                        className="w-full"
+                        color="primary"
+                        label={`Generating ${progress.current} of ${progress.total}...`}
+                        showValueLabel
+                        classNames={{
+                          track: "bg-gray-200 dark:bg-gray-700",
+                          indicator:
+                            "bg-gradient-to-r from-blue-500 to-purple-500",
+                        }}
+                      />
+                    </div>
+                  )}
+                </CardBody>
+              </Card>
+            </motion.div>
 
             {/* Generated Assets */}
             {generatedAssets.length > 0 && (
-              <Card className="border-2 border-green-200 dark:border-green-800">
-                <CardHeader className="flex items-center justify-between border-green-200 border-b bg-gradient-to-r from-green-50 to-emerald-50 dark:border-green-700 dark:from-green-950/30 dark:to-emerald-950/30">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-400" />
-                    <h2 className="font-bold text-xl">
-                      Generated Assets ({generatedAssets.length})
-                    </h2>
-                  </div>
-                  <Button
-                    color="success"
-                    size="sm"
-                    onPress={handleDownloadAll}
-                    startContent={<Download className="h-4 w-4" />}
-                  >
-                    Download All
-                  </Button>
-                </CardHeader>
-                <CardBody className="p-6">
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-                    {generatedAssets.map((asset) => (
-                      <div
-                        key={asset.name}
-                        className="rounded-lg border border-gray-200 p-4 transition-colors hover:border-primary dark:border-gray-700"
-                      >
-                        <div className="mb-2 flex items-start justify-between">
-                          <div className="min-w-0 flex-1">
-                            <p className="truncate font-semibold text-sm">
-                              {asset.name}
-                            </p>
-                            {asset.description && (
-                              <p className="text-gray-500 text-xs dark:text-gray-400">
-                                {asset.description}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.2 }}
+              >
+                <Card className="border-2 border-green-200 dark:border-green-800">
+                  <CardHeader className="flex items-center justify-between border-green-200 border-b bg-gradient-to-r from-green-50 to-emerald-50 dark:border-green-700 dark:from-green-950/30 dark:to-emerald-950/30">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-400" />
+                      <h2 className="font-bold text-xl">
+                        Generated Assets ({generatedAssets.length})
+                      </h2>
+                    </div>
+                    <Button
+                      color="success"
+                      size="sm"
+                      onPress={handleDownloadAll}
+                      startContent={<Download className="h-4 w-4" />}
+                    >
+                      Download All
+                    </Button>
+                  </CardHeader>
+                  <CardBody className="p-6">
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                      {generatedAssets.map((asset) => (
+                        <div
+                          key={asset.name}
+                          className="rounded-lg border border-gray-200 p-4 transition-colors hover:border-primary dark:border-gray-700"
+                        >
+                          <div className="mb-2 flex items-start justify-between">
+                            <div className="min-w-0 flex-1">
+                              <p className="truncate font-semibold text-sm">
+                                {asset.name}
                               </p>
-                            )}
+                              {asset.description && (
+                                <p className="text-gray-500 text-xs dark:text-gray-400">
+                                  {asset.description}
+                                </p>
+                              )}
+                            </div>
+                            <Button
+                              size="sm"
+                              color="primary"
+                              variant="flat"
+                              isIconOnly
+                              onPress={() => handleDownload(asset)}
+                            >
+                              <Download className="h-4 w-4" />
+                            </Button>
                           </div>
-                          <Button
-                            size="sm"
-                            color="primary"
-                            variant="flat"
-                            isIconOnly
-                            onPress={() => handleDownload(asset)}
-                          >
-                            <Download className="h-4 w-4" />
-                          </Button>
+                          <div className="flex items-center justify-between text-gray-500 text-xs dark:text-gray-400">
+                            <span>{asset.size}</span>
+                          </div>
                         </div>
-                        <div className="flex items-center justify-between text-gray-500 text-xs dark:text-gray-400">
-                          <span>{asset.size}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardBody>
-              </Card>
+                      ))}
+                    </div>
+                  </CardBody>
+                </Card>
+              </motion.div>
             )}
-          </div>
+          </motion.div>
         )}
       </div>
     </section>

@@ -6,6 +6,7 @@ import { Select, SelectItem } from "@heroui/select";
 import { Slider } from "@heroui/slider";
 import { Tab, Tabs } from "@heroui/tabs";
 import { createFileRoute } from "@tanstack/react-router";
+import { AnimatePresence, motion } from "framer-motion";
 import { Download, Image as ImageIcon, Palette, Type } from "lucide-react";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 
@@ -80,6 +81,8 @@ const gradientPresets = [
 
 function OGDesignerPage() {
   const [config, setConfig] = useState<OGConfig>(defaultConfig);
+  const [currentTab, setCurrentTab] = useState("background");
+  const [prevTab, setPrevTab] = useState("background");
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   // Generate unique IDs for form inputs
@@ -426,7 +429,13 @@ function OGDesignerPage() {
               <h2 className="font-bold text-xl">Design Controls</h2>
             </CardHeader>
             <CardBody className="p-6">
-              <Tabs>
+              <Tabs
+                selectedKey={currentTab}
+                onSelectionChange={(key) => {
+                  setPrevTab(currentTab);
+                  setCurrentTab(String(key));
+                }}
+              >
                 <Tab
                   key="background"
                   title={
@@ -435,141 +444,7 @@ function OGDesignerPage() {
                       <span>Background</span>
                     </div>
                   }
-                >
-                  <div className="mt-4 space-y-4">
-                    <Select
-                      label="Background Type"
-                      selectedKeys={[config.bgType]}
-                      onSelectionChange={(keys) =>
-                        updateConfig({
-                          bgType: Array.from(keys)[0] as
-                            | "solid"
-                            | "gradient"
-                            | "image",
-                        })
-                      }
-                    >
-                      <SelectItem key="solid">Solid Color</SelectItem>
-                      <SelectItem key="gradient">Gradient</SelectItem>
-                      <SelectItem key="image">Image</SelectItem>
-                    </Select>
-
-                    {config.bgType === "solid" && (
-                      <div>
-                        <label
-                          htmlFor={bgColorId}
-                          className="mb-2 block font-semibold text-sm"
-                        >
-                          Color
-                        </label>
-                        <input
-                          id={bgColorId}
-                          type="color"
-                          value={config.bgColor1}
-                          onChange={(e) =>
-                            updateConfig({ bgColor1: e.target.value })
-                          }
-                          className="h-12 w-full cursor-pointer rounded-lg"
-                        />
-                      </div>
-                    )}
-
-                    {config.bgType === "gradient" && (
-                      <>
-                        <div className="grid grid-cols-2 gap-4">
-                          <div>
-                            <label
-                              htmlFor={gradientColor1Id}
-                              className="mb-2 block font-semibold text-sm"
-                            >
-                              Color 1
-                            </label>
-                            <input
-                              id={gradientColor1Id}
-                              type="color"
-                              value={config.bgColor1}
-                              onChange={(e) =>
-                                updateConfig({ bgColor1: e.target.value })
-                              }
-                              className="h-12 w-full cursor-pointer rounded-lg"
-                            />
-                          </div>
-                          <div>
-                            <label
-                              htmlFor={gradientColor2Id}
-                              className="mb-2 block font-semibold text-sm"
-                            >
-                              Color 2
-                            </label>
-                            <input
-                              id={gradientColor2Id}
-                              type="color"
-                              value={config.bgColor2}
-                              onChange={(e) =>
-                                updateConfig({ bgColor2: e.target.value })
-                              }
-                              className="h-12 w-full cursor-pointer rounded-lg"
-                            />
-                          </div>
-                        </div>
-
-                        <Select
-                          label="Direction"
-                          selectedKeys={[config.gradientDirection]}
-                          onSelectionChange={(keys) =>
-                            updateConfig({
-                              gradientDirection: Array.from(keys)[0] as
-                                | "horizontal"
-                                | "vertical"
-                                | "diagonal",
-                            })
-                          }
-                        >
-                          <SelectItem key="horizontal">Horizontal</SelectItem>
-                          <SelectItem key="vertical">Vertical</SelectItem>
-                          <SelectItem key="diagonal">Diagonal</SelectItem>
-                        </Select>
-
-                        <div>
-                          <div className="mb-2 block font-semibold text-sm">
-                            Gradient Presets
-                          </div>
-                          <div className="grid grid-cols-3 gap-2">
-                            {gradientPresets.map((preset) => (
-                              <button
-                                key={preset.name}
-                                type="button"
-                                onClick={() =>
-                                  updateConfig({
-                                    bgColor1: preset.color1,
-                                    bgColor2: preset.color2,
-                                  })
-                                }
-                                className="h-12 rounded-lg border-2 border-gray-300 transition-colors hover:border-primary dark:border-gray-600"
-                                style={{
-                                  background: `linear-gradient(to right, ${preset.color1}, ${preset.color2})`,
-                                }}
-                                title={preset.name}
-                              />
-                            ))}
-                          </div>
-                        </div>
-                      </>
-                    )}
-
-                    {config.bgType === "image" && (
-                      <ImageUpload
-                        onImageSelect={handleBgImageUpload}
-                        acceptedFormats={[
-                          "image/png",
-                          "image/jpeg",
-                          "image/webp",
-                        ]}
-                      />
-                    )}
-                  </div>
-                </Tab>
-
+                />
                 <Tab
                   key="image"
                   title={
@@ -578,68 +453,7 @@ function OGDesignerPage() {
                       <span>Image</span>
                     </div>
                   }
-                >
-                  <div className="mt-4 space-y-4">
-                    {!config.image ? (
-                      <ImageUpload
-                        onImageSelect={handleImageUpload}
-                        acceptedFormats={[
-                          "image/png",
-                          "image/jpeg",
-                          "image/webp",
-                        ]}
-                      />
-                    ) : (
-                      <>
-                        <Button
-                          color="danger"
-                          variant="flat"
-                          onPress={() => updateConfig({ image: null })}
-                          className="w-full"
-                        >
-                          Remove Image
-                        </Button>
-
-                        <Select
-                          label="Position"
-                          selectedKeys={[config.imagePosition]}
-                          onSelectionChange={(keys) =>
-                            updateConfig({
-                              imagePosition: Array.from(keys)[0] as
-                                | "left"
-                                | "right"
-                                | "center"
-                                | "none",
-                            })
-                          }
-                        >
-                          <SelectItem key="left">Left</SelectItem>
-                          <SelectItem key="right">Right</SelectItem>
-                          <SelectItem key="center">Center</SelectItem>
-                          <SelectItem key="none">None</SelectItem>
-                        </Select>
-
-                        <div>
-                          <div className="mb-2 block font-semibold text-sm">
-                            Size: {config.imageSize}%
-                          </div>
-                          <Slider
-                            aria-label="Image size"
-                            value={config.imageSize}
-                            onChange={(value) =>
-                              updateConfig({ imageSize: value as number })
-                            }
-                            minValue={20}
-                            maxValue={80}
-                            step={5}
-                            className="w-full"
-                          />
-                        </div>
-                      </>
-                    )}
-                  </div>
-                </Tab>
-
+                />
                 <Tab
                   key="text"
                   title={
@@ -648,113 +462,701 @@ function OGDesignerPage() {
                       <span>Text</span>
                     </div>
                   }
-                >
-                  <div className="mt-4 space-y-4">
-                    <Input
-                      label="Title"
-                      value={config.title}
-                      onChange={(e) => updateConfig({ title: e.target.value })}
-                    />
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <div className="mb-2 block font-semibold text-sm">
-                          Title Size: {config.titleSize}px
-                        </div>
-                        <Slider
-                          aria-label="Title size"
-                          value={config.titleSize}
-                          onChange={(value) =>
-                            updateConfig({ titleSize: value as number })
-                          }
-                          minValue={32}
-                          maxValue={96}
-                          step={4}
-                          className="w-full"
-                        />
-                      </div>
-                      <div>
-                        <label
-                          htmlFor={titleColorId}
-                          className="mb-2 block font-semibold text-sm"
-                        >
-                          Title Color
-                        </label>
-                        <input
-                          id={titleColorId}
-                          type="color"
-                          value={config.titleColor}
-                          onChange={(e) =>
-                            updateConfig({ titleColor: e.target.value })
-                          }
-                          className="h-10 w-full cursor-pointer rounded-lg"
-                        />
-                      </div>
-                    </div>
-
-                    <Input
-                      label="Subtitle"
-                      value={config.subtitle}
-                      onChange={(e) =>
-                        updateConfig({ subtitle: e.target.value })
-                      }
-                    />
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <div className="mb-2 block font-semibold text-sm">
-                          Subtitle Size: {config.subtitleSize}px
-                        </div>
-                        <Slider
-                          aria-label="Subtitle size"
-                          value={config.subtitleSize}
-                          onChange={(value) =>
-                            updateConfig({ subtitleSize: value as number })
-                          }
-                          minValue={16}
-                          maxValue={48}
-                          step={2}
-                          className="w-full"
-                        />
-                      </div>
-                      <div>
-                        <label
-                          htmlFor={subtitleColorId}
-                          className="mb-2 block font-semibold text-sm"
-                        >
-                          Subtitle Color
-                        </label>
-                        <input
-                          id={subtitleColorId}
-                          type="color"
-                          value={config.subtitleColor}
-                          onChange={(e) =>
-                            updateConfig({ subtitleColor: e.target.value })
-                          }
-                          className="h-10 w-full cursor-pointer rounded-lg"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <div className="mb-2 block font-semibold text-sm">
-                        Padding: {config.padding}px
-                      </div>
-                      <Slider
-                        aria-label="Padding"
-                        value={config.padding}
-                        onChange={(value) =>
-                          updateConfig({ padding: value as number })
-                        }
-                        minValue={20}
-                        maxValue={120}
-                        step={10}
-                        className="w-full"
-                      />
-                    </div>
-                  </div>
-                </Tab>
+                />
               </Tabs>
+
+              {/* Animated Tab Content with Two-Layer Crossover */}
+              <div className="relative mt-4 min-h-[400px] overflow-hidden">
+                <div className="relative">
+                  <AnimatePresence initial={false}>
+                    {/* Outgoing layer */}
+                    {prevTab !== currentTab && (
+                      <motion.div
+                        key={`out-${prevTab}`}
+                        className="absolute inset-0"
+                        custom={
+                          ["background", "image", "text"].indexOf(currentTab) >=
+                          ["background", "image", "text"].indexOf(prevTab)
+                            ? 1
+                            : -1
+                        }
+                        variants={{
+                          initial: { x: 0, opacity: 1 },
+                          animate: (direction: number) => ({
+                            x: -200 * direction,
+                            opacity: 0,
+                          }),
+                        }}
+                        initial="initial"
+                        animate="animate"
+                        transition={{
+                          x: { type: "spring", stiffness: 300, damping: 25 },
+                          opacity: { duration: 0.2 },
+                        }}
+                      >
+                        {prevTab === "background" && (
+                          <div className="space-y-4">
+                            <Select
+                              label="Background Type"
+                              selectedKeys={[config.bgType]}
+                              onSelectionChange={(keys) =>
+                                updateConfig({
+                                  bgType: Array.from(keys)[0] as
+                                    | "solid"
+                                    | "gradient"
+                                    | "image",
+                                })
+                              }
+                            >
+                              <SelectItem key="solid">Solid Color</SelectItem>
+                              <SelectItem key="gradient">Gradient</SelectItem>
+                              <SelectItem key="image">Image</SelectItem>
+                            </Select>
+
+                            {config.bgType === "solid" && (
+                              <div>
+                                <label
+                                  htmlFor={bgColorId}
+                                  className="mb-2 block font-semibold text-sm"
+                                >
+                                  Color
+                                </label>
+                                <input
+                                  id={bgColorId}
+                                  type="color"
+                                  value={config.bgColor1}
+                                  onChange={(e) =>
+                                    updateConfig({ bgColor1: e.target.value })
+                                  }
+                                  className="h-12 w-full cursor-pointer rounded-lg"
+                                />
+                              </div>
+                            )}
+
+                            {config.bgType === "gradient" && (
+                              <>
+                                <div className="grid grid-cols-2 gap-4">
+                                  <div>
+                                    <label
+                                      htmlFor={gradientColor1Id}
+                                      className="mb-2 block font-semibold text-sm"
+                                    >
+                                      Color 1
+                                    </label>
+                                    <input
+                                      id={gradientColor1Id}
+                                      type="color"
+                                      value={config.bgColor1}
+                                      onChange={(e) =>
+                                        updateConfig({
+                                          bgColor1: e.target.value,
+                                        })
+                                      }
+                                      className="h-12 w-full cursor-pointer rounded-lg"
+                                    />
+                                  </div>
+                                  <div>
+                                    <label
+                                      htmlFor={gradientColor2Id}
+                                      className="mb-2 block font-semibold text-sm"
+                                    >
+                                      Color 2
+                                    </label>
+                                    <input
+                                      id={gradientColor2Id}
+                                      type="color"
+                                      value={config.bgColor2}
+                                      onChange={(e) =>
+                                        updateConfig({
+                                          bgColor2: e.target.value,
+                                        })
+                                      }
+                                      className="h-12 w-full cursor-pointer rounded-lg"
+                                    />
+                                  </div>
+                                </div>
+
+                                <Select
+                                  label="Direction"
+                                  selectedKeys={[config.gradientDirection]}
+                                  onSelectionChange={(keys) =>
+                                    updateConfig({
+                                      gradientDirection: Array.from(keys)[0] as
+                                        | "horizontal"
+                                        | "vertical"
+                                        | "diagonal",
+                                    })
+                                  }
+                                >
+                                  <SelectItem key="horizontal">
+                                    Horizontal
+                                  </SelectItem>
+                                  <SelectItem key="vertical">
+                                    Vertical
+                                  </SelectItem>
+                                  <SelectItem key="diagonal">
+                                    Diagonal
+                                  </SelectItem>
+                                </Select>
+
+                                <div>
+                                  <div className="mb-2 block font-semibold text-sm">
+                                    Gradient Presets
+                                  </div>
+                                  <div className="grid grid-cols-3 gap-2">
+                                    {gradientPresets.map((preset) => (
+                                      <button
+                                        key={preset.name}
+                                        type="button"
+                                        onClick={() =>
+                                          updateConfig({
+                                            bgColor1: preset.color1,
+                                            bgColor2: preset.color2,
+                                          })
+                                        }
+                                        className="h-12 rounded-lg border-2 border-gray-300 transition-colors hover:border-primary dark:border-gray-600"
+                                        style={{
+                                          background: `linear-gradient(to right, ${preset.color1}, ${preset.color2})`,
+                                        }}
+                                        title={preset.name}
+                                      />
+                                    ))}
+                                  </div>
+                                </div>
+                              </>
+                            )}
+
+                            {config.bgType === "image" && (
+                              <ImageUpload
+                                onImageSelect={handleBgImageUpload}
+                                acceptedFormats={[
+                                  "image/png",
+                                  "image/jpeg",
+                                  "image/webp",
+                                ]}
+                              />
+                            )}
+                          </div>
+                        )}
+                        {prevTab === "image" && (
+                          <div className="space-y-4">
+                            {!config.image ? (
+                              <ImageUpload
+                                onImageSelect={handleImageUpload}
+                                acceptedFormats={[
+                                  "image/png",
+                                  "image/jpeg",
+                                  "image/webp",
+                                ]}
+                              />
+                            ) : (
+                              <>
+                                <Button
+                                  color="danger"
+                                  variant="flat"
+                                  onPress={() => updateConfig({ image: null })}
+                                  className="w-full"
+                                >
+                                  Remove Image
+                                </Button>
+
+                                <Select
+                                  label="Position"
+                                  selectedKeys={[config.imagePosition]}
+                                  onSelectionChange={(keys) =>
+                                    updateConfig({
+                                      imagePosition: Array.from(keys)[0] as
+                                        | "left"
+                                        | "right"
+                                        | "center"
+                                        | "none",
+                                    })
+                                  }
+                                >
+                                  <SelectItem key="left">Left</SelectItem>
+                                  <SelectItem key="right">Right</SelectItem>
+                                  <SelectItem key="center">Center</SelectItem>
+                                  <SelectItem key="none">None</SelectItem>
+                                </Select>
+
+                                <div>
+                                  <div className="mb-2 block font-semibold text-sm">
+                                    Size: {config.imageSize}%
+                                  </div>
+                                  <Slider
+                                    aria-label="Image size"
+                                    value={config.imageSize}
+                                    onChange={(value) =>
+                                      updateConfig({
+                                        imageSize: value as number,
+                                      })
+                                    }
+                                    minValue={20}
+                                    maxValue={80}
+                                    step={5}
+                                    className="w-full"
+                                  />
+                                </div>
+                              </>
+                            )}
+                          </div>
+                        )}
+                        {prevTab === "text" && (
+                          <div className="space-y-4">
+                            <Input
+                              label="Title"
+                              value={config.title}
+                              onChange={(e) =>
+                                updateConfig({ title: e.target.value })
+                              }
+                            />
+
+                            <div className="grid grid-cols-2 gap-4">
+                              <div>
+                                <div className="mb-2 block font-semibold text-sm">
+                                  Title Size: {config.titleSize}px
+                                </div>
+                                <Slider
+                                  aria-label="Title size"
+                                  value={config.titleSize}
+                                  onChange={(value) =>
+                                    updateConfig({ titleSize: value as number })
+                                  }
+                                  minValue={32}
+                                  maxValue={96}
+                                  step={4}
+                                  className="w-full"
+                                />
+                              </div>
+                              <div>
+                                <label
+                                  htmlFor={titleColorId}
+                                  className="mb-2 block font-semibold text-sm"
+                                >
+                                  Title Color
+                                </label>
+                                <input
+                                  id={titleColorId}
+                                  type="color"
+                                  value={config.titleColor}
+                                  onChange={(e) =>
+                                    updateConfig({ titleColor: e.target.value })
+                                  }
+                                  className="h-10 w-full cursor-pointer rounded-lg"
+                                />
+                              </div>
+                            </div>
+
+                            <Input
+                              label="Subtitle"
+                              value={config.subtitle}
+                              onChange={(e) =>
+                                updateConfig({ subtitle: e.target.value })
+                              }
+                            />
+
+                            <div className="grid grid-cols-2 gap-4">
+                              <div>
+                                <div className="mb-2 block font-semibold text-sm">
+                                  Subtitle Size: {config.subtitleSize}px
+                                </div>
+                                <Slider
+                                  aria-label="Subtitle size"
+                                  value={config.subtitleSize}
+                                  onChange={(value) =>
+                                    updateConfig({
+                                      subtitleSize: value as number,
+                                    })
+                                  }
+                                  minValue={16}
+                                  maxValue={48}
+                                  step={2}
+                                  className="w-full"
+                                />
+                              </div>
+                              <div>
+                                <label
+                                  htmlFor={subtitleColorId}
+                                  className="mb-2 block font-semibold text-sm"
+                                >
+                                  Subtitle Color
+                                </label>
+                                <input
+                                  id={subtitleColorId}
+                                  type="color"
+                                  value={config.subtitleColor}
+                                  onChange={(e) =>
+                                    updateConfig({
+                                      subtitleColor: e.target.value,
+                                    })
+                                  }
+                                  className="h-10 w-full cursor-pointer rounded-lg"
+                                />
+                              </div>
+                            </div>
+
+                            <div>
+                              <div className="mb-2 block font-semibold text-sm">
+                                Padding: {config.padding}px
+                              </div>
+                              <Slider
+                                aria-label="Padding"
+                                value={config.padding}
+                                onChange={(value) =>
+                                  updateConfig({ padding: value as number })
+                                }
+                                minValue={20}
+                                maxValue={120}
+                                step={10}
+                                className="w-full"
+                              />
+                            </div>
+                          </div>
+                        )}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Incoming layer (always on top) */}
+                  <motion.div
+                    key={`in-${currentTab}`}
+                    custom={
+                      ["background", "image", "text"].indexOf(currentTab) >=
+                      ["background", "image", "text"].indexOf(prevTab)
+                        ? 1
+                        : -1
+                    }
+                    variants={{
+                      initial: (direction: number) => ({
+                        x: 200 * direction,
+                        opacity: 0,
+                      }),
+                      animate: { x: 0, opacity: 1 },
+                    }}
+                    initial="initial"
+                    animate="animate"
+                    transition={{
+                      x: { type: "spring", stiffness: 300, damping: 20 },
+                      opacity: { duration: 0.25 },
+                    }}
+                  >
+                    {currentTab === "background" && (
+                      <div className="space-y-4">
+                        <Select
+                          label="Background Type"
+                          selectedKeys={[config.bgType]}
+                          onSelectionChange={(keys) =>
+                            updateConfig({
+                              bgType: Array.from(keys)[0] as
+                                | "solid"
+                                | "gradient"
+                                | "image",
+                            })
+                          }
+                        >
+                          <SelectItem key="solid">Solid Color</SelectItem>
+                          <SelectItem key="gradient">Gradient</SelectItem>
+                          <SelectItem key="image">Image</SelectItem>
+                        </Select>
+
+                        {config.bgType === "solid" && (
+                          <div>
+                            <label
+                              htmlFor={bgColorId}
+                              className="mb-2 block font-semibold text-sm"
+                            >
+                              Color
+                            </label>
+                            <input
+                              id={bgColorId}
+                              type="color"
+                              value={config.bgColor1}
+                              onChange={(e) =>
+                                updateConfig({ bgColor1: e.target.value })
+                              }
+                              className="h-12 w-full cursor-pointer rounded-lg border-2 border-gray-300 dark:border-gray-600"
+                            />
+                          </div>
+                        )}
+
+                        {config.bgType === "gradient" && (
+                          <>
+                            <div>
+                              <label
+                                htmlFor={gradientColor1Id}
+                                className="mb-2 block font-semibold text-sm"
+                              >
+                                Color 1
+                              </label>
+                              <input
+                                id={gradientColor1Id}
+                                type="color"
+                                value={config.bgColor1}
+                                onChange={(e) =>
+                                  updateConfig({ bgColor1: e.target.value })
+                                }
+                                className="h-12 w-full cursor-pointer rounded-lg border-2 border-gray-300 dark:border-gray-600"
+                              />
+                            </div>
+
+                            <div>
+                              <label
+                                htmlFor={gradientColor2Id}
+                                className="mb-2 block font-semibold text-sm"
+                              >
+                                Color 2
+                              </label>
+                              <input
+                                id={gradientColor2Id}
+                                type="color"
+                                value={config.bgColor2}
+                                onChange={(e) =>
+                                  updateConfig({ bgColor2: e.target.value })
+                                }
+                                className="h-12 w-full cursor-pointer rounded-lg border-2 border-gray-300 dark:border-gray-600"
+                              />
+                            </div>
+
+                            <Select
+                              label="Direction"
+                              selectedKeys={[config.gradientDirection]}
+                              onSelectionChange={(keys) =>
+                                updateConfig({
+                                  gradientDirection: Array.from(keys)[0] as
+                                    | "horizontal"
+                                    | "vertical"
+                                    | "diagonal",
+                                })
+                              }
+                            >
+                              <SelectItem key="horizontal">
+                                Horizontal
+                              </SelectItem>
+                              <SelectItem key="vertical">Vertical</SelectItem>
+                              <SelectItem key="diagonal">Diagonal</SelectItem>
+                            </Select>
+
+                            <div>
+                              <div className="mb-2 block font-semibold text-sm">
+                                Gradient Presets
+                              </div>
+                              <div className="grid grid-cols-3 gap-2">
+                                {gradientPresets.map((preset) => (
+                                  <button
+                                    key={preset.name}
+                                    type="button"
+                                    onClick={() =>
+                                      updateConfig({
+                                        bgColor1: preset.color1,
+                                        bgColor2: preset.color2,
+                                      })
+                                    }
+                                    className="group relative h-12 overflow-hidden rounded-lg border-2 border-gray-300 transition-all hover:scale-105 hover:border-primary dark:border-gray-600"
+                                    style={{
+                                      background: `linear-gradient(to right, ${preset.color1}, ${preset.color2})`,
+                                    }}
+                                  >
+                                    <span className="absolute inset-0 flex items-center justify-center bg-black/0 font-medium text-transparent text-xs transition-all group-hover:bg-black/50 group-hover:text-white">
+                                      {preset.name}
+                                    </span>
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          </>
+                        )}
+
+                        {config.bgType === "image" && (
+                          <ImageUpload
+                            onImageSelect={(file) => {
+                              const img = new Image();
+                              img.onload = () => {
+                                updateConfig({ bgImage: img });
+                              };
+                              img.src = URL.createObjectURL(file);
+                            }}
+                            acceptedFormats={[
+                              "image/png",
+                              "image/jpeg",
+                              "image/webp",
+                            ]}
+                          />
+                        )}
+                      </div>
+                    )}
+                    {currentTab === "image" && (
+                      <div className="space-y-4">
+                        <ImageUpload
+                          onImageSelect={(file) => {
+                            const img = new Image();
+                            img.onload = () => {
+                              updateConfig({ image: img });
+                            };
+                            img.src = URL.createObjectURL(file);
+                          }}
+                          acceptedFormats={[
+                            "image/png",
+                            "image/jpeg",
+                            "image/webp",
+                          ]}
+                        />
+
+                        {config.image && (
+                          <>
+                            <Select
+                              label="Position"
+                              selectedKeys={[config.imagePosition]}
+                              onSelectionChange={(keys) =>
+                                updateConfig({
+                                  imagePosition: Array.from(keys)[0] as
+                                    | "left"
+                                    | "right"
+                                    | "center"
+                                    | "none",
+                                })
+                              }
+                            >
+                              <SelectItem key="left">Left</SelectItem>
+                              <SelectItem key="right">Right</SelectItem>
+                              <SelectItem key="center">Center</SelectItem>
+                              <SelectItem key="none">None (Hidden)</SelectItem>
+                            </Select>
+
+                            <div>
+                              <Slider
+                                label="Size"
+                                value={config.imageSize}
+                                onChange={(value) =>
+                                  updateConfig({
+                                    imageSize: Array.isArray(value)
+                                      ? value[0]
+                                      : value,
+                                  })
+                                }
+                                minValue={10}
+                                maxValue={80}
+                                step={5}
+                                className="w-full"
+                              />
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    )}
+                    {currentTab === "text" && (
+                      <div className="space-y-4">
+                        <Input
+                          label="Title"
+                          value={config.title}
+                          onChange={(e) =>
+                            updateConfig({ title: e.target.value })
+                          }
+                          placeholder="Your Awesome Title"
+                        />
+
+                        <div>
+                          <Slider
+                            label="Title Size"
+                            value={config.titleSize}
+                            onChange={(value) =>
+                              updateConfig({
+                                titleSize: Array.isArray(value)
+                                  ? value[0]
+                                  : value,
+                              })
+                            }
+                            minValue={24}
+                            maxValue={120}
+                            step={4}
+                            className="w-full"
+                          />
+                        </div>
+
+                        <div>
+                          <label
+                            htmlFor={titleColorId}
+                            className="mb-2 block font-semibold text-sm"
+                          >
+                            Title Color
+                          </label>
+                          <input
+                            id={titleColorId}
+                            type="color"
+                            value={config.titleColor}
+                            onChange={(e) =>
+                              updateConfig({ titleColor: e.target.value })
+                            }
+                            className="h-12 w-full cursor-pointer rounded-lg border-2 border-gray-300 dark:border-gray-600"
+                          />
+                        </div>
+
+                        <Input
+                          label="Subtitle"
+                          value={config.subtitle}
+                          onChange={(e) =>
+                            updateConfig({ subtitle: e.target.value })
+                          }
+                          placeholder="Add a compelling subtitle here"
+                        />
+
+                        <div>
+                          <Slider
+                            label="Subtitle Size"
+                            value={config.subtitleSize}
+                            onChange={(value) =>
+                              updateConfig({
+                                subtitleSize: Array.isArray(value)
+                                  ? value[0]
+                                  : value,
+                              })
+                            }
+                            minValue={16}
+                            maxValue={64}
+                            step={2}
+                            className="w-full"
+                          />
+                        </div>
+
+                        <div>
+                          <label
+                            htmlFor={subtitleColorId}
+                            className="mb-2 block font-semibold text-sm"
+                          >
+                            Subtitle Color
+                          </label>
+                          <input
+                            id={subtitleColorId}
+                            type="color"
+                            value={config.subtitleColor}
+                            onChange={(e) =>
+                              updateConfig({ subtitleColor: e.target.value })
+                            }
+                            className="h-12 w-full cursor-pointer rounded-lg border-2 border-gray-300 dark:border-gray-600"
+                          />
+                        </div>
+
+                        <div>
+                          <Slider
+                            label="Padding"
+                            value={config.padding}
+                            onChange={(value) =>
+                              updateConfig({
+                                padding: Array.isArray(value)
+                                  ? value[0]
+                                  : value,
+                              })
+                            }
+                            minValue={20}
+                            maxValue={120}
+                            step={10}
+                            className="w-full"
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </motion.div>
+                </div>
+              </div>
             </CardBody>
           </Card>
         </div>

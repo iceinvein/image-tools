@@ -3,6 +3,7 @@ import { Card, CardBody } from "@heroui/card";
 import { Chip } from "@heroui/chip";
 import { Progress } from "@heroui/progress";
 import { createFileRoute } from "@tanstack/react-router";
+import { motion } from "framer-motion";
 import { Download, Eraser, Info, RotateCcw, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { BackgroundRemovalSettings as SettingsComponent } from "@/components/BackgroundRemovalSettings";
@@ -142,104 +143,123 @@ function BackgroundRemoverPage() {
               />
             </div>
           ) : (
-            <div className="mx-auto max-w-6xl space-y-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+              className="mx-auto max-w-6xl space-y-6"
+            >
               {/* Compact Image Comparison */}
-              <Card className="border-2 border-gray-200 dark:border-gray-700">
-                <CardBody className="p-6">
-                  <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-                    {/* Original Image */}
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <h3 className="font-semibold text-gray-700 text-sm dark:text-gray-300">
-                          Original
-                        </h3>
-                        <Chip size="sm" variant="flat" color="default">
-                          With Background
-                        </Chip>
-                      </div>
-                      <div className="relative aspect-video overflow-hidden rounded-lg border-2 border-gray-200 bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
-                        <img
-                          src={originalUrl}
-                          alt="Original"
-                          className="h-full w-full object-contain"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Result Image */}
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <h3 className="font-semibold text-gray-700 text-sm dark:text-gray-300">
-                          {result ? "Result" : "Preview"}
-                        </h3>
-                        {result && (
-                          <Chip size="sm" variant="flat" color="success">
-                            Background Removed
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.1 }}
+              >
+                <Card className="border-2 border-gray-200 dark:border-gray-700">
+                  <CardBody className="p-6">
+                    <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                      {/* Original Image */}
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <h3 className="font-semibold text-gray-700 text-sm dark:text-gray-300">
+                            Original
+                          </h3>
+                          <Chip size="sm" variant="flat" color="default">
+                            With Background
                           </Chip>
-                        )}
+                        </div>
+                        <div className="relative aspect-video overflow-hidden rounded-lg border-2 border-gray-200 bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
+                          <img
+                            src={originalUrl}
+                            alt="Original"
+                            className="h-full w-full object-contain"
+                          />
+                        </div>
                       </div>
-                      <div
-                        className="relative aspect-video overflow-hidden rounded-lg border-2 border-gray-300 border-dashed dark:border-gray-600"
-                        style={
-                          result
-                            ? {
-                                backgroundImage: `
+
+                      {/* Result Image */}
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <h3 className="font-semibold text-gray-700 text-sm dark:text-gray-300">
+                            {result ? "Result" : "Preview"}
+                          </h3>
+                          {result && (
+                            <Chip size="sm" variant="flat" color="success">
+                              Background Removed
+                            </Chip>
+                          )}
+                        </div>
+                        <div
+                          className="relative aspect-video overflow-hidden rounded-lg border-2 border-gray-300 border-dashed dark:border-gray-600"
+                          style={
+                            result
+                              ? {
+                                  backgroundImage: `
                                   linear-gradient(45deg, #e5e7eb 25%, transparent 25%),
                                   linear-gradient(-45deg, #e5e7eb 25%, transparent 25%),
                                   linear-gradient(45deg, transparent 75%, #e5e7eb 75%),
                                   linear-gradient(-45deg, transparent 75%, #e5e7eb 75%)
                                 `,
-                                backgroundSize: "20px 20px",
-                                backgroundPosition:
-                                  "0 0, 0 10px, 10px -10px, -10px 0px",
-                              }
-                            : undefined
-                        }
-                      >
-                        {result ? (
-                          <img
-                            src={result.url}
-                            alt="Result"
-                            className="h-full w-full object-contain"
-                          />
-                        ) : (
-                          <div className="flex h-full w-full items-center justify-center bg-gray-100 text-gray-400 dark:bg-gray-800">
-                            <div className="text-center">
-                              <Sparkles className="mx-auto mb-2 h-12 w-12 opacity-50" />
-                              <p className="text-sm">Click remove to process</p>
+                                  backgroundSize: "20px 20px",
+                                  backgroundPosition:
+                                    "0 0, 0 10px, 10px -10px, -10px 0px",
+                                }
+                              : undefined
+                          }
+                        >
+                          {result ? (
+                            <img
+                              src={result.url}
+                              alt="Result"
+                              className="h-full w-full object-contain"
+                            />
+                          ) : (
+                            <div className="flex h-full w-full items-center justify-center bg-gray-100 text-gray-400 dark:bg-gray-800">
+                              <div className="text-center">
+                                <Sparkles className="mx-auto mb-2 h-12 w-12 opacity-50" />
+                                <p className="text-sm">
+                                  Click remove to process
+                                </p>
+                              </div>
                             </div>
-                          </div>
-                        )}
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                </CardBody>
-              </Card>
-
-              {/* Processing Progress */}
-              {isProcessing && progress && (
-                <Card className="border-2 border-purple-200 dark:border-purple-800">
-                  <CardBody className="p-4">
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-3">
-                        <Sparkles className="h-5 w-5 animate-pulse text-purple-500" />
-                        <span className="font-semibold text-gray-900 text-sm dark:text-gray-100">
-                          {progress.message}
-                        </span>
-                      </div>
-                      <Progress
-                        value={progress.progress}
-                        color="secondary"
-                        size="sm"
-                        className="max-w-full"
-                      />
-                      <p className="text-gray-600 text-xs dark:text-gray-400">
-                        This may take a few moments on first use while the AI
-                        model loads...
-                      </p>
                     </div>
                   </CardBody>
                 </Card>
+              </motion.div>
+
+              {/* Processing Progress */}
+              {isProcessing && progress && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: 0.2 }}
+                >
+                  <Card className="border-2 border-purple-200 dark:border-purple-800">
+                    <CardBody className="p-4">
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-3">
+                          <Sparkles className="h-5 w-5 animate-pulse text-purple-500" />
+                          <span className="font-semibold text-gray-900 text-sm dark:text-gray-100">
+                            {progress.message}
+                          </span>
+                        </div>
+                        <Progress
+                          value={progress.progress}
+                          color="secondary"
+                          size="sm"
+                          className="max-w-full"
+                        />
+                        <p className="text-gray-600 text-xs dark:text-gray-400">
+                          This may take a few moments on first use while the AI
+                          model loads...
+                        </p>
+                      </div>
+                    </CardBody>
+                  </Card>
+                </motion.div>
               )}
 
               {/* Error Message */}
@@ -263,69 +283,75 @@ function BackgroundRemoverPage() {
               )}
 
               {/* Compact Action Bar */}
-              <Card className="border-2 border-gray-200 dark:border-gray-700">
-                <CardBody className="p-4">
-                  <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
-                    <div className="flex-1 text-gray-600 text-sm dark:text-gray-400">
-                      {!result && !isProcessing && (
-                        <div className="flex items-center gap-2">
-                          <Info className="h-4 w-4 flex-shrink-0 text-blue-500" />
-                          <span>AI model (~50MB) downloads on first use</span>
-                        </div>
-                      )}
-                      {result && (
-                        <span className="font-medium text-green-600 dark:text-green-400">
-                          ✓ Background removed successfully
-                        </span>
-                      )}
-                    </div>
-                    <div className="flex gap-2">
-                      <Button
-                        size="lg"
-                        variant="bordered"
-                        onPress={() => {
-                          setOriginalFile(null);
-                          setOriginalUrl("");
-                          setResult(null);
-                          setError(null);
-                          setProgress(null);
-                        }}
-                        startContent={<RotateCcw className="h-4 w-4" />}
-                        className="flex-1 sm:flex-initial"
-                      >
-                        New
-                      </Button>
-                      <Button
-                        size="lg"
-                        color="secondary"
-                        onPress={() => handleRemoveBackground()}
-                        isDisabled={isProcessing}
-                        isLoading={isProcessing}
-                        className="flex-1 font-bold sm:flex-initial"
-                        startContent={
-                          !isProcessing ? (
-                            <Sparkles className="h-4 w-4" />
-                          ) : undefined
-                        }
-                      >
-                        {isProcessing ? "Processing..." : "Remove BG"}
-                      </Button>
-                      {result && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.3 }}
+              >
+                <Card className="border-2 border-gray-200 dark:border-gray-700">
+                  <CardBody className="p-4">
+                    <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
+                      <div className="flex-1 text-gray-600 text-sm dark:text-gray-400">
+                        {!result && !isProcessing && (
+                          <div className="flex items-center gap-2">
+                            <Info className="h-4 w-4 flex-shrink-0 text-blue-500" />
+                            <span>AI model (~50MB) downloads on first use</span>
+                          </div>
+                        )}
+                        {result && (
+                          <span className="font-medium text-green-600 dark:text-green-400">
+                            ✓ Background removed successfully
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex gap-2">
                         <Button
                           size="lg"
-                          color="success"
-                          onPress={handleDownload}
-                          startContent={<Download className="h-4 w-4" />}
-                          className="flex-1 font-bold sm:flex-initial"
+                          variant="bordered"
+                          onPress={() => {
+                            setOriginalFile(null);
+                            setOriginalUrl("");
+                            setResult(null);
+                            setError(null);
+                            setProgress(null);
+                          }}
+                          startContent={<RotateCcw className="h-4 w-4" />}
+                          className="flex-1 sm:flex-initial"
                         >
-                          Download
+                          New
                         </Button>
-                      )}
+                        <Button
+                          size="lg"
+                          color="secondary"
+                          onPress={() => handleRemoveBackground()}
+                          isDisabled={isProcessing}
+                          isLoading={isProcessing}
+                          className="flex-1 font-bold sm:flex-initial"
+                          startContent={
+                            !isProcessing ? (
+                              <Sparkles className="h-4 w-4" />
+                            ) : undefined
+                          }
+                        >
+                          {isProcessing ? "Processing..." : "Remove BG"}
+                        </Button>
+                        {result && (
+                          <Button
+                            size="lg"
+                            color="success"
+                            onPress={handleDownload}
+                            startContent={<Download className="h-4 w-4" />}
+                            className="flex-1 font-bold sm:flex-initial"
+                          >
+                            Download
+                          </Button>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </CardBody>
-              </Card>
-            </div>
+                  </CardBody>
+                </Card>
+              </motion.div>
+            </motion.div>
           )}
         </div>
       </section>

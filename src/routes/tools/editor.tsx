@@ -3,6 +3,7 @@ import { Card, CardBody, CardHeader } from "@heroui/card";
 import { Chip } from "@heroui/chip";
 import { Slider } from "@heroui/slider";
 import { createFileRoute } from "@tanstack/react-router";
+import { motion } from "framer-motion";
 import {
   Contrast as ContrastIcon,
   Download,
@@ -314,287 +315,305 @@ function EditorPage() {
             <ImageUpload onImageSelect={handleImageSelect} />
           </div>
         ) : (
-          <div className="space-y-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="space-y-6"
+          >
             {/* Live Preview Canvas with Toolbar */}
-            <Card className="overflow-hidden border border-gray-200 shadow-xl dark:border-gray-700">
-              <CardHeader className="border-gray-200 border-b bg-gradient-to-r from-blue-50 to-purple-50 p-3 dark:border-gray-700 dark:from-blue-950/30 dark:to-purple-950/30">
-                <div className="flex w-full items-center justify-between gap-4">
-                  {/* Left: Image info */}
-                  <div className="flex min-w-0 flex-1 items-center gap-3">
-                    <ImageIcon className="h-5 w-5 flex-shrink-0 text-purple-600 dark:text-purple-400" />
-                    {dimensions && (
-                      <div className="flex items-center gap-3 truncate text-gray-600 text-xs dark:text-gray-400">
-                        <span className="truncate font-medium">
-                          {originalFile.name}
-                        </span>
-                        <span className="text-gray-400">•</span>
-                        <span className="whitespace-nowrap">
-                          {getCurrentDimensions()?.width} ×{" "}
-                          {getCurrentDimensions()?.height}
-                          {rotation !== 0 && (
-                            <span className="ml-1 font-semibold text-purple-600 dark:text-purple-400">
-                              ({rotation}°)
-                            </span>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.1 }}
+            >
+              <Card className="overflow-hidden border border-gray-200 shadow-xl dark:border-gray-700">
+                <CardHeader className="border-gray-200 border-b bg-gradient-to-r from-blue-50 to-purple-50 p-3 dark:border-gray-700 dark:from-blue-950/30 dark:to-purple-950/30">
+                  <div className="flex w-full items-center justify-between gap-4">
+                    {/* Left: Image info */}
+                    <div className="flex min-w-0 flex-1 items-center gap-3">
+                      <ImageIcon className="h-5 w-5 flex-shrink-0 text-purple-600 dark:text-purple-400" />
+                      {dimensions && (
+                        <div className="flex items-center gap-3 truncate text-gray-600 text-xs dark:text-gray-400">
+                          <span className="truncate font-medium">
+                            {originalFile.name}
+                          </span>
+                          <span className="text-gray-400">•</span>
+                          <span className="whitespace-nowrap">
+                            {getCurrentDimensions()?.width} ×{" "}
+                            {getCurrentDimensions()?.height}
+                            {rotation !== 0 && (
+                              <span className="ml-1 font-semibold text-purple-600 dark:text-purple-400">
+                                ({rotation}°)
+                              </span>
+                            )}
+                          </span>
+                          {hasAnyAdjustments() && (
+                            <>
+                              <span className="text-gray-400">•</span>
+                              <Chip
+                                size="sm"
+                                color="warning"
+                                variant="flat"
+                                className="h-5"
+                              >
+                                Modified
+                              </Chip>
+                            </>
                           )}
-                        </span>
-                        {hasAnyAdjustments() && (
-                          <>
-                            <span className="text-gray-400">•</span>
-                            <Chip
-                              size="sm"
-                              color="warning"
-                              variant="flat"
-                              className="h-5"
-                            >
-                              Modified
-                            </Chip>
-                          </>
-                        )}
-                      </div>
-                    )}
-                  </div>
+                        </div>
+                      )}
+                    </div>
 
-                  {/* Center: Quick action toolbar */}
-                  <div className="flex items-center gap-1 rounded-lg border border-gray-200 bg-white p-1 dark:border-gray-700 dark:bg-gray-900">
-                    <Button
-                      size="sm"
-                      variant="light"
-                      isIconOnly
-                      onPress={() => rotateImage(-90)}
-                      className="h-8 min-w-8"
-                      title="Rotate 90° Left"
-                    >
-                      <RotateCcwIcon className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="light"
-                      isIconOnly
-                      onPress={() => rotateImage(90)}
-                      className="h-8 min-w-8"
-                      title="Rotate 90° Right"
-                    >
-                      <RotateCw className="h-4 w-4" />
-                    </Button>
-                    <div className="mx-1 h-6 w-px bg-gray-300 dark:bg-gray-600" />
-                    <Button
-                      size="sm"
-                      variant="light"
-                      isIconOnly
-                      color={flipHorizontal ? "primary" : "default"}
-                      onPress={() => setFlipHorizontal(!flipHorizontal)}
-                      className="h-8 min-w-8"
-                      title="Flip Horizontal"
-                    >
-                      <FlipHorizontal className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="light"
-                      isIconOnly
-                      color={flipVertical ? "primary" : "default"}
-                      onPress={() => setFlipVertical(!flipVertical)}
-                      className="h-8 min-w-8"
-                      title="Flip Vertical"
-                    >
-                      <FlipVertical className="h-4 w-4" />
-                    </Button>
-                    {hasAnyAdjustments() && (
-                      <>
-                        <div className="mx-1 h-6 w-px bg-gray-300 dark:bg-gray-600" />
-                        <Button
-                          size="sm"
-                          variant="light"
-                          isIconOnly
-                          color="warning"
-                          onPress={resetAllAdjustments}
-                          className="h-8 min-w-8"
-                          title="Reset All"
+                    {/* Center: Quick action toolbar */}
+                    <div className="flex items-center gap-1 rounded-lg border border-gray-200 bg-white p-1 dark:border-gray-700 dark:bg-gray-900">
+                      <Button
+                        size="sm"
+                        variant="light"
+                        isIconOnly
+                        onPress={() => rotateImage(-90)}
+                        className="h-8 min-w-8"
+                        title="Rotate 90° Left"
+                      >
+                        <RotateCcwIcon className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="light"
+                        isIconOnly
+                        onPress={() => rotateImage(90)}
+                        className="h-8 min-w-8"
+                        title="Rotate 90° Right"
+                      >
+                        <RotateCw className="h-4 w-4" />
+                      </Button>
+                      <div className="mx-1 h-6 w-px bg-gray-300 dark:bg-gray-600" />
+                      <Button
+                        size="sm"
+                        variant="light"
+                        isIconOnly
+                        color={flipHorizontal ? "primary" : "default"}
+                        onPress={() => setFlipHorizontal(!flipHorizontal)}
+                        className="h-8 min-w-8"
+                        title="Flip Horizontal"
+                      >
+                        <FlipHorizontal className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="light"
+                        isIconOnly
+                        color={flipVertical ? "primary" : "default"}
+                        onPress={() => setFlipVertical(!flipVertical)}
+                        className="h-8 min-w-8"
+                        title="Flip Vertical"
+                      >
+                        <FlipVertical className="h-4 w-4" />
+                      </Button>
+                      {hasAnyAdjustments() && (
+                        <>
+                          <div className="mx-1 h-6 w-px bg-gray-300 dark:bg-gray-600" />
+                          <Button
+                            size="sm"
+                            variant="light"
+                            isIconOnly
+                            color="warning"
+                            onPress={resetAllAdjustments}
+                            className="h-8 min-w-8"
+                            title="Reset All"
+                          >
+                            <Undo2 className="h-4 w-4" />
+                          </Button>
+                        </>
+                      )}
+                    </div>
+
+                    {/* Right: Actions */}
+                    <div className="flex items-center gap-2">
+                      <Button
+                        size="sm"
+                        onPress={handleDownload}
+                        isLoading={isProcessing}
+                        className="overflow-hidden bg-gradient-to-r from-blue-600 to-purple-600 font-bold text-white shadow-lg transition-all duration-300 hover:scale-102"
+                        startContent={
+                          !isProcessing ? (
+                            <Download className="h-4 w-4" />
+                          ) : undefined
+                        }
+                      >
+                        Download
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="flat"
+                        color="danger"
+                        onPress={handleReset}
+                        isIconOnly
+                        title="New Image"
+                      >
+                        <RotateCcw className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardBody className="p-0">
+                  <div className="relative flex min-h-[400px] items-center justify-center overflow-auto bg-gradient-to-br from-gray-50 to-gray-100 p-6 dark:from-gray-900 dark:to-gray-800">
+                    {/* Checkerboard pattern for transparency */}
+                    <div className="checkerboard absolute inset-0 opacity-10" />
+
+                    <div className="relative z-10 flex max-h-[600px] max-w-full items-center justify-center">
+                      <canvas
+                        ref={canvasRef}
+                        className="rounded-lg shadow-2xl"
+                        style={{
+                          maxWidth: "100%",
+                          maxHeight: "600px",
+                          width: "auto",
+                          height: "auto",
+                        }}
+                      />
+                    </div>
+                  </div>
+                </CardBody>
+              </Card>
+            </motion.div>
+
+            {/* Filters - Compact Single Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.2 }}
+            >
+              <Card className="border border-gray-200 shadow-xl dark:border-gray-700">
+                <CardHeader className="border-gray-200 border-b bg-gradient-to-r from-blue-50 to-purple-50 p-4 dark:border-gray-700 dark:from-blue-950/30 dark:to-purple-950/30">
+                  <div className="w-full space-y-3">
+                    <h3 className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text pb-0.5 font-bold text-lg text-transparent leading-tight">
+                      🎨 Filters & Adjustments
+                    </h3>
+
+                    {/* Filter Presets - Compact chips */}
+                    <div className="flex flex-wrap gap-2">
+                      {filterPresets.map((preset) => (
+                        <Chip
+                          key={preset.key}
+                          variant={
+                            selectedPreset === preset.key ? "solid" : "bordered"
+                          }
+                          color={
+                            selectedPreset === preset.key
+                              ? "secondary"
+                              : "default"
+                          }
+                          className="cursor-pointer font-semibold"
+                          onClick={() => applyPreset(preset.key)}
                         >
-                          <Undo2 className="h-4 w-4" />
-                        </Button>
-                      </>
-                    )}
+                          {preset.label}
+                        </Chip>
+                      ))}
+                    </div>
                   </div>
-
-                  {/* Right: Actions */}
-                  <div className="flex items-center gap-2">
-                    <Button
+                </CardHeader>
+                <CardBody className="space-y-3 p-4">
+                  {/* Brightness - Compact */}
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Sun className="h-4 w-4 text-yellow-500" />
+                        <span className="font-semibold text-gray-700 text-xs dark:text-gray-300">
+                          Brightness
+                        </span>
+                      </div>
+                      <span className="font-bold text-sm text-yellow-600 dark:text-yellow-400">
+                        {brightness}%
+                      </span>
+                    </div>
+                    <Slider
+                      value={brightness}
+                      onChange={(value) => {
+                        setBrightness(value as number);
+                        setSelectedPreset("none");
+                      }}
+                      minValue={0}
+                      maxValue={200}
+                      step={1}
                       size="sm"
-                      onPress={handleDownload}
-                      isLoading={isProcessing}
-                      className="overflow-hidden bg-gradient-to-r from-blue-600 to-purple-600 font-bold text-white shadow-lg transition-all duration-300 hover:scale-102"
-                      startContent={
-                        !isProcessing ? (
-                          <Download className="h-4 w-4" />
-                        ) : undefined
-                      }
-                    >
-                      Download
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="flat"
-                      color="danger"
-                      onPress={handleReset}
-                      isIconOnly
-                      title="New Image"
-                    >
-                      <RotateCcw className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardBody className="p-0">
-                <div className="relative flex min-h-[400px] items-center justify-center overflow-auto bg-gradient-to-br from-gray-50 to-gray-100 p-6 dark:from-gray-900 dark:to-gray-800">
-                  {/* Checkerboard pattern for transparency */}
-                  <div className="checkerboard absolute inset-0 opacity-10" />
-
-                  <div className="relative z-10 flex max-h-[600px] max-w-full items-center justify-center">
-                    <canvas
-                      ref={canvasRef}
-                      className="rounded-lg shadow-2xl"
-                      style={{
-                        maxWidth: "100%",
-                        maxHeight: "600px",
-                        width: "auto",
-                        height: "auto",
+                      classNames={{
+                        track:
+                          "bg-gradient-to-r from-yellow-200 to-orange-200 dark:from-yellow-900 dark:to-orange-900",
+                        filler:
+                          "bg-gradient-to-r from-yellow-500 to-orange-500",
+                        thumb: "bg-gradient-to-r from-yellow-600 to-orange-600",
                       }}
                     />
                   </div>
-                </div>
-              </CardBody>
-            </Card>
 
-            {/* Filters - Compact Single Card */}
-            <Card className="border border-gray-200 shadow-xl dark:border-gray-700">
-              <CardHeader className="border-gray-200 border-b bg-gradient-to-r from-blue-50 to-purple-50 p-4 dark:border-gray-700 dark:from-blue-950/30 dark:to-purple-950/30">
-                <div className="w-full space-y-3">
-                  <h3 className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text pb-0.5 font-bold text-lg text-transparent leading-tight">
-                    🎨 Filters & Adjustments
-                  </h3>
-
-                  {/* Filter Presets - Compact chips */}
-                  <div className="flex flex-wrap gap-2">
-                    {filterPresets.map((preset) => (
-                      <Chip
-                        key={preset.key}
-                        variant={
-                          selectedPreset === preset.key ? "solid" : "bordered"
-                        }
-                        color={
-                          selectedPreset === preset.key
-                            ? "secondary"
-                            : "default"
-                        }
-                        className="cursor-pointer font-semibold"
-                        onClick={() => applyPreset(preset.key)}
-                      >
-                        {preset.label}
-                      </Chip>
-                    ))}
-                  </div>
-                </div>
-              </CardHeader>
-              <CardBody className="space-y-3 p-4">
-                {/* Brightness - Compact */}
-                <div className="space-y-1">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Sun className="h-4 w-4 text-yellow-500" />
-                      <span className="font-semibold text-gray-700 text-xs dark:text-gray-300">
-                        Brightness
+                  {/* Contrast - Compact */}
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <ContrastIcon className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+                        <span className="font-semibold text-gray-700 text-xs dark:text-gray-300">
+                          Contrast
+                        </span>
+                      </div>
+                      <span className="font-bold text-gray-600 text-sm dark:text-gray-400">
+                        {contrast}%
                       </span>
                     </div>
-                    <span className="font-bold text-sm text-yellow-600 dark:text-yellow-400">
-                      {brightness}%
-                    </span>
+                    <Slider
+                      value={contrast}
+                      onChange={(value) => {
+                        setContrast(value as number);
+                        setSelectedPreset("none");
+                      }}
+                      minValue={0}
+                      maxValue={200}
+                      step={1}
+                      size="sm"
+                      classNames={{
+                        track:
+                          "bg-gradient-to-r from-gray-200 to-slate-200 dark:from-gray-900 dark:to-slate-900",
+                        filler: "bg-gradient-to-r from-gray-500 to-slate-500",
+                        thumb: "bg-gradient-to-r from-gray-600 to-slate-600",
+                      }}
+                    />
                   </div>
-                  <Slider
-                    value={brightness}
-                    onChange={(value) => {
-                      setBrightness(value as number);
-                      setSelectedPreset("none");
-                    }}
-                    minValue={0}
-                    maxValue={200}
-                    step={1}
-                    size="sm"
-                    classNames={{
-                      track:
-                        "bg-gradient-to-r from-yellow-200 to-orange-200 dark:from-yellow-900 dark:to-orange-900",
-                      filler: "bg-gradient-to-r from-yellow-500 to-orange-500",
-                      thumb: "bg-gradient-to-r from-yellow-600 to-orange-600",
-                    }}
-                  />
-                </div>
 
-                {/* Contrast - Compact */}
-                <div className="space-y-1">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <ContrastIcon className="h-4 w-4 text-gray-600 dark:text-gray-400" />
-                      <span className="font-semibold text-gray-700 text-xs dark:text-gray-300">
-                        Contrast
+                  {/* Saturation - Compact */}
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Droplets className="h-4 w-4 text-blue-500" />
+                        <span className="font-semibold text-gray-700 text-xs dark:text-gray-300">
+                          Saturation
+                        </span>
+                      </div>
+                      <span className="font-bold text-blue-600 text-sm dark:text-blue-400">
+                        {saturation}%
                       </span>
                     </div>
-                    <span className="font-bold text-gray-600 text-sm dark:text-gray-400">
-                      {contrast}%
-                    </span>
+                    <Slider
+                      value={saturation}
+                      onChange={(value) => {
+                        setSaturation(value as number);
+                        setSelectedPreset("none");
+                      }}
+                      minValue={0}
+                      maxValue={200}
+                      step={1}
+                      size="sm"
+                      classNames={{
+                        track:
+                          "bg-gradient-to-r from-blue-200 to-cyan-200 dark:from-blue-900 dark:to-cyan-900",
+                        filler: "bg-gradient-to-r from-blue-500 to-cyan-500",
+                        thumb: "bg-gradient-to-r from-blue-600 to-cyan-600",
+                      }}
+                    />
                   </div>
-                  <Slider
-                    value={contrast}
-                    onChange={(value) => {
-                      setContrast(value as number);
-                      setSelectedPreset("none");
-                    }}
-                    minValue={0}
-                    maxValue={200}
-                    step={1}
-                    size="sm"
-                    classNames={{
-                      track:
-                        "bg-gradient-to-r from-gray-200 to-slate-200 dark:from-gray-900 dark:to-slate-900",
-                      filler: "bg-gradient-to-r from-gray-500 to-slate-500",
-                      thumb: "bg-gradient-to-r from-gray-600 to-slate-600",
-                    }}
-                  />
-                </div>
-
-                {/* Saturation - Compact */}
-                <div className="space-y-1">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Droplets className="h-4 w-4 text-blue-500" />
-                      <span className="font-semibold text-gray-700 text-xs dark:text-gray-300">
-                        Saturation
-                      </span>
-                    </div>
-                    <span className="font-bold text-blue-600 text-sm dark:text-blue-400">
-                      {saturation}%
-                    </span>
-                  </div>
-                  <Slider
-                    value={saturation}
-                    onChange={(value) => {
-                      setSaturation(value as number);
-                      setSelectedPreset("none");
-                    }}
-                    minValue={0}
-                    maxValue={200}
-                    step={1}
-                    size="sm"
-                    classNames={{
-                      track:
-                        "bg-gradient-to-r from-blue-200 to-cyan-200 dark:from-blue-900 dark:to-cyan-900",
-                      filler: "bg-gradient-to-r from-blue-500 to-cyan-500",
-                      thumb: "bg-gradient-to-r from-blue-600 to-cyan-600",
-                    }}
-                  />
-                </div>
-              </CardBody>
-            </Card>
-          </div>
+                </CardBody>
+              </Card>
+            </motion.div>
+          </motion.div>
         )}
       </div>
     </section>

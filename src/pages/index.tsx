@@ -115,7 +115,8 @@ export default function IndexPage() {
                 </CardHeader>
                 <CardBody className="relative z-10 pt-0 pb-8">
                   <p className="px-6 text-center text-gray-700 leading-relaxed dark:text-gray-300">
-                    Convert images between different formats with quality control
+                    Convert images between different formats with quality
+                    control
                   </p>
                 </CardBody>
               </Card>
@@ -368,7 +369,8 @@ export default function IndexPage() {
                 </CardHeader>
                 <CardBody className="relative z-10 pt-0 pb-8">
                   <p className="px-6 text-center text-gray-700 leading-relaxed dark:text-gray-300">
-                    Resize images to specific dimensions while maintaining quality
+                    Resize images to specific dimensions while maintaining
+                    quality
                   </p>
                 </CardBody>
               </Card>

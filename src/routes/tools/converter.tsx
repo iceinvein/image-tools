@@ -4,6 +4,7 @@ import { Chip } from "@heroui/chip";
 import { Select, SelectItem } from "@heroui/select";
 import { Slider } from "@heroui/slider";
 import { createFileRoute } from "@tanstack/react-router";
+import { motion } from "framer-motion";
 import { Download, RefreshCw, RotateCcw } from "lucide-react";
 import { useState } from "react";
 import { ImageUpload } from "@/components/image-upload";
@@ -153,199 +154,218 @@ function ConverterPage() {
             <ImageUpload onImageSelect={handleImageSelect} />
           </div>
         ) : (
-          <div className="mx-auto max-w-6xl space-y-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="mx-auto max-w-6xl space-y-6"
+          >
             {/* Compact Image Comparison */}
-            <Card className="border-2 border-gray-200 dark:border-gray-700">
-              <CardBody className="p-6">
-                <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-                  {/* Original Image */}
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <h3 className="font-semibold text-gray-700 text-sm dark:text-gray-300">
-                        Original
-                      </h3>
-                      <Chip size="sm" variant="flat" color="default">
-                        {dimensions
-                          ? `${dimensions.width} × ${dimensions.height}`
-                          : ""}
-                      </Chip>
-                    </div>
-                    <div className="relative aspect-video overflow-hidden rounded-lg border-2 border-gray-200 bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
-                      <img
-                        src={originalUrl}
-                        alt="Original"
-                        className="h-full w-full object-contain"
-                      />
-                    </div>
-                    <div className="flex items-center justify-between text-gray-600 text-xs dark:text-gray-400">
-                      <span className="max-w-[200px] truncate">
-                        {originalFile.name}
-                      </span>
-                      <span className="font-medium">
-                        {(originalFile.size / 1024).toFixed(1)} KB
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Converted Image */}
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <h3 className="font-semibold text-gray-700 text-sm dark:text-gray-300">
-                        {convertedUrl ? "Converted" : "Preview"}
-                      </h3>
-                      {convertedUrl && convertedBlob && (
-                        <Chip size="sm" variant="flat" color="success">
-                          {(convertedBlob.size / 1024).toFixed(1)} KB
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.1 }}
+            >
+              <Card className="border-2 border-gray-200 dark:border-gray-700">
+                <CardBody className="p-6">
+                  <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                    {/* Original Image */}
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <h3 className="font-semibold text-gray-700 text-sm dark:text-gray-300">
+                          Original
+                        </h3>
+                        <Chip size="sm" variant="flat" color="default">
+                          {dimensions
+                            ? `${dimensions.width} × ${dimensions.height}`
+                            : ""}
                         </Chip>
-                      )}
-                    </div>
-                    <div className="relative aspect-video overflow-hidden rounded-lg border-2 border-gray-300 border-dashed bg-gray-100 dark:border-gray-600 dark:bg-gray-800">
-                      {convertedUrl ? (
+                      </div>
+                      <div className="relative aspect-video overflow-hidden rounded-lg border-2 border-gray-200 bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
                         <img
-                          src={convertedUrl}
-                          alt="Converted"
+                          src={originalUrl}
+                          alt="Original"
                           className="h-full w-full object-contain"
                         />
-                      ) : (
-                        <div className="flex h-full w-full items-center justify-center text-gray-400">
-                          <div className="text-center">
-                            <RefreshCw className="mx-auto mb-2 h-12 w-12 opacity-50" />
-                            <p className="text-sm">
-                              Adjust settings and convert
-                            </p>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                    {convertedUrl && convertedBlob ? (
+                      </div>
                       <div className="flex items-center justify-between text-gray-600 text-xs dark:text-gray-400">
                         <span className="max-w-[200px] truncate">
-                          converted.{getFileExtension(targetFormat)}
+                          {originalFile.name}
                         </span>
-                        <span
-                          className={`font-medium ${
-                            convertedBlob.size < originalFile.size
-                              ? "text-green-600 dark:text-green-400"
-                              : "text-orange-600 dark:text-orange-400"
-                          }`}
-                        >
-                          {convertedBlob.size < originalFile.size ? "↓" : "↑"}{" "}
-                          {Math.abs(
-                            ((convertedBlob.size - originalFile.size) /
-                              originalFile.size) *
-                              100,
-                          ).toFixed(1)}
-                          %
+                        <span className="font-medium">
+                          {(originalFile.size / 1024).toFixed(1)} KB
                         </span>
-                      </div>
-                    ) : (
-                      <div className="h-5" />
-                    )}
-                  </div>
-                </div>
-              </CardBody>
-            </Card>
-
-            {/* Compact Controls Bar */}
-            <Card className="border-2 border-gray-200 dark:border-gray-700">
-              <CardBody className="p-4">
-                <div className="flex flex-col items-stretch gap-4 lg:flex-row lg:items-end">
-                  {/* Format Selection */}
-                  <div className="min-w-[200px] flex-1">
-                    <Select
-                      label="Target Format"
-                      labelPlacement="outside"
-                      size="sm"
-                      selectedKeys={[targetFormat]}
-                      onSelectionChange={(keys) => {
-                        const selected = Array.from(keys)[0] as string;
-                        setTargetFormat(selected);
-                      }}
-                      classNames={{
-                        trigger:
-                          "border-2 hover:border-primary transition-colors",
-                      }}
-                    >
-                      {formats.map((format) => (
-                        <SelectItem key={format.key}>{format.label}</SelectItem>
-                      ))}
-                    </Select>
-                  </div>
-
-                  {/* Quality Slider */}
-                  {supportsQuality && (
-                    <div className="min-w-[200px] flex-1">
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                          <span className="font-medium text-gray-700 text-xs dark:text-gray-300">
-                            Quality
-                          </span>
-                          <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text font-bold text-sm text-transparent">
-                            {quality}%
-                          </span>
-                        </div>
-                        <Slider
-                          aria-label="Quality"
-                          value={quality}
-                          onChange={(value) => setQuality(value as number)}
-                          minValue={10}
-                          maxValue={100}
-                          step={5}
-                          size="sm"
-                          className="w-full"
-                          classNames={{
-                            track:
-                              "bg-gradient-to-r from-blue-200 to-purple-200 dark:from-blue-900 dark:to-purple-900",
-                            filler:
-                              "bg-gradient-to-r from-blue-500 to-purple-500",
-                            thumb:
-                              "bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg",
-                          }}
-                        />
                       </div>
                     </div>
-                  )}
 
-                  {/* Action Buttons */}
-                  <div className="flex gap-2 lg:min-w-fit">
-                    <Button
-                      size="lg"
-                      variant="bordered"
-                      onPress={handleReset}
-                      startContent={<RotateCcw className="h-4 w-4" />}
-                      className="flex-1 lg:flex-initial"
-                    >
-                      New
-                    </Button>
-                    <Button
-                      size="lg"
-                      onPress={handleConvert}
-                      isLoading={isProcessing}
-                      className="flex-1 overflow-hidden bg-gradient-to-r from-blue-600 to-purple-600 font-bold text-white shadow-lg transition-all duration-300 hover:scale-102 lg:flex-initial"
-                      startContent={
-                        !isProcessing ? (
-                          <RefreshCw className="h-4 w-4" />
-                        ) : undefined
-                      }
-                    >
-                      {isProcessing ? "Converting..." : "Convert"}
-                    </Button>
-                    {convertedUrl && (
+                    {/* Converted Image */}
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <h3 className="font-semibold text-gray-700 text-sm dark:text-gray-300">
+                          {convertedUrl ? "Converted" : "Preview"}
+                        </h3>
+                        {convertedUrl && convertedBlob && (
+                          <Chip size="sm" variant="flat" color="success">
+                            {(convertedBlob.size / 1024).toFixed(1)} KB
+                          </Chip>
+                        )}
+                      </div>
+                      <div className="relative aspect-video overflow-hidden rounded-lg border-2 border-gray-300 border-dashed bg-gray-100 dark:border-gray-600 dark:bg-gray-800">
+                        {convertedUrl ? (
+                          <img
+                            src={convertedUrl}
+                            alt="Converted"
+                            className="h-full w-full object-contain"
+                          />
+                        ) : (
+                          <div className="flex h-full w-full items-center justify-center text-gray-400">
+                            <div className="text-center">
+                              <RefreshCw className="mx-auto mb-2 h-12 w-12 opacity-50" />
+                              <p className="text-sm">
+                                Adjust settings and convert
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      {convertedUrl && convertedBlob ? (
+                        <div className="flex items-center justify-between text-gray-600 text-xs dark:text-gray-400">
+                          <span className="max-w-[200px] truncate">
+                            converted.{getFileExtension(targetFormat)}
+                          </span>
+                          <span
+                            className={`font-medium ${
+                              convertedBlob.size < originalFile.size
+                                ? "text-green-600 dark:text-green-400"
+                                : "text-orange-600 dark:text-orange-400"
+                            }`}
+                          >
+                            {convertedBlob.size < originalFile.size ? "↓" : "↑"}{" "}
+                            {Math.abs(
+                              ((convertedBlob.size - originalFile.size) /
+                                originalFile.size) *
+                                100,
+                            ).toFixed(1)}
+                            %
+                          </span>
+                        </div>
+                      ) : (
+                        <div className="h-5" />
+                      )}
+                    </div>
+                  </div>
+                </CardBody>
+              </Card>
+            </motion.div>
+
+            {/* Compact Controls Bar */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.2 }}
+            >
+              <Card className="border-2 border-gray-200 dark:border-gray-700">
+                <CardBody className="p-4">
+                  <div className="flex flex-col items-stretch gap-4 lg:flex-row lg:items-end">
+                    {/* Format Selection */}
+                    <div className="min-w-[200px] flex-1">
+                      <Select
+                        label="Target Format"
+                        labelPlacement="outside"
+                        size="sm"
+                        selectedKeys={[targetFormat]}
+                        onSelectionChange={(keys) => {
+                          const selected = Array.from(keys)[0] as string;
+                          setTargetFormat(selected);
+                        }}
+                        classNames={{
+                          trigger:
+                            "border-2 hover:border-primary transition-colors",
+                        }}
+                      >
+                        {formats.map((format) => (
+                          <SelectItem key={format.key}>
+                            {format.label}
+                          </SelectItem>
+                        ))}
+                      </Select>
+                    </div>
+
+                    {/* Quality Slider */}
+                    {supportsQuality && (
+                      <div className="min-w-[200px] flex-1">
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <span className="font-medium text-gray-700 text-xs dark:text-gray-300">
+                              Quality
+                            </span>
+                            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text font-bold text-sm text-transparent">
+                              {quality}%
+                            </span>
+                          </div>
+                          <Slider
+                            aria-label="Quality"
+                            value={quality}
+                            onChange={(value) => setQuality(value as number)}
+                            minValue={10}
+                            maxValue={100}
+                            step={5}
+                            size="sm"
+                            className="w-full"
+                            classNames={{
+                              track:
+                                "bg-gradient-to-r from-blue-200 to-purple-200 dark:from-blue-900 dark:to-purple-900",
+                              filler:
+                                "bg-gradient-to-r from-blue-500 to-purple-500",
+                              thumb:
+                                "bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg",
+                            }}
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Action Buttons */}
+                    <div className="flex gap-2 lg:min-w-fit">
                       <Button
                         size="lg"
-                        color="success"
-                        onPress={handleDownload}
-                        startContent={<Download className="h-4 w-4" />}
-                        className="flex-1 font-bold lg:flex-initial"
+                        variant="bordered"
+                        onPress={handleReset}
+                        startContent={<RotateCcw className="h-4 w-4" />}
+                        className="flex-1 lg:flex-initial"
                       >
-                        Download
+                        New
                       </Button>
-                    )}
+                      <Button
+                        size="lg"
+                        onPress={handleConvert}
+                        isLoading={isProcessing}
+                        className="flex-1 overflow-hidden bg-gradient-to-r from-blue-600 to-purple-600 font-bold text-white shadow-lg transition-all duration-300 hover:scale-102 lg:flex-initial"
+                        startContent={
+                          !isProcessing ? (
+                            <RefreshCw className="h-4 w-4" />
+                          ) : undefined
+                        }
+                      >
+                        {isProcessing ? "Converting..." : "Convert"}
+                      </Button>
+                      {convertedUrl && (
+                        <Button
+                          size="lg"
+                          color="success"
+                          onPress={handleDownload}
+                          startContent={<Download className="h-4 w-4" />}
+                          className="flex-1 font-bold lg:flex-initial"
+                        >
+                          Download
+                        </Button>
+                      )}
+                    </div>
                   </div>
-                </div>
-              </CardBody>
-            </Card>
-          </div>
+                </CardBody>
+              </Card>
+            </motion.div>
+          </motion.div>
         )}
       </div>
     </section>
