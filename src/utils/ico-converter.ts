@@ -186,12 +186,14 @@ export async function convertFileToIco(
 
       try {
         // Use recommended sizes if not specified
-        const icoSizes =
-          sizes || getRecommendedIcoSizes(img.naturalWidth, img.naturalHeight);
+        let icoSizes =
+          sizes && sizes.length > 0
+            ? sizes
+            : getRecommendedIcoSizes(img.naturalWidth, img.naturalHeight);
 
         // Ensure at least one size
         if (icoSizes.length === 0) {
-          icoSizes.push({ width: 32, height: 32 });
+          icoSizes = [{ width: 32, height: 32 }];
         }
 
         const icoBlob = await convertToIco(img, icoSizes);

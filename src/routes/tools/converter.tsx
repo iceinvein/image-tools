@@ -1,12 +1,11 @@
 import { Button } from "@heroui/button";
-import { Card, CardBody, CardHeader } from "@heroui/card";
+import { Card, CardBody } from "@heroui/card";
 import { Chip } from "@heroui/chip";
 import { Select, SelectItem } from "@heroui/select";
 import { Slider } from "@heroui/slider";
 import { createFileRoute } from "@tanstack/react-router";
 import { Download, RefreshCw, RotateCcw } from "lucide-react";
 import { useState } from "react";
-import { ImagePreview } from "@/components/image-preview";
 import { ImageUpload } from "@/components/image-upload";
 import {
   createBreadcrumbSchema,
@@ -149,71 +148,150 @@ function ConverterPage() {
         </div>
 
         {/* Main Content */}
-        <div
-          className={`grid grid-cols-1 gap-6 ${convertedUrl ? "lg:grid-cols-2" : ""}`}
-        >
-          <div className="space-y-6">
-            {!originalFile ? (
-              <div className="max-w-2xl mx-auto">
-                <ImageUpload onImageSelect={handleImageSelect} />
-              </div>
-            ) : (
-              <>
-                <ImagePreview
-                  imageUrl={originalUrl}
-                  title="Original Image"
-                  fileName={originalFile.name}
-                  fileSize={originalFile.size}
-                  dimensions={dimensions ?? undefined}
-                  onRemove={handleReset}
-                />
-
-                <Card className="border border-gray-200 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all duration-300">
-                  <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 border-b border-gray-200 dark:border-gray-700">
-                    <h3 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent leading-tight pb-0.5">
-                      ⚙️ Conversion Settings
-                    </h3>
-                  </CardHeader>
-                  <CardBody className="space-y-6 p-6">
-                    <div className="space-y-2">
-                      <Select
-                        label="Target Format"
-                        labelPlacement="outside"
-                        placeholder="Select format"
-                        selectedKeys={[targetFormat]}
-                        onSelectionChange={(keys) => {
-                          const selected = Array.from(keys)[0] as string;
-                          setTargetFormat(selected);
-                        }}
-                        classNames={{
-                          trigger:
-                            "border-2 hover:border-primary transition-colors",
-                        }}
-                      >
-                        {formats.map((format) => (
-                          <SelectItem key={format.key}>
-                            {format.label}
-                          </SelectItem>
-                        ))}
-                      </Select>
+        {!originalFile ? (
+          <div className="max-w-2xl mx-auto">
+            <ImageUpload onImageSelect={handleImageSelect} />
+          </div>
+        ) : (
+          <div className="max-w-6xl mx-auto space-y-6">
+            {/* Compact Image Comparison */}
+            <Card className="border-2 border-gray-200 dark:border-gray-700">
+              <CardBody className="p-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Original Image */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        Original
+                      </h3>
+                      <Chip size="sm" variant="flat" color="default">
+                        {dimensions
+                          ? `${dimensions.width} × ${dimensions.height}`
+                          : ""}
+                      </Chip>
                     </div>
+                    <div className="relative aspect-video bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden border-2 border-gray-200 dark:border-gray-700">
+                      <img
+                        src={originalUrl}
+                        alt="Original"
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                    <div className="flex items-center justify-between text-xs text-gray-600 dark:text-gray-400">
+                      <span className="truncate max-w-[200px]">
+                        {originalFile.name}
+                      </span>
+                      <span className="font-medium">
+                        {(originalFile.size / 1024).toFixed(1)} KB
+                      </span>
+                    </div>
+                  </div>
 
-                    {supportsQuality && (
-                      <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-xl border border-blue-200 dark:border-blue-800">
-                        <div className="flex items-center justify-between mb-3">
-                          <span className="text-sm font-bold text-gray-700 dark:text-gray-300">
+                  {/* Converted Image */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        {convertedUrl ? "Converted" : "Preview"}
+                      </h3>
+                      {convertedUrl && convertedBlob && (
+                        <Chip size="sm" variant="flat" color="success">
+                          {(convertedBlob.size / 1024).toFixed(1)} KB
+                        </Chip>
+                      )}
+                    </div>
+                    <div className="relative aspect-video bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden border-2 border-dashed border-gray-300 dark:border-gray-600">
+                      {convertedUrl ? (
+                        <img
+                          src={convertedUrl}
+                          alt="Converted"
+                          className="w-full h-full object-contain"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-gray-400">
+                          <div className="text-center">
+                            <RefreshCw className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                            <p className="text-sm">
+                              Adjust settings and convert
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    {convertedUrl && convertedBlob ? (
+                      <div className="flex items-center justify-between text-xs text-gray-600 dark:text-gray-400">
+                        <span className="truncate max-w-[200px]">
+                          converted.{getFileExtension(targetFormat)}
+                        </span>
+                        <span
+                          className={`font-medium ${
+                            convertedBlob.size < originalFile.size
+                              ? "text-green-600 dark:text-green-400"
+                              : "text-orange-600 dark:text-orange-400"
+                          }`}
+                        >
+                          {convertedBlob.size < originalFile.size ? "↓" : "↑"}{" "}
+                          {Math.abs(
+                            ((convertedBlob.size - originalFile.size) /
+                              originalFile.size) *
+                              100,
+                          ).toFixed(1)}
+                          %
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="h-5" />
+                    )}
+                  </div>
+                </div>
+              </CardBody>
+            </Card>
+
+            {/* Compact Controls Bar */}
+            <Card className="border-2 border-gray-200 dark:border-gray-700">
+              <CardBody className="p-4">
+                <div className="flex flex-col lg:flex-row items-stretch lg:items-end gap-4">
+                  {/* Format Selection */}
+                  <div className="flex-1 min-w-[200px]">
+                    <Select
+                      label="Target Format"
+                      labelPlacement="outside"
+                      size="sm"
+                      selectedKeys={[targetFormat]}
+                      onSelectionChange={(keys) => {
+                        const selected = Array.from(keys)[0] as string;
+                        setTargetFormat(selected);
+                      }}
+                      classNames={{
+                        trigger:
+                          "border-2 hover:border-primary transition-colors",
+                      }}
+                    >
+                      {formats.map((format) => (
+                        <SelectItem key={format.key}>{format.label}</SelectItem>
+                      ))}
+                    </Select>
+                  </div>
+
+                  {/* Quality Slider */}
+                  {supportsQuality && (
+                    <div className="flex-1 min-w-[200px]">
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
                             Quality
                           </span>
-                          <span className="text-2xl font-black bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                          <span className="text-sm font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                             {quality}%
                           </span>
                         </div>
                         <Slider
+                          aria-label="Quality"
                           value={quality}
                           onChange={(value) => setQuality(value as number)}
                           minValue={10}
                           maxValue={100}
                           step={5}
+                          size="sm"
                           className="w-full"
                           classNames={{
                             track:
@@ -224,74 +302,51 @@ function ConverterPage() {
                               "bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg",
                           }}
                         />
-                        <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-2">
-                          <span>Lower size</span>
-                          <span>Higher quality</span>
-                        </div>
                       </div>
-                    )}
+                    </div>
+                  )}
 
+                  {/* Action Buttons */}
+                  <div className="flex gap-2 lg:min-w-fit">
                     <Button
-                      color="primary"
+                      size="lg"
+                      variant="bordered"
+                      onPress={handleReset}
+                      startContent={<RotateCcw className="w-4 h-4" />}
+                      className="flex-1 lg:flex-initial"
+                    >
+                      New
+                    </Button>
+                    <Button
                       size="lg"
                       onPress={handleConvert}
                       isLoading={isProcessing}
-                      className="w-full font-bold text-base bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover-scale-102 transition-all duration-300 overflow-hidden"
+                      className="flex-1 lg:flex-initial bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:scale-102 transition-all duration-300 font-bold overflow-hidden"
                       startContent={
                         !isProcessing ? (
-                          <RefreshCw className="w-5 h-5" />
+                          <RefreshCw className="w-4 h-4" />
                         ) : undefined
                       }
                     >
-                      {isProcessing ? "Converting..." : "Convert Image"}
+                      {isProcessing ? "Converting..." : "Convert"}
                     </Button>
-                  </CardBody>
-                </Card>
-              </>
-            )}
-          </div>
-
-          {convertedUrl && (
-            <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-500">
-              <div className="text-center mb-6">
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 border border-blue-200 dark:border-blue-800 rounded-full">
-                  <span className="text-2xl">✅</span>
-                  <span className="font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                    Conversion Complete!
-                  </span>
+                    {convertedUrl && (
+                      <Button
+                        size="lg"
+                        color="success"
+                        onPress={handleDownload}
+                        startContent={<Download className="w-4 h-4" />}
+                        className="flex-1 lg:flex-initial font-bold"
+                      >
+                        Download
+                      </Button>
+                    )}
+                  </div>
                 </div>
-              </div>
-
-              <ImagePreview
-                imageUrl={convertedUrl}
-                title="✨ Converted Image"
-                fileName={`converted.${getFileExtension(targetFormat)}`}
-                fileSize={convertedBlob?.size}
-                dimensions={dimensions ?? undefined}
-              />
-
-              <div className="mt-6 flex flex-col sm:flex-row gap-4 justify-center">
-                <Button
-                  size="lg"
-                  onPress={handleDownload}
-                  className="bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 font-bold overflow-hidden"
-                  startContent={<Download className="w-5 h-5" />}
-                >
-                  Download Image
-                </Button>
-                <Button
-                  variant="bordered"
-                  size="lg"
-                  onPress={handleReset}
-                  className="font-semibold border-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300"
-                  startContent={<RotateCcw className="w-5 h-5" />}
-                >
-                  Convert Another
-                </Button>
-              </div>
-            </div>
-          )}
-        </div>
+              </CardBody>
+            </Card>
+          </div>
+        )}
       </div>
     </section>
   );

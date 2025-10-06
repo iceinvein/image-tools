@@ -1,9 +1,9 @@
 import { Button } from "@heroui/button";
-import { Card, CardBody, CardHeader } from "@heroui/card";
+import { Card, CardBody } from "@heroui/card";
 import { Chip } from "@heroui/chip";
 import { Progress } from "@heroui/progress";
 import { createFileRoute } from "@tanstack/react-router";
-import { Download, Eraser, Info, Sparkles } from "lucide-react";
+import { Download, Eraser, Info, RotateCcw, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { BackgroundRemovalSettings as SettingsComponent } from "@/components/BackgroundRemovalSettings";
 import { ImageUpload } from "@/components/image-upload";
@@ -134,80 +134,106 @@ function BackgroundRemoverPage() {
           </div>
 
           {/* Main Content */}
-          <div
-            className={`grid grid-cols-1 gap-6 ${result ? "lg:grid-cols-2" : ""}`}
-          >
-            {/* Left Column - Upload & Original */}
-            <div className="space-y-6">
-              {!originalFile ? (
-                <div className="max-w-2xl mx-auto">
-                  <ImageUpload
-                    onImageSelect={handleImageSelect}
-                    acceptedFormats={["image/jpeg", "image/png", "image/webp"]}
-                  />
-                </div>
-              ) : (
-                <Card className="border-2 border-gray-200 dark:border-gray-700">
-                  <CardHeader className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-950/30 dark:to-pink-950/30 border-b border-gray-200 dark:border-gray-700">
-                    <h3 className="text-lg font-bold">Original Image</h3>
-                  </CardHeader>
-                  <CardBody className="p-6">
-                    <div className="relative aspect-video bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden mb-4">
-                      <img
-                        src={originalUrl}
-                        alt="Original"
-                        className="w-full h-full object-contain"
-                      />
+          {!originalFile ? (
+            <div className="max-w-2xl mx-auto">
+              <ImageUpload
+                onImageSelect={handleImageSelect}
+                acceptedFormats={["image/jpeg", "image/png", "image/webp"]}
+              />
+            </div>
+          ) : (
+            <div className="max-w-6xl mx-auto space-y-6">
+              {/* Compact Image Comparison */}
+              <Card className="border-2 border-gray-200 dark:border-gray-700">
+                <CardBody className="p-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {/* Original Image */}
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                          Original
+                        </h3>
+                        <Chip size="sm" variant="flat" color="default">
+                          With Background
+                        </Chip>
+                      </div>
+                      <div className="relative aspect-video bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden border-2 border-gray-200 dark:border-gray-700">
+                        <img
+                          src={originalUrl}
+                          alt="Original"
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
                     </div>
-                    <div className="flex gap-3">
-                      <Button
-                        color="primary"
-                        size="md"
-                        onPress={() => handleRemoveBackground()}
-                        isDisabled={isProcessing}
-                        isLoading={isProcessing}
-                        className="flex-1"
+
+                    {/* Result Image */}
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                          {result ? "Result" : "Preview"}
+                        </h3>
+                        {result && (
+                          <Chip size="sm" variant="flat" color="success">
+                            Background Removed
+                          </Chip>
+                        )}
+                      </div>
+                      <div
+                        className="relative aspect-video rounded-lg overflow-hidden border-2 border-dashed border-gray-300 dark:border-gray-600"
+                        style={
+                          result
+                            ? {
+                                backgroundImage: `
+                                  linear-gradient(45deg, #e5e7eb 25%, transparent 25%),
+                                  linear-gradient(-45deg, #e5e7eb 25%, transparent 25%),
+                                  linear-gradient(45deg, transparent 75%, #e5e7eb 75%),
+                                  linear-gradient(-45deg, transparent 75%, #e5e7eb 75%)
+                                `,
+                                backgroundSize: "20px 20px",
+                                backgroundPosition:
+                                  "0 0, 0 10px, 10px -10px, -10px 0px",
+                              }
+                            : undefined
+                        }
                       >
-                        {isProcessing
-                          ? "Removing Background..."
-                          : "Remove Background"}
-                      </Button>
-                      <Button
-                        size="md"
-                        variant="flat"
-                        onPress={() => {
-                          setOriginalFile(null);
-                          setOriginalUrl("");
-                          setResult(null);
-                          setError(null);
-                          setProgress(null);
-                        }}
-                      >
-                        Change Image
-                      </Button>
+                        {result ? (
+                          <img
+                            src={result.url}
+                            alt="Result"
+                            className="w-full h-full object-contain"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-gray-400 bg-gray-100 dark:bg-gray-800">
+                            <div className="text-center">
+                              <Sparkles className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                              <p className="text-sm">Click remove to process</p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </CardBody>
-                </Card>
-              )}
+                  </div>
+                </CardBody>
+              </Card>
 
               {/* Processing Progress */}
               {isProcessing && progress && (
                 <Card className="border-2 border-purple-200 dark:border-purple-800">
-                  <CardBody className="p-6">
-                    <div className="space-y-4">
+                  <CardBody className="p-4">
+                    <div className="space-y-3">
                       <div className="flex items-center gap-3">
                         <Sparkles className="w-5 h-5 text-purple-500 animate-pulse" />
-                        <span className="font-semibold text-gray-900 dark:text-gray-100">
+                        <span className="font-semibold text-sm text-gray-900 dark:text-gray-100">
                           {progress.message}
                         </span>
                       </div>
                       <Progress
                         value={progress.progress}
                         color="secondary"
-                        size="md"
+                        size="sm"
                         className="max-w-full"
                       />
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                      <p className="text-xs text-gray-600 dark:text-gray-400">
                         This may take a few moments on first use while the AI
                         model loads...
                       </p>
@@ -219,31 +245,10 @@ function BackgroundRemoverPage() {
               {/* Error Message */}
               {error && (
                 <Card className="border-2 border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/20">
-                  <CardBody className="p-4">
-                    <p className="text-red-600 dark:text-red-400 font-medium">
+                  <CardBody className="p-3">
+                    <p className="text-sm text-red-600 dark:text-red-400 font-medium">
                       {error}
                     </p>
-                  </CardBody>
-                </Card>
-              )}
-
-              {/* Info Card */}
-              {!isProcessing && !result && originalFile && (
-                <Card className="border-2 border-blue-200 dark:border-blue-800">
-                  <CardBody className="p-4">
-                    <div className="flex gap-3">
-                      <Info className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                      <div className="text-sm text-gray-600 dark:text-gray-400">
-                        <p className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
-                          Ready to remove background
-                        </p>
-                        <p>
-                          Click "Remove Background" to start processing. The AI
-                          model (~50MB) will be downloaded on first use and
-                          cached for faster subsequent processing.
-                        </p>
-                      </div>
-                    </div>
                   </CardBody>
                 </Card>
               )}
@@ -256,87 +261,72 @@ function BackgroundRemoverPage() {
                   isProcessing={isProcessing}
                 />
               )}
-            </div>
 
-            {/* Right Column - Result */}
-            {result && (
-              <div className="space-y-6">
-                <Card className="border-2 border-gray-200 dark:border-gray-700">
-                  <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 border-b border-gray-200 dark:border-gray-700">
-                    <h3 className="text-lg font-bold">Background Removed</h3>
-                  </CardHeader>
-                  <CardBody className="p-6">
-                    {/* Checkered background to show transparency */}
-                    <div
-                      className="relative aspect-video rounded-lg overflow-hidden mb-4"
-                      style={{
-                        backgroundImage: `
-                          linear-gradient(45deg, #e5e7eb 25%, transparent 25%),
-                          linear-gradient(-45deg, #e5e7eb 25%, transparent 25%),
-                          linear-gradient(45deg, transparent 75%, #e5e7eb 75%),
-                          linear-gradient(-45deg, transparent 75%, #e5e7eb 75%)
-                        `,
-                        backgroundSize: "20px 20px",
-                        backgroundPosition:
-                          "0 0, 0 10px, 10px -10px, -10px 0px",
-                      }}
-                    >
-                      <img
-                        src={result.url}
-                        alt="Background removed"
-                        className="w-full h-full object-contain"
-                      />
+              {/* Compact Action Bar */}
+              <Card className="border-2 border-gray-200 dark:border-gray-700">
+                <CardBody className="p-4">
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                    <div className="flex-1 text-sm text-gray-600 dark:text-gray-400">
+                      {!result && !isProcessing && (
+                        <div className="flex items-center gap-2">
+                          <Info className="w-4 h-4 text-blue-500 flex-shrink-0" />
+                          <span>AI model (~50MB) downloads on first use</span>
+                        </div>
+                      )}
+                      {result && (
+                        <span className="text-green-600 dark:text-green-400 font-medium">
+                          ✓ Background removed successfully
+                        </span>
+                      )}
                     </div>
-
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                        <span className="text-sm font-medium">Dimensions</span>
-                        <span className="text-sm font-bold">
-                          {result.width} × {result.height}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center justify-between p-3 bg-green-50 dark:bg-green-950/30 rounded-lg">
-                        <span className="text-sm font-medium">Format</span>
-                        <span className="text-sm font-bold text-green-600 dark:text-green-400">
-                          PNG (Transparent)
-                        </span>
-                      </div>
-
+                    <div className="flex gap-2">
                       <Button
-                        color="success"
                         size="lg"
-                        className="w-full font-bold"
-                        startContent={<Download className="w-5 h-5" />}
-                        onPress={handleDownload}
+                        variant="bordered"
+                        onPress={() => {
+                          setOriginalFile(null);
+                          setOriginalUrl("");
+                          setResult(null);
+                          setError(null);
+                          setProgress(null);
+                        }}
+                        startContent={<RotateCcw className="w-4 h-4" />}
+                        className="flex-1 sm:flex-initial"
                       >
-                        Download PNG
+                        New
                       </Button>
+                      <Button
+                        size="lg"
+                        color="secondary"
+                        onPress={() => handleRemoveBackground()}
+                        isDisabled={isProcessing}
+                        isLoading={isProcessing}
+                        className="flex-1 sm:flex-initial font-bold"
+                        startContent={
+                          !isProcessing ? (
+                            <Sparkles className="w-4 h-4" />
+                          ) : undefined
+                        }
+                      >
+                        {isProcessing ? "Processing..." : "Remove BG"}
+                      </Button>
+                      {result && (
+                        <Button
+                          size="lg"
+                          color="success"
+                          onPress={handleDownload}
+                          startContent={<Download className="w-4 h-4" />}
+                          className="flex-1 sm:flex-initial font-bold"
+                        >
+                          Download
+                        </Button>
+                      )}
                     </div>
-                  </CardBody>
-                </Card>
-
-                {/* Tips Card */}
-                <Card className="border-2 border-blue-200 dark:border-blue-800">
-                  <CardBody className="p-4">
-                    <div className="flex gap-3">
-                      <Info className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                      <div className="text-sm text-gray-600 dark:text-gray-400">
-                        <p className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
-                          Tips for best results
-                        </p>
-                        <ul className="space-y-1 list-disc list-inside">
-                          <li>Use images with clear subject separation</li>
-                          <li>Good lighting helps the AI detect edges</li>
-                          <li>Works best with people, products, and objects</li>
-                        </ul>
-                      </div>
-                    </div>
-                  </CardBody>
-                </Card>
-              </div>
-            )}
-          </div>
+                  </div>
+                </CardBody>
+              </Card>
+            </div>
+          )}
         </div>
       </section>
     </>

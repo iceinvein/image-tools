@@ -1,24 +1,14 @@
 import { Button } from "@heroui/button";
-import { Card, CardBody, CardHeader } from "@heroui/card";
+import { Card, CardBody } from "@heroui/card";
 import { Chip } from "@heroui/chip";
 import { Input } from "@heroui/input";
 import { Select, SelectItem } from "@heroui/select";
 import { Slider } from "@heroui/slider";
 import { Switch } from "@heroui/switch";
-import { Tab, Tabs } from "@heroui/tabs";
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import {
-  Download,
-  Grid3x3,
-  Lock,
-  Maximize2,
-  Percent,
-  RotateCcw,
-  Sliders,
-} from "lucide-react";
+import { Download, Maximize2, RotateCcw } from "lucide-react";
 import React, { useCallback, useEffect, useState } from "react";
-import { ImagePreview } from "@/components/image-preview";
 import { ImageUpload } from "@/components/image-upload";
 import {
   createBreadcrumbSchema,
@@ -200,9 +190,6 @@ function ResizerPage() {
   const [maintainAspectRatio, setMaintainAspectRatio] = useState<boolean>(true);
   const [selectedPreset, setSelectedPreset] = useState<string>("custom");
   const [isProcessing, setIsProcessing] = useState(false);
-  const [resizeMode, setResizeMode] = useState<
-    "percentage" | "dimensions" | "presets"
-  >("percentage");
   const [scalePercentage, setScalePercentage] = useState<number>(100);
 
   const handleImageSelect = async (file: File, imageUrl: string) => {
@@ -382,457 +369,241 @@ function ResizerPage() {
             <ImageUpload onImageSelect={handleImageSelect} />
           </div>
         ) : (
-          <div className="space-y-8">
-            {/* Top section - Live Preview with more space */}
-            <div className="space-y-6">
-              <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
-                  🎯 Live Preview
-                </h2>
-                <Button
-                  variant="bordered"
-                  size="sm"
-                  onPress={handleReset}
-                  startContent={<RotateCcw className="w-4 h-4" />}
-                >
-                  New Image
-                </Button>
-              </div>
-
-              {/* Animated preview */}
-              {originalDimensions && (
-                <div className="w-full">
-                  <Card className="border border-gray-200 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all duration-300">
-                    <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 border-b border-gray-200 dark:border-gray-700">
-                      <div className="flex items-center justify-between w-full">
-                        <div className="flex items-center gap-3">
-                          <h3 className="text-xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent leading-tight pb-0.5">
-                            Live Preview
-                          </h3>
-                          <Chip color="success" variant="flat" size="sm">
-                            {targetWidth} × {targetHeight}
-                          </Chip>
-                        </div>
-                        <div className="text-sm text-gray-600 dark:text-gray-400">
-                          Scale:{" "}
-                          {Math.round(
-                            (targetWidth / originalDimensions.width) * 100,
-                          )}
-                          %
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardBody className="p-8">
-                      <AnimatedPreview
-                        imageUrl={originalUrl}
-                        originalDimensions={originalDimensions}
-                        targetWidth={targetWidth}
-                        targetHeight={targetHeight}
-                      />
-                    </CardBody>
-                  </Card>
-                </div>
-              )}
-            </div>
-
-            {/* Bottom section - Controls */}
-            <div className="space-y-6">
-              <div className="text-center">
-                <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  📐 Resize Controls
-                </h2>
-                <p className="text-gray-600 dark:text-gray-400 mt-2">
-                  Adjust the settings below to see the preview update in
-                  real-time
-                </p>
-              </div>
-
-              <Card className="border border-gray-200 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all duration-300">
-                <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 border-b border-gray-200 dark:border-gray-700">
-                  <h3 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent leading-tight pb-0.5">
-                    📐 Resize Settings
-                  </h3>
-                </CardHeader>
-                <CardBody className="p-6">
-                  <Tabs
-                    selectedKey={resizeMode}
-                    onSelectionChange={(key) =>
-                      setResizeMode(
-                        key as "percentage" | "dimensions" | "presets",
-                      )
-                    }
-                    aria-label="Resize mode"
-                    classNames={{
-                      tabList:
-                        "gap-2 w-full bg-gray-100 dark:bg-gray-900 p-1 rounded-xl mb-6",
-                      cursor:
-                        "bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg",
-                      tab: "px-3 py-2 font-semibold text-sm",
-                      tabContent: "group-data-[selected=true]:text-white",
-                    }}
-                  >
-                    {/* Percentage Mode */}
-                    <Tab
-                      key="percentage"
-                      title={
-                        <div className="flex items-center gap-2">
-                          <Percent className="w-4 h-4" />
-                          <span>Scale</span>
-                        </div>
-                      }
-                    >
-                      <div className="space-y-6 pt-4">
-                        {/* Quick scale buttons */}
-                        <div>
-                          <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
-                            Quick Scale
-                          </p>
-                          <div className="grid grid-cols-3 gap-2">
-                            {scalePresets.map((preset) => (
-                              <Button
-                                key={preset.value}
-                                size="sm"
-                                variant={
-                                  scalePercentage === preset.value
-                                    ? "solid"
-                                    : "bordered"
-                                }
-                                color={
-                                  scalePercentage === preset.value
-                                    ? "success"
-                                    : "default"
-                                }
-                                onPress={() => handleScaleChange(preset.value)}
-                                className="font-bold"
-                              >
-                                {preset.label}
-                              </Button>
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* Scale slider */}
-                        <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-xl border border-blue-200 dark:border-blue-800">
-                          <div className="flex items-center justify-between mb-3">
-                            <span className="text-sm font-bold text-gray-700 dark:text-gray-300">
-                              Custom Scale
-                            </span>
-                            <span className="text-2xl font-black bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                              {scalePercentage}%
-                            </span>
-                          </div>
-                          <Slider
-                            value={scalePercentage}
-                            onChange={(value) =>
-                              handleScaleChange(value as number)
-                            }
-                            minValue={10}
-                            maxValue={300}
-                            step={5}
-                            classNames={{
-                              track:
-                                "bg-gradient-to-r from-green-200 to-emerald-200 dark:from-green-900 dark:to-emerald-900",
-                              filler:
-                                "bg-gradient-to-r from-green-500 to-emerald-500",
-                              thumb:
-                                "bg-gradient-to-r from-green-600 to-emerald-600 shadow-lg",
-                            }}
-                          />
-                          <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-2">
-                            <span>10%</span>
-                            <span>300%</span>
-                          </div>
-                        </div>
-
-                        {/* Size preview with visual comparison */}
+          <div className="max-w-7xl mx-auto space-y-6">
+            {/* Compact Side-by-Side Layout */}
+            <Card className="border-2 border-gray-200 dark:border-gray-700">
+              <CardBody className="p-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Left: Live Preview */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        Live Preview
+                      </h3>
+                      <div className="flex items-center gap-2">
+                        <Chip size="sm" variant="flat" color="success">
+                          {targetWidth} × {targetHeight}
+                        </Chip>
                         {originalDimensions && (
-                          <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-xl border border-blue-200 dark:border-blue-800">
-                            <div className="space-y-3">
-                              <div className="flex items-center justify-between">
-                                <span className="text-xs font-medium text-gray-600 dark:text-gray-400">
-                                  Original:
-                                </span>
-                                <span className="text-sm font-bold text-gray-700 dark:text-gray-300">
-                                  {originalDimensions.width} ×{" "}
-                                  {originalDimensions.height}
-                                </span>
-                              </div>
-
-                              {/* Visual size comparison bars */}
-                              <div className="space-y-2">
-                                <div className="relative h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                                  <div
-                                    className="absolute h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full transition-all duration-300"
-                                    style={{
-                                      width: `${Math.min((targetWidth / originalDimensions.width) * 100, 100)}%`,
-                                    }}
-                                  />
-                                </div>
-                                <div className="flex items-center justify-between text-xs">
-                                  <span className="text-gray-500 dark:text-gray-400">
-                                    Width: {scalePercentage}%
-                                  </span>
-                                  {scalePercentage !== 100 && (
-                                    <span
-                                      className={`font-bold ${scalePercentage > 100 ? "text-orange-600" : "text-green-600"}`}
-                                    >
-                                      {scalePercentage > 100 ? "↑" : "↓"}{" "}
-                                      {Math.abs(100 - scalePercentage)}%
-                                    </span>
-                                  )}
-                                </div>
-                              </div>
-
-                              <div className="flex items-center justify-between pt-2 border-t border-blue-200 dark:border-blue-800">
-                                <span className="text-xs font-medium text-gray-600 dark:text-gray-400">
-                                  New size:
-                                </span>
-                                <span className="text-lg font-black bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                                  {targetWidth} × {targetHeight}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
+                          <Chip size="sm" variant="flat" color="default">
+                            {Math.round(
+                              (targetWidth / originalDimensions.width) * 100,
+                            )}
+                            %
+                          </Chip>
                         )}
                       </div>
-                    </Tab>
+                    </div>
+                    <div className="relative bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden border-2 border-gray-200 dark:border-gray-700">
+                      {originalDimensions && (
+                        <AnimatedPreview
+                          imageUrl={originalUrl}
+                          originalDimensions={originalDimensions}
+                          targetWidth={targetWidth}
+                          targetHeight={targetHeight}
+                        />
+                      )}
+                    </div>
+                  </div>
 
-                    {/* Dimensions Mode */}
-                    <Tab
-                      key="dimensions"
-                      title={
-                        <div className="flex items-center gap-2">
-                          <Sliders className="w-4 h-4" />
-                          <span>Exact</span>
-                        </div>
-                      }
-                    >
-                      <div className="space-y-6 pt-4">
-                        {/* Width slider */}
-                        <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-xl border border-blue-200 dark:border-blue-800">
-                          <div className="flex items-center justify-between mb-3">
-                            <span className="text-sm font-bold text-gray-700 dark:text-gray-300">
-                              Width
-                            </span>
-                            <Input
-                              type="number"
-                              value={targetWidth.toString()}
-                              onChange={(e) =>
-                                handleWidthChange(Number(e.target.value))
-                              }
-                              min={1}
-                              max={5000}
-                              size="sm"
-                              className="w-24"
-                              endContent={
-                                <span className="text-xs text-gray-400">
-                                  px
-                                </span>
-                              }
-                              classNames={{
-                                input: "text-right font-bold",
-                              }}
-                            />
-                          </div>
-                          <Slider
-                            value={targetWidth}
-                            onChange={(value) =>
-                              handleWidthChange(value as number)
-                            }
-                            minValue={1}
-                            maxValue={
-                              originalDimensions
-                                ? Math.max(originalDimensions.width * 2, 2000)
-                                : 2000
-                            }
-                            step={1}
-                            classNames={{
-                              filler:
-                                "bg-gradient-to-r from-blue-500 to-cyan-500",
-                              thumb:
-                                "bg-gradient-to-r from-blue-600 to-cyan-600 shadow-lg",
-                            }}
-                          />
-                        </div>
+                  {/* Right: Controls */}
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        Resize Settings
+                      </h3>
+                      <Switch
+                        size="sm"
+                        isSelected={maintainAspectRatio}
+                        onValueChange={setMaintainAspectRatio}
+                      >
+                        <span className="text-xs">Lock Aspect</span>
+                      </Switch>
+                    </div>
 
-                        {/* Height slider */}
-                        <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-xl border border-blue-200 dark:border-blue-800">
-                          <div className="flex items-center justify-between mb-3">
-                            <span className="text-sm font-bold text-gray-700 dark:text-gray-300">
-                              Height
-                            </span>
-                            <Input
-                              type="number"
-                              value={targetHeight.toString()}
-                              onChange={(e) =>
-                                handleHeightChange(Number(e.target.value))
-                              }
-                              min={1}
-                              max={5000}
-                              size="sm"
-                              className="w-24"
-                              endContent={
-                                <span className="text-xs text-gray-400">
-                                  px
-                                </span>
-                              }
-                              classNames={{
-                                input: "text-right font-bold",
-                              }}
-                            />
-                          </div>
-                          <Slider
-                            value={targetHeight}
-                            onChange={(value) =>
-                              handleHeightChange(value as number)
+                    {/* Quick Scale Buttons */}
+                    <div>
+                      <p className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">
+                        Quick Scale
+                      </p>
+                      <div className="grid grid-cols-3 gap-2">
+                        {scalePresets.map((preset) => (
+                          <Button
+                            key={preset.value}
+                            size="sm"
+                            variant={
+                              scalePercentage === preset.value
+                                ? "solid"
+                                : "bordered"
                             }
-                            minValue={1}
-                            maxValue={
-                              originalDimensions
-                                ? Math.max(originalDimensions.height * 2, 2000)
-                                : 2000
+                            color={
+                              scalePercentage === preset.value
+                                ? "success"
+                                : "default"
                             }
-                            step={1}
-                            classNames={{
-                              filler:
-                                "bg-gradient-to-r from-purple-500 to-pink-500",
-                              thumb:
-                                "bg-gradient-to-r from-purple-600 to-pink-600 shadow-lg",
-                            }}
-                          />
-                        </div>
-
-                        {/* Aspect ratio lock */}
-                        <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-xl border border-blue-200 dark:border-blue-800">
-                          <Switch
-                            isSelected={maintainAspectRatio}
-                            onValueChange={setMaintainAspectRatio}
-                            classNames={{
-                              wrapper:
-                                "group-data-[selected=true]:bg-gradient-to-r from-green-500 to-emerald-500",
-                            }}
+                            onPress={() => handleScaleChange(preset.value)}
+                            className="text-xs"
                           >
-                            <div className="flex items-center gap-2">
-                              <Lock className="w-4 h-4" />
-                              <span className="font-semibold">
-                                Lock aspect ratio
-                              </span>
-                            </div>
-                          </Switch>
+                            {preset.label}
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Scale Slider */}
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs font-medium text-gray-600 dark:text-gray-400">
+                          Custom Scale
+                        </span>
+                        <span className="text-sm font-bold text-green-600 dark:text-green-400">
+                          {scalePercentage}%
+                        </span>
+                      </div>
+                      <Slider
+                        size="sm"
+                        value={scalePercentage}
+                        onChange={(value) => handleScaleChange(value as number)}
+                        minValue={10}
+                        maxValue={300}
+                        step={5}
+                        aria-label="Scale percentage"
+                        classNames={{
+                          track: "bg-gray-200 dark:bg-gray-700",
+                          filler:
+                            "bg-gradient-to-r from-green-500 to-emerald-500",
+                          thumb: "bg-green-600",
+                        }}
+                      />
+                      <div className="flex justify-between text-xs text-gray-400 mt-1">
+                        <span>10%</span>
+                        <span>300%</span>
+                      </div>
+                    </div>
+
+                    {/* Dimension Inputs */}
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1 block">
+                          Width (px)
+                        </label>
+                        <Input
+                          type="number"
+                          size="sm"
+                          value={targetWidth.toString()}
+                          onChange={(e) =>
+                            handleWidthChange(Number(e.target.value))
+                          }
+                          min={1}
+                        />
+                      </div>
+                      <div>
+                        <label className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1 block">
+                          Height (px)
+                        </label>
+                        <Input
+                          type="number"
+                          size="sm"
+                          value={targetHeight.toString()}
+                          onChange={(e) =>
+                            handleHeightChange(Number(e.target.value))
+                          }
+                          min={1}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Presets */}
+                    <div>
+                      <label className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2 block">
+                        Common Presets
+                      </label>
+                      <Select
+                        size="sm"
+                        selectedKeys={[selectedPreset]}
+                        onChange={(e) => handlePresetChange(e.target.value)}
+                        aria-label="Preset sizes"
+                      >
+                        {presets.map((preset) => (
+                          <SelectItem key={preset.key}>
+                            {preset.label}
+                          </SelectItem>
+                        ))}
+                      </Select>
+                    </div>
+
+                    {/* Target Size Display */}
+                    {newDimensions && originalDimensions && (
+                      <div className="p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                        <div className="flex items-center justify-between text-xs">
+                          <span className="text-gray-600 dark:text-gray-400">
+                            {originalDimensions.width} ×{" "}
+                            {originalDimensions.height}
+                          </span>
+                          <span className="text-gray-400">→</span>
+                          <span className="font-bold text-blue-600 dark:text-blue-400">
+                            {newDimensions.width} × {newDimensions.height}
+                          </span>
                         </div>
                       </div>
-                    </Tab>
+                    )}
+                  </div>
+                </div>
+              </CardBody>
+            </Card>
 
-                    {/* Presets Mode */}
-                    <Tab
-                      key="presets"
-                      title={
-                        <div className="flex items-center gap-2">
-                          <Grid3x3 className="w-4 h-4" />
-                          <span>Presets</span>
-                        </div>
+            {/* Compact Action Bar */}
+            <Card className="border-2 border-gray-200 dark:border-gray-700">
+              <CardBody className="p-4">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                  <div className="flex-1 text-sm text-gray-600 dark:text-gray-400">
+                    {resizedUrl ? (
+                      <span className="text-green-600 dark:text-green-400 font-medium">
+                        ✓ Image resized successfully
+                      </span>
+                    ) : (
+                      <span>Adjust settings and click resize</span>
+                    )}
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      size="lg"
+                      variant="bordered"
+                      onPress={handleReset}
+                      startContent={<RotateCcw className="w-4 h-4" />}
+                      className="flex-1 sm:flex-initial"
+                    >
+                      New
+                    </Button>
+                    <Button
+                      size="lg"
+                      color="primary"
+                      onPress={handleResize}
+                      isLoading={isProcessing}
+                      className="flex-1 sm:flex-initial font-bold"
+                      startContent={
+                        !isProcessing ? (
+                          <Maximize2 className="w-4 h-4" />
+                        ) : undefined
                       }
                     >
-                      <div className="space-y-6 pt-4">
-                        <Select
-                          label="Size Preset"
-                          labelPlacement="outside"
-                          placeholder="Select preset"
-                          selectedKeys={[selectedPreset]}
-                          onSelectionChange={(keys) => {
-                            const selected = Array.from(keys)[0] as string;
-                            handlePresetChange(selected);
-                          }}
-                          classNames={{
-                            trigger:
-                              "border-2 hover:border-primary transition-colors",
-                          }}
-                        >
-                          {presets.map((preset) => (
-                            <SelectItem key={preset.key}>
-                              {preset.label}
-                            </SelectItem>
-                          ))}
-                        </Select>
-
-                        {newDimensions && (
-                          <div className="p-4 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20 rounded-xl border border-blue-200 dark:border-blue-800">
-                            <div className="space-y-2">
-                              <div className="flex items-center justify-between">
-                                <span className="text-xs font-medium text-gray-600 dark:text-gray-400">
-                                  Target size:
-                                </span>
-                                <span className="text-lg font-black bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                                  {newDimensions.width} × {newDimensions.height}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </Tab>
-                  </Tabs>
-
-                  <Button
-                    size="lg"
-                    onPress={handleResize}
-                    isLoading={isProcessing}
-                    className="bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:scale-102 transition-all duration-300 w-full mt-6 font-bold text-base overflow-hidden"
-                    startContent={
-                      !isProcessing ? (
-                        <Maximize2 className="w-5 h-5" />
-                      ) : undefined
-                    }
-                  >
-                    {isProcessing ? "Resizing..." : "Resize Image"}
-                  </Button>
-                </CardBody>
-              </Card>
-            </div>
-          </div>
-        )}
-
-        {/* Results section - shown below the main layout */}
-        {resizedUrl && (
-          <div className="mt-12 space-y-6 animate-in slide-in-from-bottom-4 duration-500">
-            <div className="text-center mb-6">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 border border-blue-200 dark:border-blue-800 rounded-full">
-                <span className="text-2xl">✅</span>
-                <span className="font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  Resize Complete!
-                </span>
-              </div>
-            </div>
-
-            <div className="max-w-2xl mx-auto">
-              <ImagePreview
-                imageUrl={resizedUrl}
-                title="📏 Resized Image"
-                fileName={`resized_${targetWidth}x${targetHeight}.jpg`}
-                fileSize={resizedBlob?.size}
-                dimensions={newDimensions ?? undefined}
-              />
-            </div>
-
-            <div className="mt-6 flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                size="lg"
-                onPress={handleDownload}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:scale-102 transition-all duration-300 font-bold overflow-hidden"
-                startContent={<Download className="w-5 h-5" />}
-              >
-                Download Image
-              </Button>
-              <Button
-                variant="bordered"
-                size="lg"
-                onPress={handleReset}
-                className="font-semibold border-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300"
-                startContent={<RotateCcw className="w-5 h-5" />}
-              >
-                Resize Another
-              </Button>
-            </div>
+                      {isProcessing ? "Resizing..." : "Resize"}
+                    </Button>
+                    {resizedUrl && (
+                      <Button
+                        size="lg"
+                        color="success"
+                        onPress={handleDownload}
+                        startContent={<Download className="w-4 h-4" />}
+                        className="flex-1 sm:flex-initial font-bold"
+                      >
+                        Download
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </CardBody>
+            </Card>
           </div>
         )}
       </div>

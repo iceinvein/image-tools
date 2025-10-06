@@ -1,5 +1,5 @@
 import { Button } from "@heroui/button";
-import { Card, CardBody, CardHeader } from "@heroui/card";
+import { Card, CardBody } from "@heroui/card";
 import { Chip } from "@heroui/chip";
 import { createFileRoute } from "@tanstack/react-router";
 import { Check, Download, FileImage, Info, RotateCcw } from "lucide-react";
@@ -190,181 +190,182 @@ function IcoConverterPage() {
             <ImageUpload onImageSelect={handleImageSelect} />
           </div>
         ) : (
-          <div className="space-y-8">
-            {/* Controls Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Left: Image Preview */}
-              <Card className="border-2 border-gray-200 dark:border-gray-700">
-                <CardHeader className="bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-cyan-950/30 dark:to-blue-950/30 border-b border-gray-200 dark:border-gray-700">
-                  <div className="flex items-center justify-between w-full">
-                    <h3 className="text-xl font-bold">Original Image</h3>
+          <div className="max-w-6xl mx-auto space-y-6">
+            {/* Compact Image Preview */}
+            <Card className="border-2 border-gray-200 dark:border-gray-700">
+              <CardBody className="p-6">
+                <div className="flex flex-col lg:flex-row gap-6">
+                  {/* Image Preview */}
+                  <div className="lg:w-64 flex-shrink-0">
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                          Original Image
+                        </h3>
+                        {originalDimensions && (
+                          <Chip size="sm" variant="flat" color="default">
+                            {originalDimensions.width} ×{" "}
+                            {originalDimensions.height}
+                          </Chip>
+                        )}
+                      </div>
+                      <div className="aspect-square bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 rounded-lg overflow-hidden flex items-center justify-center border-2 border-gray-200 dark:border-gray-700">
+                        <img
+                          src={originalUrl}
+                          alt="Original"
+                          className="max-w-full max-h-full object-contain"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Size Selection - Compact */}
+                  <div className="flex-1 space-y-4">
+                    {/* Presets */}
+                    <div>
+                      <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                        Quick Presets
+                      </div>
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                        {Object.entries(PRESETS).map(([key, preset]) => (
+                          <Button
+                            key={key}
+                            size="sm"
+                            variant={
+                              selectedPreset === key ? "solid" : "bordered"
+                            }
+                            color={
+                              selectedPreset === key ? "primary" : "default"
+                            }
+                            onPress={() => handlePresetChange(key)}
+                            className="justify-start h-auto py-2"
+                          >
+                            <div className="text-left">
+                              <div className="font-semibold text-xs">
+                                {preset.name}
+                              </div>
+                            </div>
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Size Selection */}
+                    <div>
+                      <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                        Select Sizes ({selectedSizes.length} selected)
+                      </div>
+                      <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-2">
+                        {availableSizes.map((size) => {
+                          const isSelected = selectedSizes.includes(size.label);
+                          return (
+                            <Button
+                              key={size.label}
+                              size="sm"
+                              variant={isSelected ? "solid" : "bordered"}
+                              color={isSelected ? "success" : "default"}
+                              onPress={() => {
+                                if (isSelected) {
+                                  setSelectedSizes(
+                                    selectedSizes.filter(
+                                      (s) => s !== size.label,
+                                    ),
+                                  );
+                                } else {
+                                  setSelectedSizes([
+                                    ...selectedSizes,
+                                    size.label,
+                                  ]);
+                                }
+                                setSelectedPreset("custom");
+                              }}
+                              startContent={
+                                isSelected ? (
+                                  <Check className="w-3 h-3" />
+                                ) : undefined
+                              }
+                              className="text-xs"
+                            >
+                              {size.label}
+                            </Button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {originalDimensions &&
+                      availableSizes.length < ALL_SIZES.length && (
+                        <div className="p-2 bg-yellow-50 dark:bg-yellow-950/30 rounded-lg border border-yellow-200 dark:border-yellow-800">
+                          <div className="flex items-start gap-2">
+                            <Info className="w-3 h-3 text-yellow-600 dark:text-yellow-400 mt-0.5 flex-shrink-0" />
+                            <p className="text-xs text-yellow-700 dark:text-yellow-300">
+                              Some sizes unavailable. Upload larger image for
+                              more options.
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                  </div>
+                </div>
+              </CardBody>
+            </Card>
+
+            {/* Compact Action Bar */}
+            <Card className="border-2 border-gray-200 dark:border-gray-700">
+              <CardBody className="p-4">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                  <div className="flex-1 text-sm text-gray-600 dark:text-gray-400">
+                    {selectedSizes.length > 0 ? (
+                      <span>
+                        <strong className="text-gray-900 dark:text-gray-100">
+                          {selectedSizes.length} size
+                          {selectedSizes.length !== 1 ? "s" : ""}
+                        </strong>{" "}
+                        selected for ICO file
+                      </span>
+                    ) : (
+                      <span>Select at least one size to create ICO file</span>
+                    )}
+                  </div>
+                  <div className="flex gap-2">
                     <Button
-                      size="sm"
+                      size="lg"
                       variant="bordered"
                       onPress={handleReset}
                       startContent={<RotateCcw className="w-4 h-4" />}
+                      className="flex-1 sm:flex-initial"
                     >
-                      New Image
+                      New
                     </Button>
-                  </div>
-                </CardHeader>
-                <CardBody className="p-6">
-                  <div className="aspect-square bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 rounded-xl overflow-hidden flex items-center justify-center">
-                    <img
-                      src={originalUrl}
-                      alt="Original"
-                      className="max-w-full max-h-full object-contain"
-                    />
-                  </div>
-                  {originalDimensions && (
-                    <div className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
-                      {originalDimensions.width} × {originalDimensions.height}
-                    </div>
-                  )}
-                </CardBody>
-              </Card>
-
-              {/* Right: Size Selection */}
-              <Card className="border-2 border-gray-200 dark:border-gray-700">
-                <CardHeader className="bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-cyan-950/30 dark:to-blue-950/30 border-b border-gray-200 dark:border-gray-700">
-                  <h3 className="text-xl font-bold">
-                    <FileImage className="w-5 h-5 inline mr-2" />
-                    Icon Sizes
-                  </h3>
-                </CardHeader>
-                <CardBody className="p-6 space-y-6">
-                  {/* Presets */}
-                  <div>
-                    <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
-                      Quick Presets
-                    </div>
-                    <div className="grid grid-cols-2 gap-2">
-                      {Object.entries(PRESETS).map(([key, preset]) => (
-                        <Button
-                          key={key}
-                          size="sm"
-                          variant={
-                            selectedPreset === key ? "solid" : "bordered"
-                          }
-                          color={selectedPreset === key ? "primary" : "default"}
-                          onPress={() => handlePresetChange(key)}
-                          className="justify-start h-auto py-3"
-                        >
-                          <div className="text-left">
-                            <div className="font-semibold">{preset.name}</div>
-                            <div className="text-xs opacity-70">
-                              {preset.description}
-                            </div>
-                          </div>
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Size Selection */}
-                  <div>
-                    <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
-                      Select Sizes ({selectedSizes.length} selected)
-                    </div>
-                    <div className="grid grid-cols-2 gap-2">
-                      {availableSizes.map((size) => {
-                        const isSelected = selectedSizes.includes(size.label);
-                        return (
-                          <Button
-                            key={size.label}
-                            size="sm"
-                            variant={isSelected ? "solid" : "bordered"}
-                            color={isSelected ? "success" : "default"}
-                            onPress={() => {
-                              if (isSelected) {
-                                setSelectedSizes(
-                                  selectedSizes.filter((s) => s !== size.label),
-                                );
-                              } else {
-                                setSelectedSizes([
-                                  ...selectedSizes,
-                                  size.label,
-                                ]);
-                              }
-                              setSelectedPreset("custom");
-                            }}
-                            startContent={
-                              isSelected ? (
-                                <Check className="w-4 h-4" />
-                              ) : undefined
-                            }
-                          >
-                            {size.label}
-                          </Button>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {originalDimensions &&
-                    availableSizes.length < ALL_SIZES.length && (
-                      <div className="p-3 bg-yellow-50 dark:bg-yellow-950/30 rounded-lg border border-yellow-200 dark:border-yellow-800">
-                        <div className="flex items-start gap-2">
-                          <Info className="w-4 h-4 text-yellow-600 dark:text-yellow-400 mt-0.5 flex-shrink-0" />
-                          <p className="text-xs text-yellow-700 dark:text-yellow-300">
-                            Some sizes are unavailable because your image is too
-                            small. Upload a larger image for more size options.
-                          </p>
-                        </div>
-                      </div>
-                    )}
-
-                  <Button
-                    size="lg"
-                    onPress={handleConvert}
-                    isLoading={isProcessing}
-                    isDisabled={selectedSizes.length === 0}
-                    className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-lg hover:scale-102 transition-all duration-300 font-bold overflow-hidden"
-                    startContent={
-                      !isProcessing ? (
-                        <FileImage className="w-5 h-5" />
-                      ) : undefined
-                    }
-                  >
-                    {isProcessing ? "Converting..." : "Create ICO File"}
-                  </Button>
-                </CardBody>
-              </Card>
-            </div>
-
-            {/* Result Section */}
-            {convertedBlob && (
-              <Card className="border-2 border-green-200 dark:border-green-800 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30">
-                <CardHeader>
-                  <h3 className="text-xl font-bold text-green-800 dark:text-green-200">
-                    ✅ ICO File Created!
-                  </h3>
-                </CardHeader>
-                <CardBody className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
-                        File size: {(convertedBlob.size / 1024).toFixed(2)} KB
-                      </p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
-                        Contains {selectedSizes.length} size
-                        {selectedSizes.length !== 1 ? "s" : ""}:{" "}
-                        {selectedSizes.join(", ")}
-                      </p>
-                    </div>
                     <Button
                       size="lg"
-                      color="success"
-                      onPress={handleDownload}
-                      startContent={<Download className="w-5 h-5" />}
-                      className="font-bold"
+                      onPress={handleConvert}
+                      isLoading={isProcessing}
+                      isDisabled={selectedSizes.length === 0}
+                      className="flex-1 sm:flex-initial bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-lg hover:scale-102 transition-all duration-300 font-bold overflow-hidden"
+                      startContent={
+                        !isProcessing ? (
+                          <FileImage className="w-4 h-4" />
+                        ) : undefined
+                      }
                     >
-                      Download ICO
+                      {isProcessing ? "Converting..." : "Create ICO"}
                     </Button>
+                    {convertedBlob && (
+                      <Button
+                        size="lg"
+                        color="success"
+                        onPress={handleDownload}
+                        startContent={<Download className="w-4 h-4" />}
+                        className="flex-1 sm:flex-initial font-bold"
+                      >
+                        Download
+                      </Button>
+                    )}
                   </div>
-                </CardBody>
-              </Card>
-            )}
+                </div>
+              </CardBody>
+            </Card>
           </div>
         )}
       </div>
