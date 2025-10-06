@@ -365,9 +365,16 @@ function AssetGeneratorPage() {
                   </CardHeader>
                   <CardBody className="p-6">
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-                      {generatedAssets.map((asset) => (
-                        <div
+                      {generatedAssets.map((asset, index) => (
+                        <motion.div
                           key={asset.name}
+                          initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                          animate={{ opacity: 1, scale: 1, y: 0 }}
+                          transition={{
+                            duration: 0.3,
+                            delay: index * 0.05,
+                            ease: "easeOut",
+                          }}
                           className="rounded-lg border border-gray-200 p-4 transition-colors hover:border-primary dark:border-gray-700"
                         >
                           <div className="mb-2 flex items-start justify-between">
@@ -394,7 +401,7 @@ function AssetGeneratorPage() {
                           <div className="flex items-center justify-between text-gray-500 text-xs dark:text-gray-400">
                             <span>{asset.size}</span>
                           </div>
-                        </div>
+                        </motion.div>
                       ))}
                     </div>
                   </CardBody>

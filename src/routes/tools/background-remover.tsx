@@ -208,10 +208,14 @@ function BackgroundRemoverPage() {
                           }
                         >
                           {result ? (
-                            <img
+                            <motion.img
+                              key={result.url}
                               src={result.url}
                               alt="Result"
                               className="h-full w-full object-contain"
+                              initial={{ opacity: 0, scale: 0.95 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              transition={{ duration: 0.3, ease: "easeOut" }}
                             />
                           ) : (
                             <div className="flex h-full w-full items-center justify-center bg-gray-100 text-gray-400 dark:bg-gray-800">
@@ -299,9 +303,14 @@ function BackgroundRemoverPage() {
                           </div>
                         )}
                         {result && (
-                          <span className="font-medium text-green-600 dark:text-green-400">
+                          <motion.span
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.3, ease: "easeOut" }}
+                            className="font-medium text-green-600 dark:text-green-400"
+                          >
                             ✓ Background removed successfully
-                          </span>
+                          </motion.span>
                         )}
                       </div>
                       <div className="flex gap-2">
@@ -336,15 +345,25 @@ function BackgroundRemoverPage() {
                           {isProcessing ? "Processing..." : "Remove BG"}
                         </Button>
                         {result && (
-                          <Button
-                            size="lg"
-                            color="success"
-                            onPress={handleDownload}
-                            startContent={<Download className="h-4 w-4" />}
-                            className="flex-1 font-bold sm:flex-initial"
+                          <motion.div
+                            initial={{ opacity: 0, scale: 0.9, x: 20 }}
+                            animate={{ opacity: 1, scale: 1, x: 0 }}
+                            transition={{
+                              duration: 0.3,
+                              ease: "easeOut",
+                            }}
+                            className="flex-1 sm:flex-initial"
                           >
-                            Download
-                          </Button>
+                            <Button
+                              size="lg"
+                              color="success"
+                              onPress={handleDownload}
+                              startContent={<Download className="h-4 w-4" />}
+                              className="w-full font-bold"
+                            >
+                              Download
+                            </Button>
+                          </motion.div>
                         )}
                       </div>
                     </div>

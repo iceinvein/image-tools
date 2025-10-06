@@ -371,15 +371,25 @@ function IcoConverterPage() {
                         {isProcessing ? "Converting..." : "Create ICO"}
                       </Button>
                       {convertedBlob && (
-                        <Button
-                          size="lg"
-                          color="success"
-                          onPress={handleDownload}
-                          startContent={<Download className="h-4 w-4" />}
-                          className="flex-1 font-bold sm:flex-initial"
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0.9, x: 20 }}
+                          animate={{ opacity: 1, scale: 1, x: 0 }}
+                          transition={{
+                            duration: 0.3,
+                            ease: "easeOut",
+                          }}
+                          className="flex-1 sm:flex-initial"
                         >
-                          Download
-                        </Button>
+                          <Button
+                            size="lg"
+                            color="success"
+                            onPress={handleDownload}
+                            startContent={<Download className="h-4 w-4" />}
+                            className="w-full font-bold"
+                          >
+                            Download
+                          </Button>
+                        </motion.div>
                       )}
                     </div>
                   </div>

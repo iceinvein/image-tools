@@ -212,10 +212,14 @@ function ConverterPage() {
                       </div>
                       <div className="relative aspect-video overflow-hidden rounded-lg border-2 border-gray-300 border-dashed bg-gray-100 dark:border-gray-600 dark:bg-gray-800">
                         {convertedUrl ? (
-                          <img
+                          <motion.img
+                            key={convertedUrl}
                             src={convertedUrl}
                             alt="Converted"
                             className="h-full w-full object-contain"
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.3, ease: "easeOut" }}
                           />
                         ) : (
                           <div className="flex h-full w-full items-center justify-center text-gray-400">
@@ -350,15 +354,25 @@ function ConverterPage() {
                         {isProcessing ? "Converting..." : "Convert"}
                       </Button>
                       {convertedUrl && (
-                        <Button
-                          size="lg"
-                          color="success"
-                          onPress={handleDownload}
-                          startContent={<Download className="h-4 w-4" />}
-                          className="flex-1 font-bold lg:flex-initial"
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0.9, x: 20 }}
+                          animate={{ opacity: 1, scale: 1, x: 0 }}
+                          transition={{
+                            duration: 0.3,
+                            ease: "easeOut",
+                          }}
+                          className="flex-1 lg:flex-initial"
                         >
-                          Download
-                        </Button>
+                          <Button
+                            size="lg"
+                            color="success"
+                            onPress={handleDownload}
+                            startContent={<Download className="h-4 w-4" />}
+                            className="w-full font-bold"
+                          >
+                            Download
+                          </Button>
+                        </motion.div>
                       )}
                     </div>
                   </div>
