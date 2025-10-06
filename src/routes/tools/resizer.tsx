@@ -7,6 +7,7 @@ import { Slider } from "@heroui/slider";
 import { Switch } from "@heroui/switch";
 import { Tab, Tabs } from "@heroui/tabs";
 import { createFileRoute } from "@tanstack/react-router";
+import { motion } from "framer-motion";
 import {
   Download,
   Grid3x3,
@@ -16,7 +17,7 @@ import {
   RotateCcw,
   Sliders,
 } from "lucide-react";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { ImagePreview } from "@/components/image-preview";
 import { ImageUpload } from "@/components/image-upload";
 import {
@@ -50,6 +51,131 @@ const scalePresets = [
   { value: 150, label: "150%" },
   { value: 200, label: "200%" },
 ];
+
+// Custom hook for debounced state
+function useDebouncedState<T>(value: T, duration: number = 0.3): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedValue(value);
+    }, duration * 1000);
+
+    return () => clearTimeout(timer);
+  }, [value, duration]);
+
+  return debouncedValue;
+}
+
+// Enhanced Animated Preview Component with more space
+interface EnhancedAnimatedPreviewProps {
+  imageUrl: string;
+  originalDimensions: { width: number; height: number };
+  targetWidth: number;
+  targetHeight: number;
+  fileName: string;
+}
+
+function EnhancedAnimatedPreview({
+  imageUrl,
+  originalDimensions,
+  targetWidth,
+  targetHeight,
+  fileName
+}: EnhancedAnimatedPreviewProps) {
+  const debouncedWidth = useDebouncedState(targetWidth);
+  const debouncedHeight = useDebouncedState(targetHeight);
+
+  // Calculate aspect ratio for the preview container
+  const aspectRatio = debouncedWidth / debouncedHeight;
+
+  // Calculate scale for display with more generous space (max 600px width)
+  const maxPreviewWidth = 600;
+  const maxPreviewHeight = 400;
+  const scaleByWidth = maxPreviewWidth / debouncedWidth;
+  const scaleByHeight = maxPreviewHeight / debouncedHeight;
+  const scale = Math.min(scaleByWidth, scaleByHeight, 1);
+  const displayWidth = debouncedWidth * scale;
+  const displayHeight = debouncedHeight * scale;
+
+  return (
+    <div className="space-y-6">
+      {/* Large animated preview container */}
+      <div className="relative flex items-center justify-center min-h-[500px] w-full bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 rounded-2xl overflow-hidden border-2 border-dashed border-gray-300 dark:border-gray-600">
+        <motion.div
+          layout
+          className="relative overflow-hidden rounded-xl shadow-2xl border-4 border-white dark:border-gray-800"
+          style={{
+            width: displayWidth,
+            height: displayHeight,
+            aspectRatio: aspectRatio,
+          }}
+          transition={{
+            type: "spring",
+            stiffness: 300,
+            damping: 30,
+          }}
+        >
+          <img
+            src={imageUrl}
+            alt="Live Preview"
+            className="w-full h-full object-cover"
+          />
+
+          {/* Overlay with dimensions */}
+          <div className="absolute inset-0 bg-black/20 opacity-0 hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+            <div className="bg-black/90 text-white px-4 py-2 rounded-lg text-lg font-bold backdrop-blur-sm">
+              {debouncedWidth} × {debouncedHeight}
+            </div>
+          </div>
+
+          {/* Corner dimension labels */}
+          <div className="absolute top-2 left-2 bg-green-500 text-white px-2 py-1 rounded text-xs font-bold">
+            {Math.round((debouncedWidth / originalDimensions.width) * 100)}%
+          </div>
+        </motion.div>
+
+        {/* Background grid pattern for better visual reference */}
+        <div className="absolute inset-0 opacity-10 dark:opacity-5"
+             style={{
+               backgroundImage: `radial-gradient(circle, #666 1px, transparent 1px)`,
+               backgroundSize: '20px 20px'
+             }}>
+        </div>
+      </div>
+
+      {/* Info cards below preview */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950/30 dark:to-blue-900/30 border-blue-200 dark:border-blue-800">
+          <CardBody className="p-4 text-center">
+            <div className="text-sm text-blue-600 dark:text-blue-400 font-medium mb-1">Original</div>
+            <div className="text-lg font-bold text-blue-800 dark:text-blue-200">
+              {originalDimensions.width} × {originalDimensions.height}
+            </div>
+          </CardBody>
+        </Card>
+
+        <Card className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950/30 dark:to-green-900/30 border-green-200 dark:border-green-800">
+          <CardBody className="p-4 text-center">
+            <div className="text-sm text-green-600 dark:text-green-400 font-medium mb-1">Target</div>
+            <div className="text-lg font-bold text-green-800 dark:text-green-200">
+              {debouncedWidth} × {debouncedHeight}
+            </div>
+          </CardBody>
+        </Card>
+
+        <Card className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950/30 dark:to-purple-900/30 border-purple-200 dark:border-purple-800">
+          <CardBody className="p-4 text-center">
+            <div className="text-sm text-purple-600 dark:text-purple-400 font-medium mb-1">Scale</div>
+            <div className="text-lg font-bold text-purple-800 dark:text-purple-200">
+              {Math.round((debouncedWidth / originalDimensions.width) * 100)}%
+            </div>
+          </CardBody>
+        </Card>
+      </div>
+    </div>
+  );
+}
 
 function ResizerPage() {
   const [originalFile, setOriginalFile] = useState<File | null>(null);
@@ -246,30 +372,79 @@ function ResizerPage() {
         </div>
 
         {/* Main Content */}
-        <div
-          className={`grid grid-cols-1 gap-6 ${resizedUrl ? "lg:grid-cols-2" : ""}`}
-        >
-          <div className="space-y-6">
-            {!originalFile ? (
-              <ImageUpload onImageSelect={handleImageSelect} />
-            ) : (
-              <>
-                <ImagePreview
-                  imageUrl={originalUrl}
-                  title="Original Image"
-                  fileName={originalFile.name}
-                  fileSize={originalFile.size}
-                  dimensions={originalDimensions ?? undefined}
-                  onRemove={handleReset}
-                />
+        {!originalFile ? (
+          <div className="max-w-2xl mx-auto">
+            <ImageUpload onImageSelect={handleImageSelect} />
+          </div>
+        ) : (
+          <div className="space-y-8">
+            {/* Top section - Live Preview with more space */}
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+                  🎯 Live Preview
+                </h2>
+                <Button
+                  variant="bordered"
+                  size="sm"
+                  onPress={handleReset}
+                  startContent={<RotateCcw className="w-4 h-4" />}
+                >
+                  New Image
+                </Button>
+              </div>
 
-                <Card className="border border-gray-200 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all duration-300">
-                  <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 border-b border-gray-200 dark:border-gray-700">
-                    <h3 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent leading-tight pb-0.5">
-                      📐 Resize Settings
-                    </h3>
-                  </CardHeader>
-                  <CardBody className="p-6">
+              {/* Enhanced preview with more space */}
+              {originalDimensions && (
+                <div className="w-full">
+                  <Card className="border border-gray-200 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all duration-300">
+                    <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 border-b border-gray-200 dark:border-gray-700">
+                      <div className="flex items-center justify-between w-full">
+                        <div className="flex items-center gap-3">
+                          <h3 className="text-xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent leading-tight pb-0.5">
+                            Live Preview
+                          </h3>
+                          <Chip color="success" variant="flat" size="sm">
+                            {targetWidth} × {targetHeight}
+                          </Chip>
+                        </div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400">
+                          Scale: {Math.round((targetWidth / originalDimensions.width) * 100)}%
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardBody className="p-8">
+                      <EnhancedAnimatedPreview
+                        imageUrl={originalUrl}
+                        originalDimensions={originalDimensions}
+                        targetWidth={targetWidth}
+                        targetHeight={targetHeight}
+                        fileName={originalFile.name}
+                      />
+                    </CardBody>
+                  </Card>
+                </div>
+              )}
+            </div>
+
+            {/* Bottom section - Controls */}
+            <div className="space-y-6">
+              <div className="text-center">
+                <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  📐 Resize Controls
+                </h2>
+                <p className="text-gray-600 dark:text-gray-400 mt-2">
+                  Adjust the settings below to see the preview update in real-time
+                </p>
+              </div>
+
+              <Card className="border border-gray-200 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-all duration-300">
+                <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 border-b border-gray-200 dark:border-gray-700">
+                  <h3 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent leading-tight pb-0.5">
+                    📐 Resize Settings
+                  </h3>
+                </CardHeader>
+                <CardBody className="p-6">
                     <Tabs
                       selectedKey={resizeMode}
                       onSelectionChange={(key) =>
@@ -610,12 +785,13 @@ function ResizerPage() {
                     </Button>
                   </CardBody>
                 </Card>
-              </>
-            )}
-          </div>
+              </div>
+            </div>
+          )}
 
+          {/* Results section - shown below the main layout */}
           {resizedUrl && (
-            <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-500">
+            <div className="mt-12 space-y-6 animate-in slide-in-from-bottom-4 duration-500">
               <div className="text-center mb-6">
                 <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 border border-blue-200 dark:border-blue-800 rounded-full">
                   <span className="text-2xl">✅</span>
@@ -625,13 +801,15 @@ function ResizerPage() {
                 </div>
               </div>
 
-              <ImagePreview
-                imageUrl={resizedUrl}
-                title="📏 Resized Image"
-                fileName={`resized_${targetWidth}x${targetHeight}.jpg`}
-                fileSize={resizedBlob?.size}
-                dimensions={newDimensions ?? undefined}
-              />
+              <div className="max-w-2xl mx-auto">
+                <ImagePreview
+                  imageUrl={resizedUrl}
+                  title="📏 Resized Image"
+                  fileName={`resized_${targetWidth}x${targetHeight}.jpg`}
+                  fileSize={resizedBlob?.size}
+                  dimensions={newDimensions ?? undefined}
+                />
+              </div>
 
               <div className="mt-6 flex flex-col sm:flex-row gap-4 justify-center">
                 <Button
@@ -654,7 +832,6 @@ function ResizerPage() {
               </div>
             </div>
           )}
-        </div>
       </div>
     </section>
   );
