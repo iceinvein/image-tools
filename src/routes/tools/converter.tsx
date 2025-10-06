@@ -236,7 +236,7 @@ function ConverterPage() {
                       size="lg"
                       onPress={handleConvert}
                       isLoading={isProcessing}
-                      className="w-full font-bold text-base bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
+                      className="w-full font-bold text-base bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover-scale-102 transition-all duration-300 overflow-hidden"
                       startContent={
                         !isProcessing ? (
                           <RefreshCw className="w-5 h-5" />
@@ -274,7 +274,7 @@ function ConverterPage() {
                 <Button
                   size="lg"
                   onPress={handleDownload}
-                  className="bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 font-bold"
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 font-bold overflow-hidden"
                   startContent={<Download className="w-5 h-5" />}
                 >
                   Download Image

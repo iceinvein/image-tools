@@ -777,7 +777,7 @@ function ResizerPage() {
                     size="lg"
                     onPress={handleResize}
                     isLoading={isProcessing}
-                    className="bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 w-full mt-6 font-bold text-base"
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:scale-102 transition-all duration-300 w-full mt-6 font-bold text-base overflow-hidden"
                     startContent={
                       !isProcessing ? (
                         <Maximize2 className="w-5 h-5" />
@@ -818,7 +818,7 @@ function ResizerPage() {
               <Button
                 size="lg"
                 onPress={handleDownload}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 font-bold"
+                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:scale-102 transition-all duration-300 font-bold overflow-hidden"
                 startContent={<Download className="w-5 h-5" />}
               >
                 Download Image

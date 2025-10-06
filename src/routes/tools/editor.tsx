@@ -423,7 +423,7 @@ function EditorPage() {
                       size="sm"
                       onPress={handleDownload}
                       isLoading={isProcessing}
-                      className="bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 font-bold"
+                      className="bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:scale-102 transition-all duration-300 font-bold overflow-hidden"
                       startContent={
                         !isProcessing ? (
                           <Download className="w-4 h-4" />

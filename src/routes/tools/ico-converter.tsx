@@ -319,7 +319,7 @@ function IcoConverterPage() {
                     onPress={handleConvert}
                     isLoading={isProcessing}
                     isDisabled={selectedSizes.length === 0}
-                    className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 font-bold"
+                    className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-lg hover:scale-102 transition-all duration-300 font-bold overflow-hidden"
                     startContent={
                       !isProcessing ? (
                         <FileImage className="w-5 h-5" />
