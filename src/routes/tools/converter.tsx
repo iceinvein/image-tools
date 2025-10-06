@@ -4,7 +4,7 @@ import { Chip } from "@heroui/chip";
 import { Select, SelectItem } from "@heroui/select";
 import { Slider } from "@heroui/slider";
 import { createFileRoute } from "@tanstack/react-router";
-import { Download, FileImage, RefreshCw, RotateCcw } from "lucide-react";
+import { Download, RefreshCw, RotateCcw } from "lucide-react";
 import { useState } from "react";
 import { ImagePreview } from "@/components/image-preview";
 import { ImageUpload } from "@/components/image-upload";
@@ -13,7 +13,6 @@ import {
   createSoftwareApplicationSchema,
   SEO,
 } from "@/components/seo";
-import { convertFileToIco } from "@/utils/ico-converter";
 import {
   convertImage,
   downloadBlob,
@@ -25,7 +24,6 @@ const formats = [
   { key: "image/jpeg", label: "JPEG", extension: "jpg" },
   { key: "image/png", label: "PNG", extension: "png" },
   { key: "image/webp", label: "WebP", extension: "webp" },
-  { key: "image/x-icon", label: "ICO", extension: "ico" },
 ];
 
 function ConverterPage() {
@@ -60,15 +58,11 @@ function ConverterPage() {
 
     setIsProcessing(true);
     try {
-      let blob: Blob;
-
-      // Special handling for ICO format
-      if (targetFormat === "image/x-icon") {
-        blob = await convertFileToIco(originalFile);
-      } else {
-        blob = await convertImage(originalFile, targetFormat, quality / 100);
-      }
-
+      const blob = await convertImage(
+        originalFile,
+        targetFormat,
+        quality / 100,
+      );
       setConvertedBlob(blob);
 
       const url = URL.createObjectURL(blob);
@@ -105,14 +99,14 @@ function ConverterPage() {
   return (
     <section className="py-8 md:py-10 min-h-screen">
       <SEO
-        title="Image Converter - Convert Images to JPEG, PNG, WebP, ICO | Image Tools"
-        description="Free online image converter. Convert images between JPEG, PNG, WebP, and ICO formats with customizable quality settings. Create favicons and icons. 100% browser-based, no uploads required."
-        keywords="image converter, convert image format, jpeg to png, png to webp, webp converter, ico converter, favicon generator, image format conversion, online image converter"
+        title="Image Converter - Convert Images to JPEG, PNG, WebP | Image Tools"
+        description="Free online image converter. Convert images between JPEG, PNG, and WebP formats with customizable quality settings. 100% browser-based, no uploads required."
+        keywords="image converter, convert image format, jpeg to png, png to webp, webp converter, image format conversion, online image converter"
         canonicalUrl="https://image-utilities.netlify.app/tools/converter"
         structuredData={{
           ...createSoftwareApplicationSchema(
             "Image Converter",
-            "Convert images between JPEG, PNG, WebP, and ICO formats with customizable quality settings",
+            "Convert images between JPEG, PNG, and WebP formats with customizable quality settings",
           ),
           ...createBreadcrumbSchema([
             { name: "Home", url: "https://image-utilities.netlify.app/" },
@@ -149,7 +143,7 @@ function ConverterPage() {
               Privacy-first
             </Chip>
             <Chip color="secondary" variant="flat" size="sm">
-              JPEG • PNG • WebP • ICO
+              JPEG • PNG • WebP
             </Chip>
           </div>
         </div>
@@ -160,7 +154,9 @@ function ConverterPage() {
         >
           <div className="space-y-6">
             {!originalFile ? (
-              <ImageUpload onImageSelect={handleImageSelect} />
+              <div className="max-w-2xl mx-auto">
+                <ImageUpload onImageSelect={handleImageSelect} />
+              </div>
             ) : (
               <>
                 <ImagePreview
@@ -201,25 +197,6 @@ function ConverterPage() {
                         ))}
                       </Select>
                     </div>
-
-                    {targetFormat === "image/x-icon" && (
-                      <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-xl border border-blue-200 dark:border-blue-800">
-                        <div className="flex items-start gap-3">
-                          <FileImage className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
-                          <div className="text-sm text-gray-700 dark:text-gray-300">
-                            <p className="font-semibold mb-1">
-                              ICO Format Info
-                            </p>
-                            <p className="text-xs leading-relaxed">
-                              ICO files will include multiple sizes (16×16,
-                              32×32, 48×48, 64×64, 128×128, 256×256) for optimal
-                              display across different contexts like favicons,
-                              desktop icons, and taskbars.
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    )}
 
                     {supportsQuality && (
                       <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-xl border border-blue-200 dark:border-blue-800">

@@ -140,10 +140,12 @@ function BackgroundRemoverPage() {
             {/* Left Column - Upload & Original */}
             <div className="space-y-6">
               {!originalFile ? (
-                <ImageUpload
-                  onImageSelect={handleImageSelect}
-                  acceptedFormats={["image/jpeg", "image/png", "image/webp"]}
-                />
+                <div className="max-w-2xl mx-auto">
+                  <ImageUpload
+                    onImageSelect={handleImageSelect}
+                    acceptedFormats={["image/jpeg", "image/png", "image/webp"]}
+                  />
+                </div>
               ) : (
                 <Card className="border-2 border-gray-200 dark:border-gray-700">
                   <CardHeader className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-950/30 dark:to-pink-950/30 border-b border-gray-200 dark:border-gray-700">

@@ -4,6 +4,7 @@ import {
   Edit3,
   Eraser,
   FileArchive,
+  FileImage,
   Maximize2,
   Package,
   Palette,
@@ -18,6 +19,7 @@ export function ToolsNav() {
 
   const pathname = location.pathname;
   const selectedKey = useMemo(() => {
+    if (pathname.includes("/tools/ico-converter")) return "ico-converter";
     if (pathname.includes("/tools/converter")) return "converter";
     if (pathname.includes("/tools/compressor")) return "compressor";
     if (pathname.includes("/tools/background-remover"))
@@ -52,6 +54,15 @@ export function ToolsNav() {
             <div className="flex items-center gap-2">
               <RefreshCw className="w-4 h-4 transition-transform duration-300 group-hover:rotate-180" />
               <span>Converter</span>
+            </div>
+          }
+        />
+        <Tab
+          key="ico-converter"
+          title={
+            <div className="flex items-center gap-2">
+              <FileImage className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
+              <span>ICO</span>
             </div>
           }
         />

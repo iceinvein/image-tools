@@ -4,6 +4,7 @@ import {
   Edit3,
   Eraser,
   FileArchive,
+  FileImage,
   Maximize2,
   Package,
   Palette,
@@ -19,6 +20,13 @@ const tools = [
     icon: RefreshCw,
     path: "/tools/converter",
     color: "#3B82F6", // blue
+  },
+  {
+    key: "ico-converter",
+    label: "ICO Converter",
+    icon: FileImage,
+    path: "/tools/ico-converter",
+    color: "#06B6D4", // cyan
   },
   {
     key: "compressor",

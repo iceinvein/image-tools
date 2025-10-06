@@ -135,10 +135,12 @@ function CompressorPage() {
             {/* Left Column - Upload & Controls */}
             <div className="space-y-6">
               {!originalFile ? (
-                <ImageUpload
-                  onImageSelect={handleImageSelect}
-                  acceptedFormats={["image/jpeg", "image/png", "image/webp"]}
-                />
+                <div className="max-w-2xl mx-auto">
+                  <ImageUpload
+                    onImageSelect={handleImageSelect}
+                    acceptedFormats={["image/jpeg", "image/png", "image/webp"]}
+                  />
+                </div>
               ) : (
                 <Card className="border-2 border-gray-200 dark:border-gray-700">
                   <CardHeader className="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-950/30 dark:to-red-950/30 border-b border-gray-200 dark:border-gray-700">

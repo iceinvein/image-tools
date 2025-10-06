@@ -17,6 +17,7 @@ import { Route as ToolsBackgroundRemoverRouteImport } from "./routes/tools/backg
 import { Route as ToolsCompressorRouteImport } from "./routes/tools/compressor";
 import { Route as ToolsConverterRouteImport } from "./routes/tools/converter";
 import { Route as ToolsEditorRouteImport } from "./routes/tools/editor";
+import { Route as ToolsIcoConverterRouteImport } from "./routes/tools/ico-converter";
 import { Route as ToolsOgDesignerRouteImport } from "./routes/tools/og-designer";
 import { Route as ToolsPlaystoreDesignerRouteImport } from "./routes/tools/playstore-designer";
 import { Route as ToolsResizerRouteImport } from "./routes/tools/resizer";
@@ -49,6 +50,11 @@ const ToolsPlaystoreDesignerRoute = ToolsPlaystoreDesignerRouteImport.update({
 const ToolsOgDesignerRoute = ToolsOgDesignerRouteImport.update({
   id: "/og-designer",
   path: "/og-designer",
+  getParentRoute: () => ToolsRoute,
+} as any);
+const ToolsIcoConverterRoute = ToolsIcoConverterRouteImport.update({
+  id: "/ico-converter",
+  path: "/ico-converter",
   getParentRoute: () => ToolsRoute,
 } as any);
 const ToolsEditorRoute = ToolsEditorRouteImport.update({
@@ -86,6 +92,7 @@ export interface FileRoutesByFullPath {
   "/tools/compressor": typeof ToolsCompressorRoute;
   "/tools/converter": typeof ToolsConverterRoute;
   "/tools/editor": typeof ToolsEditorRoute;
+  "/tools/ico-converter": typeof ToolsIcoConverterRoute;
   "/tools/og-designer": typeof ToolsOgDesignerRoute;
   "/tools/playstore-designer": typeof ToolsPlaystoreDesignerRoute;
   "/tools/resizer": typeof ToolsResizerRoute;
@@ -99,6 +106,7 @@ export interface FileRoutesByTo {
   "/tools/compressor": typeof ToolsCompressorRoute;
   "/tools/converter": typeof ToolsConverterRoute;
   "/tools/editor": typeof ToolsEditorRoute;
+  "/tools/ico-converter": typeof ToolsIcoConverterRoute;
   "/tools/og-designer": typeof ToolsOgDesignerRoute;
   "/tools/playstore-designer": typeof ToolsPlaystoreDesignerRoute;
   "/tools/resizer": typeof ToolsResizerRoute;
@@ -113,6 +121,7 @@ export interface FileRoutesById {
   "/tools/compressor": typeof ToolsCompressorRoute;
   "/tools/converter": typeof ToolsConverterRoute;
   "/tools/editor": typeof ToolsEditorRoute;
+  "/tools/ico-converter": typeof ToolsIcoConverterRoute;
   "/tools/og-designer": typeof ToolsOgDesignerRoute;
   "/tools/playstore-designer": typeof ToolsPlaystoreDesignerRoute;
   "/tools/resizer": typeof ToolsResizerRoute;
@@ -128,6 +137,7 @@ export interface FileRouteTypes {
     | "/tools/compressor"
     | "/tools/converter"
     | "/tools/editor"
+    | "/tools/ico-converter"
     | "/tools/og-designer"
     | "/tools/playstore-designer"
     | "/tools/resizer";
@@ -141,6 +151,7 @@ export interface FileRouteTypes {
     | "/tools/compressor"
     | "/tools/converter"
     | "/tools/editor"
+    | "/tools/ico-converter"
     | "/tools/og-designer"
     | "/tools/playstore-designer"
     | "/tools/resizer";
@@ -154,6 +165,7 @@ export interface FileRouteTypes {
     | "/tools/compressor"
     | "/tools/converter"
     | "/tools/editor"
+    | "/tools/ico-converter"
     | "/tools/og-designer"
     | "/tools/playstore-designer"
     | "/tools/resizer";
@@ -209,6 +221,13 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof ToolsOgDesignerRouteImport;
       parentRoute: typeof ToolsRoute;
     };
+    "/tools/ico-converter": {
+      id: "/tools/ico-converter";
+      path: "/ico-converter";
+      fullPath: "/tools/ico-converter";
+      preLoaderRoute: typeof ToolsIcoConverterRouteImport;
+      parentRoute: typeof ToolsRoute;
+    };
     "/tools/editor": {
       id: "/tools/editor";
       path: "/editor";
@@ -253,6 +272,7 @@ interface ToolsRouteChildren {
   ToolsCompressorRoute: typeof ToolsCompressorRoute;
   ToolsConverterRoute: typeof ToolsConverterRoute;
   ToolsEditorRoute: typeof ToolsEditorRoute;
+  ToolsIcoConverterRoute: typeof ToolsIcoConverterRoute;
   ToolsOgDesignerRoute: typeof ToolsOgDesignerRoute;
   ToolsPlaystoreDesignerRoute: typeof ToolsPlaystoreDesignerRoute;
   ToolsResizerRoute: typeof ToolsResizerRoute;
@@ -264,6 +284,7 @@ const ToolsRouteChildren: ToolsRouteChildren = {
   ToolsCompressorRoute: ToolsCompressorRoute,
   ToolsConverterRoute: ToolsConverterRoute,
   ToolsEditorRoute: ToolsEditorRoute,
+  ToolsIcoConverterRoute: ToolsIcoConverterRoute,
   ToolsOgDesignerRoute: ToolsOgDesignerRoute,
   ToolsPlaystoreDesignerRoute: ToolsPlaystoreDesignerRoute,
   ToolsResizerRoute: ToolsResizerRoute,

@@ -310,7 +310,9 @@ function EditorPage() {
 
         {/* Main Content */}
         {!originalFile ? (
-          <ImageUpload onImageSelect={handleImageSelect} />
+          <div className="max-w-2xl mx-auto">
+            <ImageUpload onImageSelect={handleImageSelect} />
+          </div>
         ) : (
           <div className="space-y-6">
             {/* Live Preview Canvas with Toolbar */}
