@@ -1,4 +1,3 @@
-import { Button } from "@heroui/button";
 import { Card, CardBody, CardHeader } from "@heroui/card";
 import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
@@ -72,46 +71,55 @@ export default function IndexPage() {
               scale: { type: "spring", visualDuration: 0.4, bounce: 0.5 },
             }}
           >
-            <Card className="group relative overflow-hidden border-2 border-blue-200/60 bg-gradient-to-br from-white via-blue-50/30 to-purple-50/30 backdrop-blur-md transition-all ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:border-blue-400/80 hover:shadow-2xl hover:shadow-blue-500/20 dark:border-blue-800/60 dark:from-gray-900 dark:via-blue-950/20 dark:to-purple-950/20 dark:hover:border-blue-500/80">
-              {/* Animated gradient background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-100/50 via-purple-100/40 to-blue-50/30 opacity-0 transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-100 dark:from-blue-900/30 dark:via-purple-900/20 dark:to-blue-950/30" />
+            <Link to="/tools/converter" className="block">
+              <Card className="group relative h-full cursor-pointer overflow-hidden border-2 border-blue-200/60 bg-gradient-to-br from-white via-blue-50/30 to-purple-50/30 backdrop-blur-md transition-all ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:border-blue-400/80 hover:shadow-2xl hover:shadow-blue-500/20 dark:border-blue-800/60 dark:from-gray-900 dark:via-blue-950/20 dark:to-purple-950/20 dark:hover:border-blue-500/80">
+                {/* Animated gradient background */}
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-100/50 via-purple-100/40 to-blue-50/30 opacity-0 transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-100 dark:from-blue-900/30 dark:via-purple-900/20 dark:to-blue-950/30" />
 
-              {/* Glow effect */}
-              <div className="-inset-1 absolute rounded-2xl bg-gradient-to-r from-blue-500 to-purple-600 opacity-0 blur-2xl transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-25" />
+                {/* Glow effect */}
+                <div className="-inset-1 absolute rounded-2xl bg-gradient-to-r from-blue-500 to-purple-600 opacity-0 blur-2xl transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-25" />
 
-              <CardHeader className="relative z-10 justify-center pt-10 pb-6">
-                <div className="flex flex-col items-center justify-center text-center">
-                  {/* Icon container with animation */}
-                  <div className="relative mb-5 flex items-center justify-center">
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-600 opacity-30 blur-xl transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-110 group-hover:opacity-50" />
-                    <div className="relative rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 p-5 shadow-lg transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:rotate-2 group-hover:scale-105 group-hover:shadow-2xl">
-                      <RefreshCw className="h-10 w-10 text-white transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:rotate-90" />
+                <CardHeader className="relative z-10 justify-center pt-10 pb-6">
+                  <div className="flex flex-col items-center justify-center text-center">
+                    {/* Icon container with animation */}
+                    <div className="relative mb-5 flex items-center justify-center">
+                      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-600 opacity-30 blur-xl transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-110 group-hover:opacity-50" />
+                      <div className="relative rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 p-5 shadow-lg transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:rotate-2 group-hover:scale-105 group-hover:shadow-2xl">
+                        <motion.div
+                          animate={{ rotate: 360 }}
+                          transition={{
+                            duration: 3,
+                            repeat: Infinity,
+                            ease: "linear",
+                          }}
+                        >
+                          <RefreshCw className="h-10 w-10 text-white" />
+                        </motion.div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-center justify-center">
+                      <h2 className="mb-2 font-black text-2xl text-white transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-105">
+                        Converter
+                      </h2>
+                      <motion.div
+                        className="h-1 w-16 rounded-full bg-gradient-to-r from-blue-400 to-purple-500"
+                        animate={{ width: [64, 72, 64] }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                        }}
+                      />
                     </div>
                   </div>
-                  <div className="flex flex-col items-center justify-center">
-                    <h2 className="mb-2 font-black text-2xl text-white transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-105">
-                      Converter
-                    </h2>
-                    <div className="h-1 w-16 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:w-24" />
-                  </div>
-                </div>
-              </CardHeader>
-              <CardBody className="relative z-10 pt-0 pb-8">
-                <p className="mb-8 px-6 text-center text-gray-700 leading-relaxed dark:text-gray-300">
-                  Convert images between different formats with quality control
-                </p>
-                <div className="px-6">
-                  <Button
-                    as={Link}
-                    to="/tools/converter"
-                    size="lg"
-                    className="w-full bg-white/90 font-bold text-blue-600 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-105 hover:bg-white hover:shadow-blue-500/30 hover:shadow-xl dark:bg-gray-800/90 dark:text-blue-400 dark:hover:bg-gray-800"
-                  >
-                    Open Converter
-                  </Button>
-                </div>
-              </CardBody>
-            </Card>
+                </CardHeader>
+                <CardBody className="relative z-10 pt-0 pb-8">
+                  <p className="px-6 text-center text-gray-700 leading-relaxed dark:text-gray-300">
+                    Convert images between different formats with quality control
+                  </p>
+                </CardBody>
+              </Card>
+            </Link>
           </motion.div>
 
           <motion.div
@@ -126,47 +134,56 @@ export default function IndexPage() {
               scale: { type: "spring", visualDuration: 0.4, bounce: 0.5 },
             }}
           >
-            <Card className="group relative overflow-hidden border-2 border-cyan-200/60 bg-gradient-to-br from-white via-cyan-50/30 to-blue-50/30 backdrop-blur-md transition-all ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:border-cyan-400/80 hover:shadow-2xl hover:shadow-cyan-500/20 dark:border-cyan-800/60 dark:from-gray-900 dark:via-cyan-950/20 dark:to-blue-950/20 dark:hover:border-cyan-500/80">
-              {/* Animated gradient background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-cyan-100/50 via-blue-100/40 to-cyan-50/30 opacity-0 transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-100 dark:from-cyan-900/30 dark:via-blue-900/20 dark:to-cyan-950/30" />
+            <Link to="/tools/ico-converter" className="block">
+              <Card className="group relative h-full cursor-pointer overflow-hidden border-2 border-cyan-200/60 bg-gradient-to-br from-white via-cyan-50/30 to-blue-50/30 backdrop-blur-md transition-all ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:border-cyan-400/80 hover:shadow-2xl hover:shadow-cyan-500/20 dark:border-cyan-800/60 dark:from-gray-900 dark:via-cyan-950/20 dark:to-blue-950/20 dark:hover:border-cyan-500/80">
+                {/* Animated gradient background */}
+                <div className="absolute inset-0 bg-gradient-to-br from-cyan-100/50 via-blue-100/40 to-cyan-50/30 opacity-0 transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-100 dark:from-cyan-900/30 dark:via-blue-900/20 dark:to-cyan-950/30" />
 
-              {/* Glow effect */}
-              <div className="-inset-1 absolute rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 opacity-0 blur-2xl transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-25" />
+                {/* Glow effect */}
+                <div className="-inset-1 absolute rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 opacity-0 blur-2xl transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-25" />
 
-              <CardHeader className="relative z-10 justify-center pt-10 pb-6">
-                <div className="flex flex-col items-center justify-center text-center">
-                  {/* Icon container with animation */}
-                  <div className="relative mb-5 flex items-center justify-center">
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 opacity-30 blur-xl transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-110 group-hover:opacity-50" />
-                    <div className="relative rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 p-5 shadow-lg transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:rotate-2 group-hover:scale-105 group-hover:shadow-2xl">
-                      <FileImage className="h-10 w-10 text-white transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-110" />
+                <CardHeader className="relative z-10 justify-center pt-10 pb-6">
+                  <div className="flex flex-col items-center justify-center text-center">
+                    {/* Icon container with animation */}
+                    <div className="relative mb-5 flex items-center justify-center">
+                      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 opacity-30 blur-xl transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-110 group-hover:opacity-50" />
+                      <div className="relative rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 p-5 shadow-lg transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:rotate-2 group-hover:scale-105 group-hover:shadow-2xl">
+                        <motion.div
+                          animate={{ y: [0, -8, 0] }}
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                          }}
+                        >
+                          <FileImage className="h-10 w-10 text-white" />
+                        </motion.div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-center justify-center">
+                      <h2 className="mb-2 font-black text-2xl text-white transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-105">
+                        ICO Converter
+                      </h2>
+                      <motion.div
+                        className="h-1 w-16 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500"
+                        animate={{ width: [64, 72, 64] }}
+                        transition={{
+                          duration: 2.2,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                        }}
+                      />
                     </div>
                   </div>
-                  <div className="flex flex-col items-center justify-center">
-                    <h2 className="mb-2 font-black text-2xl text-white transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-105">
-                      ICO Converter
-                    </h2>
-                    <div className="h-1 w-16 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:w-24" />
-                  </div>
-                </div>
-              </CardHeader>
-              <CardBody className="relative z-10 pt-0 pb-8">
-                <p className="mb-8 px-6 text-center text-gray-700 leading-relaxed dark:text-gray-300">
-                  Create multi-resolution ICO files for favicons and Windows
-                  icons
-                </p>
-                <div className="px-6">
-                  <Button
-                    as={Link}
-                    to="/tools/ico-converter"
-                    size="lg"
-                    className="w-full bg-white/90 font-bold text-cyan-600 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-105 hover:bg-white hover:shadow-cyan-500/30 hover:shadow-xl dark:bg-gray-800/90 dark:text-cyan-400 dark:hover:bg-gray-800"
-                  >
-                    Open ICO Converter
-                  </Button>
-                </div>
-              </CardBody>
-            </Card>
+                </CardHeader>
+                <CardBody className="relative z-10 pt-0 pb-8">
+                  <p className="px-6 text-center text-gray-700 leading-relaxed dark:text-gray-300">
+                    Create multi-resolution ICO files for favicons and Windows
+                    icons
+                  </p>
+                </CardBody>
+              </Card>
+            </Link>
           </motion.div>
 
           <motion.div
@@ -181,46 +198,55 @@ export default function IndexPage() {
               scale: { type: "spring", visualDuration: 0.4, bounce: 0.5 },
             }}
           >
-            <Card className="group relative overflow-hidden border-2 border-orange-200/60 bg-gradient-to-br from-white via-orange-50/30 to-red-50/30 backdrop-blur-md transition-all ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:border-orange-400/80 hover:shadow-2xl hover:shadow-orange-500/20 dark:border-orange-800/60 dark:from-gray-900 dark:via-orange-950/20 dark:to-red-950/20 dark:hover:border-orange-500/80">
-              {/* Animated gradient background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-orange-100/50 via-red-100/40 to-orange-50/30 opacity-0 transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-100 dark:from-orange-900/30 dark:via-red-900/20 dark:to-orange-950/30" />
+            <Link to="/tools/compressor" className="block">
+              <Card className="group relative h-full cursor-pointer overflow-hidden border-2 border-orange-200/60 bg-gradient-to-br from-white via-orange-50/30 to-red-50/30 backdrop-blur-md transition-all ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:border-orange-400/80 hover:shadow-2xl hover:shadow-orange-500/20 dark:border-orange-800/60 dark:from-gray-900 dark:via-orange-950/20 dark:to-red-950/20 dark:hover:border-orange-500/80">
+                {/* Animated gradient background */}
+                <div className="absolute inset-0 bg-gradient-to-br from-orange-100/50 via-red-100/40 to-orange-50/30 opacity-0 transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-100 dark:from-orange-900/30 dark:via-red-900/20 dark:to-orange-950/30" />
 
-              {/* Glow effect */}
-              <div className="-inset-1 absolute rounded-2xl bg-gradient-to-r from-orange-500 to-red-600 opacity-0 blur-2xl transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-25" />
+                {/* Glow effect */}
+                <div className="-inset-1 absolute rounded-2xl bg-gradient-to-r from-orange-500 to-red-600 opacity-0 blur-2xl transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-25" />
 
-              <CardHeader className="relative z-10 justify-center pt-10 pb-6">
-                <div className="flex flex-col items-center justify-center text-center">
-                  {/* Icon container with animation */}
-                  <div className="relative mb-5 flex items-center justify-center">
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-orange-500 to-red-600 opacity-30 blur-xl transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-110 group-hover:opacity-50" />
-                    <div className="relative rounded-2xl bg-gradient-to-br from-orange-500 to-red-600 p-5 shadow-lg transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:rotate-2 group-hover:scale-105 group-hover:shadow-2xl">
-                      <FileArchive className="h-10 w-10 text-white transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-110" />
+                <CardHeader className="relative z-10 justify-center pt-10 pb-6">
+                  <div className="flex flex-col items-center justify-center text-center">
+                    {/* Icon container with animation */}
+                    <div className="relative mb-5 flex items-center justify-center">
+                      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-orange-500 to-red-600 opacity-30 blur-xl transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-110 group-hover:opacity-50" />
+                      <div className="relative rounded-2xl bg-gradient-to-br from-orange-500 to-red-600 p-5 shadow-lg transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:rotate-2 group-hover:scale-105 group-hover:shadow-2xl">
+                        <motion.div
+                          animate={{ scale: [1, 0.9, 1] }}
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                          }}
+                        >
+                          <FileArchive className="h-10 w-10 text-white" />
+                        </motion.div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-center justify-center">
+                      <h2 className="mb-2 font-black text-2xl text-white transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-105">
+                        Compressor
+                      </h2>
+                      <motion.div
+                        className="h-1 w-16 rounded-full bg-gradient-to-r from-orange-400 to-red-500"
+                        animate={{ width: [64, 72, 64] }}
+                        transition={{
+                          duration: 1.8,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                        }}
+                      />
                     </div>
                   </div>
-                  <div className="flex flex-col items-center justify-center">
-                    <h2 className="mb-2 font-black text-2xl text-white transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-105">
-                      Compressor
-                    </h2>
-                    <div className="h-1 w-16 rounded-full bg-gradient-to-r from-orange-400 to-red-500 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:w-24" />
-                  </div>
-                </div>
-              </CardHeader>
-              <CardBody className="relative z-10 pt-0 pb-8">
-                <p className="mb-8 px-6 text-center text-gray-700 leading-relaxed dark:text-gray-300">
-                  Reduce image file sizes while maintaining quality
-                </p>
-                <div className="px-6">
-                  <Button
-                    as={Link}
-                    to="/tools/compressor"
-                    size="lg"
-                    className="w-full bg-white/90 font-bold text-orange-600 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-105 hover:bg-white hover:shadow-orange-500/30 hover:shadow-xl dark:bg-gray-800/90 dark:text-orange-400 dark:hover:bg-gray-800"
-                  >
-                    Open Compressor
-                  </Button>
-                </div>
-              </CardBody>
-            </Card>
+                </CardHeader>
+                <CardBody className="relative z-10 pt-0 pb-8">
+                  <p className="px-6 text-center text-gray-700 leading-relaxed dark:text-gray-300">
+                    Reduce image file sizes while maintaining quality
+                  </p>
+                </CardBody>
+              </Card>
+            </Link>
           </motion.div>
 
           <motion.div
@@ -235,46 +261,55 @@ export default function IndexPage() {
               scale: { type: "spring", visualDuration: 0.4, bounce: 0.5 },
             }}
           >
-            <Card className="group relative overflow-hidden border-2 border-purple-200/60 bg-gradient-to-br from-white via-purple-50/30 to-pink-50/30 backdrop-blur-md transition-all ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:border-purple-400/80 hover:shadow-2xl hover:shadow-purple-500/20 dark:border-purple-800/60 dark:from-gray-900 dark:via-purple-950/20 dark:to-pink-950/20 dark:hover:border-purple-500/80">
-              {/* Animated gradient background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-100/50 via-pink-100/40 to-purple-50/30 opacity-0 transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-100 dark:from-purple-900/30 dark:via-pink-900/20 dark:to-purple-950/30" />
+            <Link to="/tools/background-remover" className="block">
+              <Card className="group relative h-full cursor-pointer overflow-hidden border-2 border-purple-200/60 bg-gradient-to-br from-white via-purple-50/30 to-pink-50/30 backdrop-blur-md transition-all ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:border-purple-400/80 hover:shadow-2xl hover:shadow-purple-500/20 dark:border-purple-800/60 dark:from-gray-900 dark:via-purple-950/20 dark:to-pink-950/20 dark:hover:border-purple-500/80">
+                {/* Animated gradient background */}
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-100/50 via-pink-100/40 to-purple-50/30 opacity-0 transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-100 dark:from-purple-900/30 dark:via-pink-900/20 dark:to-purple-950/30" />
 
-              {/* Glow effect */}
-              <div className="-inset-1 absolute rounded-2xl bg-gradient-to-r from-purple-500 to-pink-600 opacity-0 blur-2xl transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-25" />
+                {/* Glow effect */}
+                <div className="-inset-1 absolute rounded-2xl bg-gradient-to-r from-purple-500 to-pink-600 opacity-0 blur-2xl transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-25" />
 
-              <CardHeader className="relative z-10 justify-center pt-10 pb-6">
-                <div className="flex flex-col items-center justify-center text-center">
-                  {/* Icon container with animation */}
-                  <div className="relative mb-5 flex items-center justify-center">
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-600 opacity-30 blur-xl transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-110 group-hover:opacity-50" />
-                    <div className="relative rounded-2xl bg-gradient-to-br from-purple-500 to-pink-600 p-5 shadow-lg transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:rotate-2 group-hover:scale-105 group-hover:shadow-2xl">
-                      <Eraser className="h-10 w-10 text-white transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-110" />
+                <CardHeader className="relative z-10 justify-center pt-10 pb-6">
+                  <div className="flex flex-col items-center justify-center text-center">
+                    {/* Icon container with animation */}
+                    <div className="relative mb-5 flex items-center justify-center">
+                      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-600 opacity-30 blur-xl transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-110 group-hover:opacity-50" />
+                      <div className="relative rounded-2xl bg-gradient-to-br from-purple-500 to-pink-600 p-5 shadow-lg transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:rotate-2 group-hover:scale-105 group-hover:shadow-2xl">
+                        <motion.div
+                          animate={{ x: [-3, 3, -3] }}
+                          transition={{
+                            duration: 1.5,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                          }}
+                        >
+                          <Eraser className="h-10 w-10 text-white" />
+                        </motion.div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-center justify-center">
+                      <h2 className="mb-2 font-black text-2xl text-white transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-105">
+                        Background Remover
+                      </h2>
+                      <motion.div
+                        className="h-1 w-16 rounded-full bg-gradient-to-r from-purple-400 to-pink-500"
+                        animate={{ width: [64, 72, 64] }}
+                        transition={{
+                          duration: 2.3,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                        }}
+                      />
                     </div>
                   </div>
-                  <div className="flex flex-col items-center justify-center">
-                    <h2 className="mb-2 font-black text-2xl text-white transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-105">
-                      Background Remover
-                    </h2>
-                    <div className="h-1 w-16 rounded-full bg-gradient-to-r from-purple-400 to-pink-500 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:w-24" />
-                  </div>
-                </div>
-              </CardHeader>
-              <CardBody className="relative z-10 pt-0 pb-8">
-                <p className="mb-8 px-6 text-center text-gray-700 leading-relaxed dark:text-gray-300">
-                  Remove backgrounds automatically with AI
-                </p>
-                <div className="px-6">
-                  <Button
-                    as={Link}
-                    to="/tools/background-remover"
-                    size="lg"
-                    className="w-full bg-white/90 font-bold text-purple-600 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-105 hover:bg-white hover:shadow-purple-500/30 hover:shadow-xl dark:bg-gray-800/90 dark:text-purple-400 dark:hover:bg-gray-800"
-                  >
-                    Open BG Remover
-                  </Button>
-                </div>
-              </CardBody>
-            </Card>
+                </CardHeader>
+                <CardBody className="relative z-10 pt-0 pb-8">
+                  <p className="px-6 text-center text-gray-700 leading-relaxed dark:text-gray-300">
+                    Remove backgrounds automatically with AI
+                  </p>
+                </CardBody>
+              </Card>
+            </Link>
           </motion.div>
 
           <motion.div
@@ -289,46 +324,55 @@ export default function IndexPage() {
               scale: { type: "spring", visualDuration: 0.4, bounce: 0.5 },
             }}
           >
-            <Card className="group relative overflow-hidden border-2 border-purple-200/60 bg-gradient-to-br from-white via-purple-50/30 to-blue-50/30 backdrop-blur-md transition-all ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:border-purple-400/80 hover:shadow-2xl hover:shadow-purple-500/20 dark:border-purple-800/60 dark:from-gray-900 dark:via-purple-950/20 dark:to-blue-950/20 dark:hover:border-purple-500/80">
-              {/* Animated gradient background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-100/50 via-blue-100/40 to-purple-50/30 opacity-0 transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-100 dark:from-purple-900/30 dark:via-blue-900/20 dark:to-purple-950/30" />
+            <Link to="/tools/resizer" className="block">
+              <Card className="group relative h-full cursor-pointer overflow-hidden border-2 border-purple-200/60 bg-gradient-to-br from-white via-purple-50/30 to-blue-50/30 backdrop-blur-md transition-all ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:border-purple-400/80 hover:shadow-2xl hover:shadow-purple-500/20 dark:border-purple-800/60 dark:from-gray-900 dark:via-purple-950/20 dark:to-blue-950/20 dark:hover:border-purple-500/80">
+                {/* Animated gradient background */}
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-100/50 via-blue-100/40 to-purple-50/30 opacity-0 transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-100 dark:from-purple-900/30 dark:via-blue-900/20 dark:to-purple-950/30" />
 
-              {/* Glow effect */}
-              <div className="-inset-1 absolute rounded-2xl bg-gradient-to-r from-purple-500 to-blue-600 opacity-0 blur-2xl transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-25" />
+                {/* Glow effect */}
+                <div className="-inset-1 absolute rounded-2xl bg-gradient-to-r from-purple-500 to-blue-600 opacity-0 blur-2xl transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-25" />
 
-              <CardHeader className="relative z-10 justify-center pt-10 pb-6">
-                <div className="flex flex-col items-center justify-center text-center">
-                  {/* Icon container with animation */}
-                  <div className="relative mb-5 flex items-center justify-center">
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-500 to-blue-600 opacity-30 blur-xl transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-110 group-hover:opacity-50" />
-                    <div className="group-hover:-rotate-2 relative rounded-2xl bg-gradient-to-br from-purple-500 to-blue-600 p-5 shadow-lg transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-105 group-hover:shadow-2xl">
-                      <Maximize2 className="h-10 w-10 text-white transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-110" />
+                <CardHeader className="relative z-10 justify-center pt-10 pb-6">
+                  <div className="flex flex-col items-center justify-center text-center">
+                    {/* Icon container with animation */}
+                    <div className="relative mb-5 flex items-center justify-center">
+                      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-500 to-blue-600 opacity-30 blur-xl transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-110 group-hover:opacity-50" />
+                      <div className="group-hover:-rotate-2 relative rounded-2xl bg-gradient-to-br from-purple-500 to-blue-600 p-5 shadow-lg transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-105 group-hover:shadow-2xl">
+                        <motion.div
+                          animate={{ scale: [1, 1.15, 1] }}
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                          }}
+                        >
+                          <Maximize2 className="h-10 w-10 text-white" />
+                        </motion.div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-center justify-center">
+                      <h2 className="mb-2 font-black text-2xl text-white transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-105">
+                        Resizer
+                      </h2>
+                      <motion.div
+                        className="h-1 w-16 rounded-full bg-gradient-to-r from-purple-400 to-blue-500"
+                        animate={{ width: [64, 72, 64] }}
+                        transition={{
+                          duration: 2.1,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                        }}
+                      />
                     </div>
                   </div>
-                  <div className="flex flex-col items-center justify-center">
-                    <h2 className="mb-2 font-black text-2xl text-white transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-105">
-                      Resizer
-                    </h2>
-                    <div className="h-1 w-16 rounded-full bg-gradient-to-r from-purple-400 to-blue-500 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:w-24" />
-                  </div>
-                </div>
-              </CardHeader>
-              <CardBody className="relative z-10 pt-0 pb-8">
-                <p className="mb-8 px-6 text-center text-gray-700 leading-relaxed dark:text-gray-300">
-                  Resize images to specific dimensions while maintaining quality
-                </p>
-                <div className="px-6">
-                  <Button
-                    as={Link}
-                    to="/tools/resizer"
-                    size="lg"
-                    className="w-full bg-white/90 font-bold text-purple-600 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-105 hover:bg-white hover:shadow-purple-500/30 hover:shadow-xl dark:bg-gray-800/90 dark:text-purple-400 dark:hover:bg-gray-800"
-                  >
-                    Open Resizer
-                  </Button>
-                </div>
-              </CardBody>
-            </Card>
+                </CardHeader>
+                <CardBody className="relative z-10 pt-0 pb-8">
+                  <p className="px-6 text-center text-gray-700 leading-relaxed dark:text-gray-300">
+                    Resize images to specific dimensions while maintaining quality
+                  </p>
+                </CardBody>
+              </Card>
+            </Link>
           </motion.div>
 
           <motion.div
@@ -343,46 +387,55 @@ export default function IndexPage() {
               scale: { type: "spring", visualDuration: 0.4, bounce: 0.5 },
             }}
           >
-            <Card className="group relative overflow-hidden border-2 border-blue-200/60 bg-gradient-to-br from-white via-blue-50/30 to-purple-50/30 backdrop-blur-md transition-all ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:border-blue-400/80 hover:shadow-2xl hover:shadow-blue-500/20 dark:border-blue-800/60 dark:from-gray-900 dark:via-blue-950/20 dark:to-purple-950/20 dark:hover:border-blue-500/80">
-              {/* Animated gradient background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-100/50 via-purple-100/40 to-blue-50/30 opacity-0 transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-100 dark:from-blue-900/30 dark:via-purple-900/20 dark:to-blue-950/30" />
+            <Link to="/tools/editor" className="block">
+              <Card className="group relative h-full cursor-pointer overflow-hidden border-2 border-blue-200/60 bg-gradient-to-br from-white via-blue-50/30 to-purple-50/30 backdrop-blur-md transition-all ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:border-blue-400/80 hover:shadow-2xl hover:shadow-blue-500/20 dark:border-blue-800/60 dark:from-gray-900 dark:via-blue-950/20 dark:to-purple-950/20 dark:hover:border-blue-500/80">
+                {/* Animated gradient background */}
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-100/50 via-purple-100/40 to-blue-50/30 opacity-0 transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-100 dark:from-blue-900/30 dark:via-purple-900/20 dark:to-blue-950/30" />
 
-              {/* Glow effect */}
-              <div className="-inset-1 absolute rounded-2xl bg-gradient-to-r from-blue-500 to-purple-600 opacity-0 blur-2xl transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-25" />
+                {/* Glow effect */}
+                <div className="-inset-1 absolute rounded-2xl bg-gradient-to-r from-blue-500 to-purple-600 opacity-0 blur-2xl transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-25" />
 
-              <CardHeader className="relative z-10 justify-center pt-10 pb-6">
-                <div className="flex flex-col items-center justify-center text-center">
-                  {/* Icon container with animation */}
-                  <div className="relative mb-5 flex items-center justify-center">
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-600 opacity-30 blur-xl transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-110 group-hover:opacity-50" />
-                    <div className="relative rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 p-5 shadow-lg transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:rotate-3 group-hover:scale-105 group-hover:shadow-2xl">
-                      <Edit3 className="group-hover:-rotate-6 h-10 w-10 text-white transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]" />
+                <CardHeader className="relative z-10 justify-center pt-10 pb-6">
+                  <div className="flex flex-col items-center justify-center text-center">
+                    {/* Icon container with animation */}
+                    <div className="relative mb-5 flex items-center justify-center">
+                      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-600 opacity-30 blur-xl transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-110 group-hover:opacity-50" />
+                      <div className="relative rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 p-5 shadow-lg transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:rotate-3 group-hover:scale-105 group-hover:shadow-2xl">
+                        <motion.div
+                          animate={{ rotate: [-5, 5, -5] }}
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                          }}
+                        >
+                          <Edit3 className="h-10 w-10 text-white" />
+                        </motion.div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-center justify-center">
+                      <h2 className="mb-2 font-black text-2xl text-white transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-105">
+                        Editor
+                      </h2>
+                      <motion.div
+                        className="h-1 w-16 rounded-full bg-gradient-to-r from-blue-400 to-purple-500"
+                        animate={{ width: [64, 72, 64] }}
+                        transition={{
+                          duration: 1.9,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                        }}
+                      />
                     </div>
                   </div>
-                  <div className="flex flex-col items-center justify-center">
-                    <h2 className="mb-2 font-black text-2xl text-white transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-105">
-                      Editor
-                    </h2>
-                    <div className="h-1 w-16 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:w-24" />
-                  </div>
-                </div>
-              </CardHeader>
-              <CardBody className="relative z-10 pt-0 pb-8">
-                <p className="mb-8 px-6 text-center text-gray-700 leading-relaxed dark:text-gray-300">
-                  Crop, rotate, flip, and apply filters to enhance your images
-                </p>
-                <div className="px-6">
-                  <Button
-                    as={Link}
-                    to="/tools/editor"
-                    size="lg"
-                    className="w-full bg-white/90 font-bold text-blue-600 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-105 hover:bg-white hover:shadow-blue-500/30 hover:shadow-xl dark:bg-gray-800/90 dark:text-blue-400 dark:hover:bg-gray-800"
-                  >
-                    Open Editor
-                  </Button>
-                </div>
-              </CardBody>
-            </Card>
+                </CardHeader>
+                <CardBody className="relative z-10 pt-0 pb-8">
+                  <p className="px-6 text-center text-gray-700 leading-relaxed dark:text-gray-300">
+                    Crop, rotate, flip, and apply filters to enhance your images
+                  </p>
+                </CardBody>
+              </Card>
+            </Link>
           </motion.div>
 
           <motion.div
@@ -397,46 +450,55 @@ export default function IndexPage() {
               scale: { type: "spring", visualDuration: 0.4, bounce: 0.5 },
             }}
           >
-            <Card className="group relative overflow-hidden border-2 border-orange-200/60 bg-gradient-to-br from-white via-orange-50/30 to-pink-50/30 backdrop-blur-md transition-all ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:border-orange-400/80 hover:shadow-2xl hover:shadow-orange-500/20 dark:border-orange-800/60 dark:from-gray-900 dark:via-orange-950/20 dark:to-pink-950/20 dark:hover:border-orange-500/80">
-              {/* Animated gradient background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-orange-100/50 via-pink-100/40 to-orange-50/30 opacity-0 transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-100 dark:from-orange-900/30 dark:via-pink-900/20 dark:to-orange-950/30" />
+            <Link to="/tools/asset-generator" className="block">
+              <Card className="group relative h-full cursor-pointer overflow-hidden border-2 border-orange-200/60 bg-gradient-to-br from-white via-orange-50/30 to-pink-50/30 backdrop-blur-md transition-all ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:border-orange-400/80 hover:shadow-2xl hover:shadow-orange-500/20 dark:border-orange-800/60 dark:from-gray-900 dark:via-orange-950/20 dark:to-pink-950/20 dark:hover:border-orange-500/80">
+                {/* Animated gradient background */}
+                <div className="absolute inset-0 bg-gradient-to-br from-orange-100/50 via-pink-100/40 to-orange-50/30 opacity-0 transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-100 dark:from-orange-900/30 dark:via-pink-900/20 dark:to-orange-950/30" />
 
-              {/* Glow effect */}
-              <div className="-inset-1 absolute rounded-2xl bg-gradient-to-r from-orange-500 to-pink-600 opacity-0 blur-2xl transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-25" />
+                {/* Glow effect */}
+                <div className="-inset-1 absolute rounded-2xl bg-gradient-to-r from-orange-500 to-pink-600 opacity-0 blur-2xl transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-25" />
 
-              <CardHeader className="relative z-10 justify-center pt-10 pb-6">
-                <div className="flex flex-col items-center justify-center text-center">
-                  {/* Icon container with animation */}
-                  <div className="relative mb-5 flex items-center justify-center">
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-orange-500 to-pink-600 opacity-30 blur-xl transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-110 group-hover:opacity-50" />
-                    <div className="relative rounded-2xl bg-gradient-to-br from-orange-500 to-pink-600 p-5 shadow-lg transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:rotate-2 group-hover:scale-105 group-hover:shadow-2xl">
-                      <Package className="h-10 w-10 text-white transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-110" />
+                <CardHeader className="relative z-10 justify-center pt-10 pb-6">
+                  <div className="flex flex-col items-center justify-center text-center">
+                    {/* Icon container with animation */}
+                    <div className="relative mb-5 flex items-center justify-center">
+                      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-orange-500 to-pink-600 opacity-30 blur-xl transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-110 group-hover:opacity-50" />
+                      <div className="relative rounded-2xl bg-gradient-to-br from-orange-500 to-pink-600 p-5 shadow-lg transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:rotate-2 group-hover:scale-105 group-hover:shadow-2xl">
+                        <motion.div
+                          animate={{ y: [0, -5, 0], rotate: [0, 5, 0] }}
+                          transition={{
+                            duration: 2.5,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                          }}
+                        >
+                          <Package className="h-10 w-10 text-white" />
+                        </motion.div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-center justify-center">
+                      <h2 className="mb-2 font-black text-2xl text-white transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-105">
+                        Asset Generator
+                      </h2>
+                      <motion.div
+                        className="h-1 w-16 rounded-full bg-gradient-to-r from-orange-400 to-pink-500"
+                        animate={{ width: [64, 72, 64] }}
+                        transition={{
+                          duration: 2.4,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                        }}
+                      />
                     </div>
                   </div>
-                  <div className="flex flex-col items-center justify-center">
-                    <h2 className="mb-2 font-black text-2xl text-white transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-105">
-                      Asset Generator
-                    </h2>
-                    <div className="h-1 w-16 rounded-full bg-gradient-to-r from-orange-400 to-pink-500 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:w-24" />
-                  </div>
-                </div>
-              </CardHeader>
-              <CardBody className="relative z-10 pt-0 pb-8">
-                <p className="mb-8 px-6 text-center text-gray-700 leading-relaxed dark:text-gray-300">
-                  Generate all web and app icons from a single 1024×1024 image
-                </p>
-                <div className="px-6">
-                  <Button
-                    as={Link}
-                    to="/tools/asset-generator"
-                    size="lg"
-                    className="w-full bg-white/90 font-bold text-orange-600 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-105 hover:bg-white hover:shadow-orange-500/30 hover:shadow-xl dark:bg-gray-800/90 dark:text-orange-400 dark:hover:bg-gray-800"
-                  >
-                    Open Generator
-                  </Button>
-                </div>
-              </CardBody>
-            </Card>
+                </CardHeader>
+                <CardBody className="relative z-10 pt-0 pb-8">
+                  <p className="px-6 text-center text-gray-700 leading-relaxed dark:text-gray-300">
+                    Generate all web and app icons from a single 1024×1024 image
+                  </p>
+                </CardBody>
+              </Card>
+            </Link>
           </motion.div>
 
           <motion.div
@@ -451,47 +513,56 @@ export default function IndexPage() {
               scale: { type: "spring", visualDuration: 0.4, bounce: 0.5 },
             }}
           >
-            <Card className="group relative overflow-hidden border-2 border-pink-200/60 bg-gradient-to-br from-white via-pink-50/30 to-purple-50/30 backdrop-blur-md transition-all ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:border-pink-400/80 hover:shadow-2xl hover:shadow-pink-500/20 dark:border-pink-800/60 dark:from-gray-900 dark:via-pink-950/20 dark:to-purple-950/20 dark:hover:border-pink-500/80">
-              {/* Animated gradient background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-pink-100/50 via-purple-100/40 to-pink-50/30 opacity-0 transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-100 dark:from-pink-900/30 dark:via-purple-900/20 dark:to-pink-950/30" />
+            <Link to="/tools/og-designer" className="block">
+              <Card className="group relative h-full cursor-pointer overflow-hidden border-2 border-pink-200/60 bg-gradient-to-br from-white via-pink-50/30 to-purple-50/30 backdrop-blur-md transition-all ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:border-pink-400/80 hover:shadow-2xl hover:shadow-pink-500/20 dark:border-pink-800/60 dark:from-gray-900 dark:via-pink-950/20 dark:to-purple-950/20 dark:hover:border-pink-500/80">
+                {/* Animated gradient background */}
+                <div className="absolute inset-0 bg-gradient-to-br from-pink-100/50 via-purple-100/40 to-pink-50/30 opacity-0 transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-100 dark:from-pink-900/30 dark:via-purple-900/20 dark:to-pink-950/30" />
 
-              {/* Glow effect */}
-              <div className="-inset-1 absolute rounded-2xl bg-gradient-to-r from-pink-500 to-purple-600 opacity-0 blur-2xl transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-25" />
+                {/* Glow effect */}
+                <div className="-inset-1 absolute rounded-2xl bg-gradient-to-r from-pink-500 to-purple-600 opacity-0 blur-2xl transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-25" />
 
-              <CardHeader className="relative z-10 justify-center pt-10 pb-6">
-                <div className="flex flex-col items-center justify-center text-center">
-                  {/* Icon container with animation */}
-                  <div className="relative mb-5 flex items-center justify-center">
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-pink-500 to-purple-600 opacity-30 blur-xl transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-110 group-hover:opacity-50" />
-                    <div className="relative rounded-2xl bg-gradient-to-br from-pink-500 to-purple-600 p-5 shadow-lg transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:rotate-2 group-hover:scale-105 group-hover:shadow-2xl">
-                      <Palette className="h-10 w-10 text-white transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:rotate-12" />
+                <CardHeader className="relative z-10 justify-center pt-10 pb-6">
+                  <div className="flex flex-col items-center justify-center text-center">
+                    {/* Icon container with animation */}
+                    <div className="relative mb-5 flex items-center justify-center">
+                      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-pink-500 to-purple-600 opacity-30 blur-xl transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-110 group-hover:opacity-50" />
+                      <div className="relative rounded-2xl bg-gradient-to-br from-pink-500 to-purple-600 p-5 shadow-lg transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:rotate-2 group-hover:scale-105 group-hover:shadow-2xl">
+                        <motion.div
+                          animate={{ rotate: [0, 15, -15, 0] }}
+                          transition={{
+                            duration: 3,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                          }}
+                        >
+                          <Palette className="h-10 w-10 text-white" />
+                        </motion.div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-center justify-center">
+                      <h2 className="mb-2 font-black text-2xl text-white transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-105">
+                        OG Designer
+                      </h2>
+                      <motion.div
+                        className="h-1 w-16 rounded-full bg-gradient-to-r from-pink-400 to-purple-500"
+                        animate={{ width: [64, 72, 64] }}
+                        transition={{
+                          duration: 2.6,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                        }}
+                      />
                     </div>
                   </div>
-                  <div className="flex flex-col items-center justify-center">
-                    <h2 className="mb-2 font-black text-2xl text-white transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-105">
-                      OG Designer
-                    </h2>
-                    <div className="h-1 w-16 rounded-full bg-gradient-to-r from-pink-400 to-purple-500 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:w-24" />
-                  </div>
-                </div>
-              </CardHeader>
-              <CardBody className="relative z-10 pt-0 pb-8">
-                <p className="mb-8 px-6 text-center text-gray-700 leading-relaxed dark:text-gray-300">
-                  Design custom Open Graph images with text, images, and
-                  gradients
-                </p>
-                <div className="px-6">
-                  <Button
-                    as={Link}
-                    to="/tools/og-designer"
-                    size="lg"
-                    className="w-full bg-white/90 font-bold text-pink-600 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-105 hover:bg-white hover:shadow-pink-500/30 hover:shadow-xl dark:bg-gray-800/90 dark:text-pink-400 dark:hover:bg-gray-800"
-                  >
-                    Open Designer
-                  </Button>
-                </div>
-              </CardBody>
-            </Card>
+                </CardHeader>
+                <CardBody className="relative z-10 pt-0 pb-8">
+                  <p className="px-6 text-center text-gray-700 leading-relaxed dark:text-gray-300">
+                    Design custom Open Graph images with text, images, and
+                    gradients
+                  </p>
+                </CardBody>
+              </Card>
+            </Link>
           </motion.div>
 
           <motion.div
@@ -506,46 +577,55 @@ export default function IndexPage() {
               scale: { type: "spring", visualDuration: 0.4, bounce: 0.5 },
             }}
           >
-            <Card className="group relative overflow-hidden border-2 border-green-200/60 bg-gradient-to-br from-white via-green-50/30 to-teal-50/30 backdrop-blur-md transition-all ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:border-green-400/80 hover:shadow-2xl hover:shadow-green-500/20 dark:border-green-800/60 dark:from-gray-900 dark:via-green-950/20 dark:to-teal-950/20 dark:hover:border-green-500/80">
-              {/* Animated gradient background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-green-100/50 via-teal-100/40 to-green-50/30 opacity-0 transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-100 dark:from-green-900/30 dark:via-teal-900/20 dark:to-green-950/30" />
+            <Link to="/tools/playstore-designer" className="block">
+              <Card className="group relative h-full cursor-pointer overflow-hidden border-2 border-green-200/60 bg-gradient-to-br from-white via-green-50/30 to-teal-50/30 backdrop-blur-md transition-all ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:border-green-400/80 hover:shadow-2xl hover:shadow-green-500/20 dark:border-green-800/60 dark:from-gray-900 dark:via-green-950/20 dark:to-teal-950/20 dark:hover:border-green-500/80">
+                {/* Animated gradient background */}
+                <div className="absolute inset-0 bg-gradient-to-br from-green-100/50 via-teal-100/40 to-green-50/30 opacity-0 transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-100 dark:from-green-900/30 dark:via-teal-900/20 dark:to-green-950/30" />
 
-              {/* Glow effect */}
-              <div className="-inset-1 absolute rounded-2xl bg-gradient-to-r from-green-500 to-teal-600 opacity-0 blur-2xl transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-25" />
+                {/* Glow effect */}
+                <div className="-inset-1 absolute rounded-2xl bg-gradient-to-r from-green-500 to-teal-600 opacity-0 blur-2xl transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-25" />
 
-              <CardHeader className="relative z-10 justify-center pt-10 pb-6">
-                <div className="flex flex-col items-center justify-center text-center">
-                  {/* Icon container with animation */}
-                  <div className="relative mb-5 flex items-center justify-center">
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-green-500 to-teal-600 opacity-30 blur-xl transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-110 group-hover:opacity-50" />
-                    <div className="relative rounded-2xl bg-gradient-to-br from-green-500 to-teal-600 p-5 shadow-lg transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:rotate-2 group-hover:scale-105 group-hover:shadow-2xl">
-                      <Smartphone className="h-10 w-10 text-white transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:rotate-12" />
+                <CardHeader className="relative z-10 justify-center pt-10 pb-6">
+                  <div className="flex flex-col items-center justify-center text-center">
+                    {/* Icon container with animation */}
+                    <div className="relative mb-5 flex items-center justify-center">
+                      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-green-500 to-teal-600 opacity-30 blur-xl transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-110 group-hover:opacity-50" />
+                      <div className="relative rounded-2xl bg-gradient-to-br from-green-500 to-teal-600 p-5 shadow-lg transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:rotate-2 group-hover:scale-105 group-hover:shadow-2xl">
+                        <motion.div
+                          animate={{ rotate: [0, 10, -10, 0], y: [0, -3, 0] }}
+                          transition={{
+                            duration: 2.5,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                          }}
+                        >
+                          <Smartphone className="h-10 w-10 text-white" />
+                        </motion.div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-center justify-center">
+                      <h2 className="mb-2 font-black text-2xl text-white transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-105">
+                        Play Store Designer
+                      </h2>
+                      <motion.div
+                        className="h-1 w-16 rounded-full bg-gradient-to-r from-green-400 to-teal-500"
+                        animate={{ width: [64, 72, 64] }}
+                        transition={{
+                          duration: 2.7,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                        }}
+                      />
                     </div>
                   </div>
-                  <div className="flex flex-col items-center justify-center">
-                    <h2 className="mb-2 font-black text-2xl text-white transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-105">
-                      Play Store Designer
-                    </h2>
-                    <div className="h-1 w-16 rounded-full bg-gradient-to-r from-green-400 to-teal-500 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:w-24" />
-                  </div>
-                </div>
-              </CardHeader>
-              <CardBody className="relative z-10 pt-0 pb-8">
-                <p className="mb-8 px-6 text-center text-gray-700 leading-relaxed dark:text-gray-300">
-                  Create Google Play Store feature graphics for app listings
-                </p>
-                <div className="px-6">
-                  <Button
-                    as={Link}
-                    to="/tools/playstore-designer"
-                    size="lg"
-                    className="w-full bg-white/90 font-bold text-green-600 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-105 hover:bg-white hover:shadow-green-500/30 hover:shadow-xl dark:bg-gray-800/90 dark:text-green-400 dark:hover:bg-gray-800"
-                  >
-                    Open Designer
-                  </Button>
-                </div>
-              </CardBody>
-            </Card>
+                </CardHeader>
+                <CardBody className="relative z-10 pt-0 pb-8">
+                  <p className="px-6 text-center text-gray-700 leading-relaxed dark:text-gray-300">
+                    Create Google Play Store feature graphics for app listings
+                  </p>
+                </CardBody>
+              </Card>
+            </Link>
           </motion.div>
         </div>
       </section>
