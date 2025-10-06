@@ -338,7 +338,7 @@ function PlayStoreDesigner() {
   };
 
   return (
-    <section className="py-8 md:py-10 min-h-screen">
+    <section className="min-h-screen py-8 md:py-10">
       <SEO
         title="Free Play Store Feature Graphic Designer - Create Promotional Images"
         description="Free online Play Store feature graphic designer. Design professional Play Store feature graphics (1024×500) with custom backgrounds, images, and text. Perfect for app store listings. 100% browser-based, no uploads required."
@@ -359,23 +359,23 @@ function PlayStoreDesigner() {
         ]}
       />
 
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="mx-auto max-w-7xl px-4">
         {/* Hero Header */}
-        <div className="text-center mb-12 relative">
+        <div className="relative mb-12 text-center">
           {/* Animated background gradient */}
-          <div className="absolute inset-0 -z-10 overflow-hidden">
-            <div className="absolute top-0 left-1/4 w-96 h-96 bg-green-500/10 rounded-full blur-3xl animate-pulse" />
-            <div className="absolute top-0 right-1/4 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
+          <div className="-z-10 absolute inset-0 overflow-hidden">
+            <div className="absolute top-0 left-1/4 h-96 w-96 animate-pulse rounded-full bg-green-500/10 blur-3xl" />
+            <div className="absolute top-0 right-1/4 h-96 w-96 animate-pulse rounded-full bg-teal-500/10 blur-3xl delay-1000" />
           </div>
 
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-green-500 to-teal-600 mb-6 shadow-lg shadow-green-500/30 animate-float">
-            <Smartphone className="w-10 h-10 text-white" />
+          <div className="mb-6 inline-flex h-20 w-20 animate-float items-center justify-center rounded-2xl bg-gradient-to-br from-green-500 to-teal-600 shadow-green-500/30 shadow-lg">
+            <Smartphone className="h-10 w-10 text-white" />
           </div>
 
-          <h1 className="text-4xl md:text-5xl font-black mb-4 leading-tight pb-2 bg-gradient-to-r from-green-600 to-teal-600 dark:from-green-400 dark:to-teal-400 bg-clip-text text-transparent">
+          <h1 className="mb-4 bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text pb-2 font-black text-4xl text-transparent leading-tight md:text-5xl dark:from-green-400 dark:to-teal-400">
             Play Store Designer
           </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-6">
+          <p className="mx-auto mb-6 max-w-2xl text-gray-600 text-lg dark:text-gray-400">
             Design professional Google Play Store feature graphics with custom
             backgrounds, images, and text.
           </p>
@@ -394,27 +394,27 @@ function PlayStoreDesigner() {
         </div>
 
         {/* Main Content */}
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="grid gap-8 lg:grid-cols-2">
           {/* Canvas Preview */}
           <Card className="border-2 border-gray-200 dark:border-gray-700">
-            <CardHeader className="bg-gradient-to-r from-green-50 to-teal-50 dark:from-green-950/30 dark:to-teal-950/30 border-b border-gray-200 dark:border-gray-700">
-              <h2 className="text-xl font-bold">Preview</h2>
+            <CardHeader className="border-gray-200 border-b bg-gradient-to-r from-green-50 to-teal-50 dark:border-gray-700 dark:from-green-950/30 dark:to-teal-950/30">
+              <h2 className="font-bold text-xl">Preview</h2>
             </CardHeader>
             <CardBody className="p-6">
-              <div className="relative w-full aspect-[1024/500] bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden">
+              <div className="relative aspect-[1024/500] w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
                 <canvas
                   ref={canvasRef}
-                  className="w-full h-full object-contain"
+                  className="h-full w-full object-contain"
                 />
               </div>
-              <div className="flex items-center justify-between mt-4">
+              <div className="mt-4 flex items-center justify-between">
                 <Chip size="sm" variant="flat">
                   1024 × 500 px
                 </Chip>
                 <Button
                   color="success"
                   size="lg"
-                  startContent={<Download className="w-5 h-5" />}
+                  startContent={<Download className="h-5 w-5" />}
                   onPress={handleDownload}
                 >
                   Download PNG
@@ -425,8 +425,8 @@ function PlayStoreDesigner() {
 
           {/* Controls */}
           <Card className="border-2 border-gray-200 dark:border-gray-700">
-            <CardHeader className="bg-gradient-to-r from-green-50 to-teal-50 dark:from-green-950/30 dark:to-teal-950/30 border-b border-gray-200 dark:border-gray-700">
-              <h2 className="text-xl font-bold">Design Controls</h2>
+            <CardHeader className="border-gray-200 border-b bg-gradient-to-r from-green-50 to-teal-50 dark:border-gray-700 dark:from-green-950/30 dark:to-teal-950/30">
+              <h2 className="font-bold text-xl">Design Controls</h2>
             </CardHeader>
             <CardBody className="p-6">
               <Tabs aria-label="Design controls">
@@ -434,7 +434,7 @@ function PlayStoreDesigner() {
                   key="background"
                   title={
                     <div className="flex items-center gap-2">
-                      <ImageIcon className="w-4 h-4" />
+                      <ImageIcon className="h-4 w-4" />
                       <span>Background</span>
                     </div>
                   }
@@ -461,7 +461,7 @@ function PlayStoreDesigner() {
                       <div>
                         <label
                           htmlFor={bgColorId}
-                          className="text-sm font-semibold mb-2 block"
+                          className="mb-2 block font-semibold text-sm"
                         >
                           Color
                         </label>
@@ -472,7 +472,7 @@ function PlayStoreDesigner() {
                           onChange={(e) =>
                             updateConfig({ bgColor1: e.target.value })
                           }
-                          className="w-full h-12 rounded-lg cursor-pointer"
+                          className="h-12 w-full cursor-pointer rounded-lg"
                         />
                       </div>
                     )}
@@ -483,7 +483,7 @@ function PlayStoreDesigner() {
                           <div>
                             <label
                               htmlFor={gradientColor1Id}
-                              className="text-sm font-semibold mb-2 block"
+                              className="mb-2 block font-semibold text-sm"
                             >
                               Color 1
                             </label>
@@ -494,13 +494,13 @@ function PlayStoreDesigner() {
                               onChange={(e) =>
                                 updateConfig({ bgColor1: e.target.value })
                               }
-                              className="w-full h-12 rounded-lg cursor-pointer"
+                              className="h-12 w-full cursor-pointer rounded-lg"
                             />
                           </div>
                           <div>
                             <label
                               htmlFor={gradientColor2Id}
-                              className="text-sm font-semibold mb-2 block"
+                              className="mb-2 block font-semibold text-sm"
                             >
                               Color 2
                             </label>
@@ -511,7 +511,7 @@ function PlayStoreDesigner() {
                               onChange={(e) =>
                                 updateConfig({ bgColor2: e.target.value })
                               }
-                              className="w-full h-12 rounded-lg cursor-pointer"
+                              className="h-12 w-full cursor-pointer rounded-lg"
                             />
                           </div>
                         </div>
@@ -534,7 +534,7 @@ function PlayStoreDesigner() {
                         </Select>
 
                         <div>
-                          <div className="text-sm font-semibold mb-2 block">
+                          <div className="mb-2 block font-semibold text-sm">
                             Gradient Presets
                           </div>
                           <div className="grid grid-cols-3 gap-2">
@@ -548,7 +548,7 @@ function PlayStoreDesigner() {
                                     bgColor2: preset.color2,
                                   })
                                 }
-                                className="h-12 rounded-lg border-2 border-gray-700 hover:border-gray-500 transition-colors"
+                                className="h-12 rounded-lg border-2 border-gray-700 transition-colors hover:border-gray-500"
                                 style={{
                                   background: `linear-gradient(to right, ${preset.color1}, ${preset.color2})`,
                                 }}
@@ -570,7 +570,7 @@ function PlayStoreDesigner() {
                   key="image"
                   title={
                     <div className="flex items-center gap-2">
-                      <ImageIcon className="w-4 h-4" />
+                      <ImageIcon className="h-4 w-4" />
                       <span>Image</span>
                     </div>
                   }
@@ -600,7 +600,7 @@ function PlayStoreDesigner() {
                         </Select>
 
                         <div>
-                          <div className="text-sm font-semibold mb-2 block">
+                          <div className="mb-2 block font-semibold text-sm">
                             Size: {config.imageSize}%
                           </div>
                           <Slider
@@ -624,7 +624,7 @@ function PlayStoreDesigner() {
                   key="text"
                   title={
                     <div className="flex items-center gap-2">
-                      <Type className="w-4 h-4" />
+                      <Type className="h-4 w-4" />
                       <span>Text</span>
                     </div>
                   }
@@ -639,7 +639,7 @@ function PlayStoreDesigner() {
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <div className="text-sm font-semibold mb-2 block">
+                        <div className="mb-2 block font-semibold text-sm">
                           Title Size: {config.titleSize}px
                         </div>
                         <Slider
@@ -657,7 +657,7 @@ function PlayStoreDesigner() {
                       <div>
                         <label
                           htmlFor={titleColorId}
-                          className="text-sm font-semibold mb-2 block"
+                          className="mb-2 block font-semibold text-sm"
                         >
                           Title Color
                         </label>
@@ -668,7 +668,7 @@ function PlayStoreDesigner() {
                           onChange={(e) =>
                             updateConfig({ titleColor: e.target.value })
                           }
-                          className="w-full h-10 rounded-lg cursor-pointer"
+                          className="h-10 w-full cursor-pointer rounded-lg"
                         />
                       </div>
                     </div>
@@ -684,7 +684,7 @@ function PlayStoreDesigner() {
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <div className="text-sm font-semibold mb-2 block">
+                        <div className="mb-2 block font-semibold text-sm">
                           Subtitle Size: {config.subtitleSize}px
                         </div>
                         <Slider
@@ -702,7 +702,7 @@ function PlayStoreDesigner() {
                       <div>
                         <label
                           htmlFor={subtitleColorId}
-                          className="text-sm font-semibold mb-2 block"
+                          className="mb-2 block font-semibold text-sm"
                         >
                           Subtitle Color
                         </label>
@@ -713,13 +713,13 @@ function PlayStoreDesigner() {
                           onChange={(e) =>
                             updateConfig({ subtitleColor: e.target.value })
                           }
-                          className="w-full h-10 rounded-lg cursor-pointer"
+                          className="h-10 w-full cursor-pointer rounded-lg"
                         />
                       </div>
                     </div>
 
                     <div>
-                      <div className="text-sm font-semibold mb-2 block">
+                      <div className="mb-2 block font-semibold text-sm">
                         Padding: {config.padding}px
                       </div>
                       <Slider
@@ -742,15 +742,15 @@ function PlayStoreDesigner() {
         </div>
 
         {/* Info Section */}
-        <Card className="mt-6 bg-green-900/20 border-green-800/50">
+        <Card className="mt-6 border-green-800/50 bg-green-900/20">
           <CardBody>
             <div className="flex gap-3">
-              <Smartphone className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
+              <Smartphone className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-400" />
               <div>
-                <h3 className="font-semibold text-green-400 mb-2">
+                <h3 className="mb-2 font-semibold text-green-400">
                   Google Play Store Feature Graphic
                 </h3>
-                <p className="text-sm text-gray-300">
+                <p className="text-gray-300 text-sm">
                   The Google Play Store feature graphic (1024×500) appears at
                   the top of your app's Play Store listing. It's the first
                   visual element users see and is crucial for making a strong

@@ -90,13 +90,13 @@ export function ImageUpload({
       <Card
         className={`relative overflow-hidden border-2 border-dashed transition-all duration-300 ${
           isDragOver
-            ? "border-primary bg-gradient-to-br from-primary/10 via-secondary/10 to-primary/10 scale-[1.02] shadow-xl animate-pulse"
-            : "border-gray-300 dark:border-gray-600 hover:border-primary/50 dark:hover:border-primary/50 hover:shadow-lg hover:scale-[1.01]"
+            ? "scale-[1.02] animate-pulse border-primary bg-gradient-to-br from-primary/10 via-secondary/10 to-primary/10 shadow-xl"
+            : "border-gray-300 hover:scale-[1.01] hover:border-primary/50 hover:shadow-lg dark:border-gray-600 dark:hover:border-primary/50"
         }`}
       >
         {/* Animated background gradient */}
         <div
-          className={`absolute inset-0 bg-gradient-to-br from-blue-50/50 via-purple-50/50 to-pink-50/50 dark:from-blue-950/20 dark:via-purple-950/20 dark:to-pink-950/20 transition-opacity duration-300 ${isDragOver ? "opacity-100" : "opacity-0"}`}
+          className={`absolute inset-0 bg-gradient-to-br from-blue-50/50 via-purple-50/50 to-pink-50/50 transition-opacity duration-300 dark:from-blue-950/20 dark:via-purple-950/20 dark:to-pink-950/20 ${isDragOver ? "opacity-100" : "opacity-0"}`}
         />
 
         <CardBody
@@ -109,24 +109,24 @@ export function ImageUpload({
             {/* Icon with animation */}
             <div className="relative inline-block">
               <div
-                className={`absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full blur-xl opacity-20 transition-all duration-300 ${isDragOver ? "scale-150 opacity-40" : "scale-100"}`}
+                className={`absolute inset-0 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 opacity-20 blur-xl transition-all duration-300 ${isDragOver ? "scale-150 opacity-40" : "scale-100"}`}
               />
               <div
-                className={`relative p-6 bg-gradient-to-br from-blue-500/10 to-purple-500/10 dark:from-blue-500/20 dark:to-purple-500/20 rounded-2xl border border-blue-200/50 dark:border-blue-700/50 transition-all duration-300 ${isDragOver ? "scale-110 rotate-6" : "scale-100 rotate-0"}`}
+                className={`relative rounded-2xl border border-blue-200/50 bg-gradient-to-br from-blue-500/10 to-purple-500/10 p-6 transition-all duration-300 dark:border-blue-700/50 dark:from-blue-500/20 dark:to-purple-500/20 ${isDragOver ? "rotate-6 scale-110" : "rotate-0 scale-100"}`}
               >
                 {isDragOver ? (
-                  <Sparkles className="w-12 h-12 text-primary animate-pulse" />
+                  <Sparkles className="h-12 w-12 animate-pulse text-primary" />
                 ) : (
-                  <Upload className="w-12 h-12 text-primary" />
+                  <Upload className="h-12 w-12 text-primary" />
                 )}
               </div>
             </div>
 
             <div>
-              <h3 className="text-2xl font-bold mb-2 brand-text-gradient">
+              <h3 className="brand-text-gradient mb-2 font-bold text-2xl">
                 {isDragOver ? "Drop it like it's hot! 🔥" : "Upload Your Image"}
               </h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-6">
+              <p className="mb-6 text-gray-600 dark:text-gray-400">
                 Drag and drop your image here, or click to browse
               </p>
             </div>
@@ -136,7 +136,7 @@ export function ImageUpload({
               className="brand-btn px-8 font-semibold transition-all duration-300 hover:scale-105 hover:shadow-xl active:scale-95"
               onPress={() => inputRef.current?.click()}
               startContent={
-                <ImageIcon className="w-5 h-5 transition-transform group-hover:rotate-12" />
+                <ImageIcon className="h-5 w-5 transition-transform group-hover:rotate-12" />
               }
             >
               Choose File
@@ -151,7 +151,7 @@ export function ImageUpload({
               className="hidden"
             />
 
-            <div className="flex items-center justify-center gap-2 text-sm text-gray-500 dark:text-gray-400 pt-4 border-t border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-center gap-2 border-gray-200 border-t pt-4 text-gray-500 text-sm dark:border-gray-700 dark:text-gray-400">
               <div className="flex flex-wrap justify-center gap-2">
                 {acceptedFormats.map((format) => (
                   <span key={format} className="brand-chip text-xs">
@@ -167,7 +167,7 @@ export function ImageUpload({
       </Card>
 
       {error && (
-        <div className="mt-4 p-4 bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 rounded-lg text-red-700 dark:text-red-400 animate-in slide-in-from-top-2 duration-300">
+        <div className="slide-in-from-top-2 mt-4 animate-in rounded-lg border-red-500 border-l-4 bg-red-50 p-4 text-red-700 duration-300 dark:bg-red-900/20 dark:text-red-400">
           <p className="font-medium">{error}</p>
         </div>
       )}

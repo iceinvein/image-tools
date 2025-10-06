@@ -97,7 +97,7 @@ export function ToolsSidebar({ isOpen, onClose }: ToolsSidebarProps) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="fixed inset-0 bg-black/50 z-40"
+          className="fixed inset-0 z-40 bg-black/50"
         />
       )}
 
@@ -110,7 +110,7 @@ export function ToolsSidebar({ isOpen, onClose }: ToolsSidebarProps) {
         className="fixed top-16 left-0 z-50"
       >
         <motion.div
-          className="absolute top-0 left-0 bottom-0 w-64 bg-white dark:bg-gray-900 shadow-2xl"
+          className="absolute top-0 bottom-0 left-0 w-64 bg-white shadow-2xl dark:bg-gray-900"
           variants={sidebarVariants}
         />
         <Navigation onClose={onClose} />
@@ -147,7 +147,7 @@ const Navigation = ({ onClose }: { onClose: () => void }) => {
   return (
     <motion.ul
       variants={navVariants}
-      className="list-none p-6 m-0 absolute top-6 w-56"
+      className="absolute top-6 m-0 w-56 list-none p-6"
     >
       {tools.map((tool) => {
         const Icon = tool.icon;
@@ -163,14 +163,14 @@ const Navigation = ({ onClose }: { onClose: () => void }) => {
             onClick={() => handleNavigate(tool.path)}
           >
             <div
-              className={`flex items-center gap-3 p-3 rounded-lg transition-all ${
+              className={`flex items-center gap-3 rounded-lg p-3 transition-all ${
                 isActive
                   ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg"
-                  : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
               }`}
             >
               <div
-                className="w-10 h-10 rounded-full flex items-center justify-center"
+                className="flex h-10 w-10 items-center justify-center rounded-full"
                 style={{
                   backgroundColor: isActive
                     ? "rgba(255,255,255,0.2)"
@@ -178,7 +178,7 @@ const Navigation = ({ onClose }: { onClose: () => void }) => {
                 }}
               >
                 <Icon
-                  className="w-5 h-5"
+                  className="h-5 w-5"
                   style={{ color: isActive ? "white" : tool.color }}
                 />
               </div>

@@ -254,7 +254,7 @@ function EditorPage() {
   };
 
   return (
-    <section className="py-8 md:py-10 min-h-screen">
+    <section className="min-h-screen py-8 md:py-10">
       <SEO
         title="Image Editor - Crop, Rotate, Filter & Enhance Images | Image Tools"
         description="Free online image editor. Crop, rotate, flip, and apply filters to your images. Adjust brightness, contrast, and saturation. 100% browser-based editing."
@@ -274,23 +274,23 @@ function EditorPage() {
           ]),
         }}
       />
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="mx-auto max-w-7xl px-4">
         {/* Hero Header */}
-        <div className="text-center mb-12 relative">
+        <div className="relative mb-12 text-center">
           {/* Animated background gradient */}
-          <div className="absolute inset-0 -z-10 overflow-hidden">
-            <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse" />
-            <div className="absolute top-0 right-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
+          <div className="-z-10 absolute inset-0 overflow-hidden">
+            <div className="absolute top-0 left-1/4 h-96 w-96 animate-pulse rounded-full bg-purple-500/10 blur-3xl" />
+            <div className="absolute top-0 right-1/4 h-96 w-96 animate-pulse rounded-full bg-pink-500/10 blur-3xl delay-1000" />
           </div>
 
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-600 mb-6 shadow-lg shadow-purple-500/30 animate-float">
-            <Edit3 className="w-10 h-10 text-white" />
+          <div className="mb-6 inline-flex h-20 w-20 animate-float items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500 to-pink-600 shadow-lg shadow-purple-500/30">
+            <Edit3 className="h-10 w-10 text-white" />
           </div>
 
-          <h1 className="text-4xl md:text-5xl font-black mb-4 leading-tight pb-2 bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400 bg-clip-text text-transparent">
+          <h1 className="mb-4 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text pb-2 font-black text-4xl text-transparent leading-tight md:text-5xl dark:from-purple-400 dark:to-pink-400">
             Image Editor
           </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-6">
+          <p className="mx-auto mb-6 max-w-2xl text-gray-600 text-lg dark:text-gray-400">
             Edit with live preview. Rotate, flip, and apply filters with instant
             visual feedback.
           </p>
@@ -310,20 +310,20 @@ function EditorPage() {
 
         {/* Main Content */}
         {!originalFile ? (
-          <div className="max-w-2xl mx-auto">
+          <div className="mx-auto max-w-2xl">
             <ImageUpload onImageSelect={handleImageSelect} />
           </div>
         ) : (
           <div className="space-y-6">
             {/* Live Preview Canvas with Toolbar */}
-            <Card className="border border-gray-200 dark:border-gray-700 shadow-xl overflow-hidden">
-              <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 border-b border-gray-200 dark:border-gray-700 p-3">
-                <div className="flex items-center justify-between w-full gap-4">
+            <Card className="overflow-hidden border border-gray-200 shadow-xl dark:border-gray-700">
+              <CardHeader className="border-gray-200 border-b bg-gradient-to-r from-blue-50 to-purple-50 p-3 dark:border-gray-700 dark:from-blue-950/30 dark:to-purple-950/30">
+                <div className="flex w-full items-center justify-between gap-4">
                   {/* Left: Image info */}
-                  <div className="flex items-center gap-3 min-w-0 flex-1">
-                    <ImageIcon className="w-5 h-5 text-purple-600 dark:text-purple-400 flex-shrink-0" />
+                  <div className="flex min-w-0 flex-1 items-center gap-3">
+                    <ImageIcon className="h-5 w-5 flex-shrink-0 text-purple-600 dark:text-purple-400" />
                     {dimensions && (
-                      <div className="flex items-center gap-3 text-xs text-gray-600 dark:text-gray-400 truncate">
+                      <div className="flex items-center gap-3 truncate text-gray-600 text-xs dark:text-gray-400">
                         <span className="truncate font-medium">
                           {originalFile.name}
                         </span>
@@ -332,7 +332,7 @@ function EditorPage() {
                           {getCurrentDimensions()?.width} ×{" "}
                           {getCurrentDimensions()?.height}
                           {rotation !== 0 && (
-                            <span className="ml-1 text-purple-600 dark:text-purple-400 font-semibold">
+                            <span className="ml-1 font-semibold text-purple-600 dark:text-purple-400">
                               ({rotation}°)
                             </span>
                           )}
@@ -355,38 +355,38 @@ function EditorPage() {
                   </div>
 
                   {/* Center: Quick action toolbar */}
-                  <div className="flex items-center gap-1 bg-white dark:bg-gray-900 rounded-lg p-1 border border-gray-200 dark:border-gray-700">
+                  <div className="flex items-center gap-1 rounded-lg border border-gray-200 bg-white p-1 dark:border-gray-700 dark:bg-gray-900">
                     <Button
                       size="sm"
                       variant="light"
                       isIconOnly
                       onPress={() => rotateImage(-90)}
-                      className="min-w-8 h-8"
+                      className="h-8 min-w-8"
                       title="Rotate 90° Left"
                     >
-                      <RotateCcwIcon className="w-4 h-4" />
+                      <RotateCcwIcon className="h-4 w-4" />
                     </Button>
                     <Button
                       size="sm"
                       variant="light"
                       isIconOnly
                       onPress={() => rotateImage(90)}
-                      className="min-w-8 h-8"
+                      className="h-8 min-w-8"
                       title="Rotate 90° Right"
                     >
-                      <RotateCw className="w-4 h-4" />
+                      <RotateCw className="h-4 w-4" />
                     </Button>
-                    <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-1" />
+                    <div className="mx-1 h-6 w-px bg-gray-300 dark:bg-gray-600" />
                     <Button
                       size="sm"
                       variant="light"
                       isIconOnly
                       color={flipHorizontal ? "primary" : "default"}
                       onPress={() => setFlipHorizontal(!flipHorizontal)}
-                      className="min-w-8 h-8"
+                      className="h-8 min-w-8"
                       title="Flip Horizontal"
                     >
-                      <FlipHorizontal className="w-4 h-4" />
+                      <FlipHorizontal className="h-4 w-4" />
                     </Button>
                     <Button
                       size="sm"
@@ -394,24 +394,24 @@ function EditorPage() {
                       isIconOnly
                       color={flipVertical ? "primary" : "default"}
                       onPress={() => setFlipVertical(!flipVertical)}
-                      className="min-w-8 h-8"
+                      className="h-8 min-w-8"
                       title="Flip Vertical"
                     >
-                      <FlipVertical className="w-4 h-4" />
+                      <FlipVertical className="h-4 w-4" />
                     </Button>
                     {hasAnyAdjustments() && (
                       <>
-                        <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-1" />
+                        <div className="mx-1 h-6 w-px bg-gray-300 dark:bg-gray-600" />
                         <Button
                           size="sm"
                           variant="light"
                           isIconOnly
                           color="warning"
                           onPress={resetAllAdjustments}
-                          className="min-w-8 h-8"
+                          className="h-8 min-w-8"
                           title="Reset All"
                         >
-                          <Undo2 className="w-4 h-4" />
+                          <Undo2 className="h-4 w-4" />
                         </Button>
                       </>
                     )}
@@ -423,10 +423,10 @@ function EditorPage() {
                       size="sm"
                       onPress={handleDownload}
                       isLoading={isProcessing}
-                      className="bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:scale-102 transition-all duration-300 font-bold overflow-hidden"
+                      className="overflow-hidden bg-gradient-to-r from-blue-600 to-purple-600 font-bold text-white shadow-lg transition-all duration-300 hover:scale-102"
                       startContent={
                         !isProcessing ? (
-                          <Download className="w-4 h-4" />
+                          <Download className="h-4 w-4" />
                         ) : undefined
                       }
                     >
@@ -440,17 +440,17 @@ function EditorPage() {
                       isIconOnly
                       title="New Image"
                     >
-                      <RotateCcw className="w-4 h-4" />
+                      <RotateCcw className="h-4 w-4" />
                     </Button>
                   </div>
                 </div>
               </CardHeader>
               <CardBody className="p-0">
-                <div className="relative bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 p-6 flex items-center justify-center min-h-[400px] overflow-auto">
+                <div className="relative flex min-h-[400px] items-center justify-center overflow-auto bg-gradient-to-br from-gray-50 to-gray-100 p-6 dark:from-gray-900 dark:to-gray-800">
                   {/* Checkerboard pattern for transparency */}
-                  <div className="absolute inset-0 opacity-10 checkerboard" />
+                  <div className="checkerboard absolute inset-0 opacity-10" />
 
-                  <div className="relative z-10 max-w-full max-h-[600px] flex items-center justify-center">
+                  <div className="relative z-10 flex max-h-[600px] max-w-full items-center justify-center">
                     <canvas
                       ref={canvasRef}
                       className="rounded-lg shadow-2xl"
@@ -467,10 +467,10 @@ function EditorPage() {
             </Card>
 
             {/* Filters - Compact Single Card */}
-            <Card className="border border-gray-200 dark:border-gray-700 shadow-xl">
-              <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 border-b border-gray-200 dark:border-gray-700 p-4">
+            <Card className="border border-gray-200 shadow-xl dark:border-gray-700">
+              <CardHeader className="border-gray-200 border-b bg-gradient-to-r from-blue-50 to-purple-50 p-4 dark:border-gray-700 dark:from-blue-950/30 dark:to-purple-950/30">
                 <div className="w-full space-y-3">
-                  <h3 className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent leading-tight pb-0.5">
+                  <h3 className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text pb-0.5 font-bold text-lg text-transparent leading-tight">
                     🎨 Filters & Adjustments
                   </h3>
 
@@ -496,17 +496,17 @@ function EditorPage() {
                   </div>
                 </div>
               </CardHeader>
-              <CardBody className="p-4 space-y-3">
+              <CardBody className="space-y-3 p-4">
                 {/* Brightness - Compact */}
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <Sun className="w-4 h-4 text-yellow-500" />
-                      <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
+                      <Sun className="h-4 w-4 text-yellow-500" />
+                      <span className="font-semibold text-gray-700 text-xs dark:text-gray-300">
                         Brightness
                       </span>
                     </div>
-                    <span className="text-sm font-bold text-yellow-600 dark:text-yellow-400">
+                    <span className="font-bold text-sm text-yellow-600 dark:text-yellow-400">
                       {brightness}%
                     </span>
                   </div>
@@ -533,12 +533,12 @@ function EditorPage() {
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <ContrastIcon className="w-4 h-4 text-gray-600 dark:text-gray-400" />
-                      <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
+                      <ContrastIcon className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+                      <span className="font-semibold text-gray-700 text-xs dark:text-gray-300">
                         Contrast
                       </span>
                     </div>
-                    <span className="text-sm font-bold text-gray-600 dark:text-gray-400">
+                    <span className="font-bold text-gray-600 text-sm dark:text-gray-400">
                       {contrast}%
                     </span>
                   </div>
@@ -565,12 +565,12 @@ function EditorPage() {
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <Droplets className="w-4 h-4 text-blue-500" />
-                      <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
+                      <Droplets className="h-4 w-4 text-blue-500" />
+                      <span className="font-semibold text-gray-700 text-xs dark:text-gray-300">
                         Saturation
                       </span>
                     </div>
-                    <span className="text-sm font-bold text-blue-600 dark:text-blue-400">
+                    <span className="font-bold text-blue-600 text-sm dark:text-blue-400">
                       {saturation}%
                     </span>
                   </div>

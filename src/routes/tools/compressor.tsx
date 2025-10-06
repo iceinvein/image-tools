@@ -93,24 +93,24 @@ function CompressorPage() {
         description="Compress images online with quality control. Reduce JPEG, PNG, and WebP file sizes while maintaining visual quality. Free browser-based image compression tool."
         canonicalUrl="https://image-utilities.netlify.app/tools/compressor"
       />
-      <section className="py-8 md:py-10 min-h-screen">
-        <div className="max-w-7xl mx-auto px-4">
+      <section className="min-h-screen py-8 md:py-10">
+        <div className="mx-auto max-w-7xl px-4">
           {/* Hero Header */}
-          <div className="text-center mb-12 relative">
+          <div className="relative mb-12 text-center">
             {/* Animated background gradient */}
-            <div className="absolute inset-0 -z-10 overflow-hidden">
-              <div className="absolute top-0 left-1/4 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl animate-pulse" />
-              <div className="absolute top-0 right-1/4 w-96 h-96 bg-red-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
+            <div className="-z-10 absolute inset-0 overflow-hidden">
+              <div className="absolute top-0 left-1/4 h-96 w-96 animate-pulse rounded-full bg-orange-500/10 blur-3xl" />
+              <div className="absolute top-0 right-1/4 h-96 w-96 animate-pulse rounded-full bg-red-500/10 blur-3xl delay-1000" />
             </div>
 
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-orange-500 to-red-600 mb-6 shadow-lg shadow-orange-500/30 animate-float">
-              <FileArchive className="w-10 h-10 text-white" />
+            <div className="mb-6 inline-flex h-20 w-20 animate-float items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 to-red-600 shadow-lg shadow-orange-500/30">
+              <FileArchive className="h-10 w-10 text-white" />
             </div>
 
-            <h1 className="text-4xl md:text-5xl font-black mb-4 leading-tight pb-2 bg-gradient-to-r from-orange-600 to-red-600 dark:from-orange-400 dark:to-red-400 bg-clip-text text-transparent">
+            <h1 className="mb-4 bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text pb-2 font-black text-4xl text-transparent leading-tight md:text-5xl dark:from-orange-400 dark:to-red-400">
               Image Compressor
             </h1>
-            <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-6">
+            <p className="mx-auto mb-6 max-w-2xl text-gray-600 text-lg dark:text-gray-400">
               Reduce image file sizes while maintaining quality. Perfect for web
               optimization and faster loading times.
             </p>
@@ -130,33 +130,33 @@ function CompressorPage() {
 
           {/* Main Content */}
           {!originalFile ? (
-            <div className="max-w-2xl mx-auto">
+            <div className="mx-auto max-w-2xl">
               <ImageUpload
                 onImageSelect={handleImageSelect}
                 acceptedFormats={["image/jpeg", "image/png", "image/webp"]}
               />
             </div>
           ) : (
-            <div className="max-w-6xl mx-auto space-y-6">
+            <div className="mx-auto max-w-6xl space-y-6">
               {/* Compact Image Comparison */}
               <Card className="border-2 border-gray-200 dark:border-gray-700">
                 <CardBody className="p-6">
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                     {/* Original Image */}
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
-                        <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        <h3 className="font-semibold text-gray-700 text-sm dark:text-gray-300">
                           Original
                         </h3>
                         <Chip size="sm" variant="flat" color="default">
                           {formatFileSize(originalFile.size)}
                         </Chip>
                       </div>
-                      <div className="relative aspect-video bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden border-2 border-gray-200 dark:border-gray-700">
+                      <div className="relative aspect-video overflow-hidden rounded-lg border-2 border-gray-200 bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
                         <img
                           src={originalUrl}
                           alt="Original"
-                          className="w-full h-full object-contain"
+                          className="h-full w-full object-contain"
                         />
                       </div>
                     </div>
@@ -164,7 +164,7 @@ function CompressorPage() {
                     {/* Compressed Image */}
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
-                        <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        <h3 className="font-semibold text-gray-700 text-sm dark:text-gray-300">
                           {result ? "Compressed" : "Preview"}
                         </h3>
                         {result && (
@@ -173,17 +173,17 @@ function CompressorPage() {
                           </Chip>
                         )}
                       </div>
-                      <div className="relative aspect-video bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden border-2 border-dashed border-gray-300 dark:border-gray-600">
+                      <div className="relative aspect-video overflow-hidden rounded-lg border-2 border-gray-300 border-dashed bg-gray-100 dark:border-gray-600 dark:bg-gray-800">
                         {result ? (
                           <img
                             src={result.url}
                             alt="Compressed"
-                            className="w-full h-full object-contain"
+                            className="h-full w-full object-contain"
                           />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center text-gray-400">
+                          <div className="flex h-full w-full items-center justify-center text-gray-400">
                             <div className="text-center">
-                              <FileArchive className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                              <FileArchive className="mx-auto mb-2 h-12 w-12 opacity-50" />
                               <p className="text-sm">
                                 Adjust settings and compress
                               </p>
@@ -197,7 +197,7 @@ function CompressorPage() {
                             size="sm"
                             variant="flat"
                             color="success"
-                            startContent={<ArrowDown className="w-3 h-3" />}
+                            startContent={<ArrowDown className="h-3 w-3" />}
                           >
                             Saved{" "}
                             {((1 - result.compressionRatio) * 100).toFixed(1)}%
@@ -212,9 +212,9 @@ function CompressorPage() {
               {/* Compact Controls Bar */}
               <Card className="border-2 border-gray-200 dark:border-gray-700">
                 <CardBody className="p-4">
-                  <div className="flex flex-col lg:flex-row items-stretch lg:items-end gap-4">
+                  <div className="flex flex-col items-stretch gap-4 lg:flex-row lg:items-end">
                     {/* Format Selection */}
-                    <div className="flex-1 min-w-[200px]">
+                    <div className="min-w-[200px] flex-1">
                       <Select
                         label="Output Format"
                         labelPlacement="outside"
@@ -230,13 +230,13 @@ function CompressorPage() {
 
                     {/* Quality Slider */}
                     {format !== "image/png" && (
-                      <div className="flex-1 min-w-[200px]">
+                      <div className="min-w-[200px] flex-1">
                         <div className="space-y-2">
                           <div className="flex items-center justify-between">
-                            <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
+                            <span className="font-medium text-gray-700 text-xs dark:text-gray-300">
                               Quality
                             </span>
-                            <span className="text-sm font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+                            <span className="bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text font-bold text-sm text-transparent">
                               {quality}%
                             </span>
                           </div>
@@ -264,7 +264,7 @@ function CompressorPage() {
                           setOriginalUrl("");
                           setResult(null);
                         }}
-                        startContent={<RotateCcw className="w-4 h-4" />}
+                        startContent={<RotateCcw className="h-4 w-4" />}
                         className="flex-1 lg:flex-initial"
                       >
                         New
@@ -274,10 +274,10 @@ function CompressorPage() {
                         color="warning"
                         onPress={() => handleCompress()}
                         isLoading={isCompressing}
-                        className="flex-1 lg:flex-initial font-bold"
+                        className="flex-1 font-bold lg:flex-initial"
                         startContent={
                           !isCompressing ? (
-                            <FileArchive className="w-4 h-4" />
+                            <FileArchive className="h-4 w-4" />
                           ) : undefined
                         }
                       >
@@ -288,8 +288,8 @@ function CompressorPage() {
                           size="lg"
                           color="success"
                           onPress={handleDownload}
-                          startContent={<Download className="w-4 h-4" />}
-                          className="flex-1 lg:flex-initial font-bold"
+                          startContent={<Download className="h-4 w-4" />}
+                          className="flex-1 font-bold lg:flex-initial"
                         >
                           Download
                         </Button>

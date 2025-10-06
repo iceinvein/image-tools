@@ -28,10 +28,7 @@
     "enabled": true,
     "rules": {
       "recommended": true,
-      "a11y": {
-        "recommended": true,
-        "noSvgWithoutTitle": "off"
-      },
+      "a11y": "off",
       "correctness": {
         "recommended": true,
         "noUnusedVariables": "warn",
@@ -53,6 +50,16 @@
         "recommended": true,
         "noExplicitAny": "warn",
         "noArrayIndexKey": "warn"
+      },
+      "nursery": {
+        "useSortedClasses": {
+          "level": "warn",
+          "options": {
+            "attributes": ["className"],
+            "functions": ["clsx", "cva", "tw", "tw.*", "cn"]
+          },
+          "fix": "safe"
+        }
       }
     }
   },

@@ -135,7 +135,7 @@ function IcoConverterPage() {
   const availableSizes = getAvailableSizes();
 
   return (
-    <section className="py-8 md:py-10 min-h-screen">
+    <section className="min-h-screen py-8 md:py-10">
       <SEO
         title="ICO Converter - Create Favicon & Windows Icons | Image Tools"
         description="Convert images to ICO format with custom size selection. Create favicons, Windows icons, and app icons with multiple resolutions in one file. Free browser-based ICO converter."
@@ -155,18 +155,18 @@ function IcoConverterPage() {
           ]),
         }}
       />
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="mx-auto max-w-7xl px-4">
         {/* Hero Header */}
-        <div className="text-center mb-12 relative">
-          <div className="absolute inset-0 -z-10 overflow-hidden">
-            <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" />
-            <div className="absolute top-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
+        <div className="relative mb-12 text-center">
+          <div className="-z-10 absolute inset-0 overflow-hidden">
+            <div className="absolute top-0 left-1/4 h-96 w-96 animate-pulse rounded-full bg-cyan-500/10 blur-3xl" />
+            <div className="absolute top-0 right-1/4 h-96 w-96 animate-pulse rounded-full bg-blue-500/10 blur-3xl delay-1000" />
           </div>
 
-          <h1 className="text-4xl md:text-5xl font-black mb-4 leading-tight pb-2 bg-gradient-to-r from-cyan-600 to-blue-600 dark:from-cyan-400 dark:to-blue-400 bg-clip-text text-transparent">
+          <h1 className="mb-4 bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text pb-2 font-black text-4xl text-transparent leading-tight md:text-5xl dark:from-cyan-400 dark:to-blue-400">
             ICO Converter
           </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-6">
+          <p className="mx-auto mb-6 max-w-2xl text-gray-600 text-lg dark:text-gray-400">
             Create multi-resolution ICO files for favicons, Windows icons, and
             app icons. Select exactly which sizes you need.
           </p>
@@ -186,20 +186,20 @@ function IcoConverterPage() {
 
         {/* Main Content */}
         {!originalFile ? (
-          <div className="max-w-2xl mx-auto">
+          <div className="mx-auto max-w-2xl">
             <ImageUpload onImageSelect={handleImageSelect} />
           </div>
         ) : (
-          <div className="max-w-6xl mx-auto space-y-6">
+          <div className="mx-auto max-w-6xl space-y-6">
             {/* Compact Image Preview */}
             <Card className="border-2 border-gray-200 dark:border-gray-700">
               <CardBody className="p-6">
-                <div className="flex flex-col lg:flex-row gap-6">
+                <div className="flex flex-col gap-6 lg:flex-row">
                   {/* Image Preview */}
-                  <div className="lg:w-64 flex-shrink-0">
+                  <div className="flex-shrink-0 lg:w-64">
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
-                        <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        <h3 className="font-semibold text-gray-700 text-sm dark:text-gray-300">
                           Original Image
                         </h3>
                         {originalDimensions && (
@@ -209,11 +209,11 @@ function IcoConverterPage() {
                           </Chip>
                         )}
                       </div>
-                      <div className="aspect-square bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 rounded-lg overflow-hidden flex items-center justify-center border-2 border-gray-200 dark:border-gray-700">
+                      <div className="flex aspect-square items-center justify-center overflow-hidden rounded-lg border-2 border-gray-200 bg-gradient-to-br from-gray-50 to-gray-100 dark:border-gray-700 dark:from-gray-900 dark:to-gray-800">
                         <img
                           src={originalUrl}
                           alt="Original"
-                          className="max-w-full max-h-full object-contain"
+                          className="max-h-full max-w-full object-contain"
                         />
                       </div>
                     </div>
@@ -223,10 +223,10 @@ function IcoConverterPage() {
                   <div className="flex-1 space-y-4">
                     {/* Presets */}
                     <div>
-                      <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                      <div className="mb-2 font-semibold text-gray-700 text-sm dark:text-gray-300">
                         Quick Presets
                       </div>
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
                         {Object.entries(PRESETS).map(([key, preset]) => (
                           <Button
                             key={key}
@@ -238,7 +238,7 @@ function IcoConverterPage() {
                               selectedPreset === key ? "primary" : "default"
                             }
                             onPress={() => handlePresetChange(key)}
-                            className="justify-start h-auto py-2"
+                            className="h-auto justify-start py-2"
                           >
                             <div className="text-left">
                               <div className="font-semibold text-xs">
@@ -252,10 +252,10 @@ function IcoConverterPage() {
 
                     {/* Size Selection */}
                     <div>
-                      <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                      <div className="mb-2 font-semibold text-gray-700 text-sm dark:text-gray-300">
                         Select Sizes ({selectedSizes.length} selected)
                       </div>
-                      <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-2">
+                      <div className="grid grid-cols-4 gap-2 sm:grid-cols-6 lg:grid-cols-8">
                         {availableSizes.map((size) => {
                           const isSelected = selectedSizes.includes(size.label);
                           return (
@@ -281,7 +281,7 @@ function IcoConverterPage() {
                               }}
                               startContent={
                                 isSelected ? (
-                                  <Check className="w-3 h-3" />
+                                  <Check className="h-3 w-3" />
                                 ) : undefined
                               }
                               className="text-xs"
@@ -295,9 +295,9 @@ function IcoConverterPage() {
 
                     {originalDimensions &&
                       availableSizes.length < ALL_SIZES.length && (
-                        <div className="p-2 bg-yellow-50 dark:bg-yellow-950/30 rounded-lg border border-yellow-200 dark:border-yellow-800">
+                        <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-2 dark:border-yellow-800 dark:bg-yellow-950/30">
                           <div className="flex items-start gap-2">
-                            <Info className="w-3 h-3 text-yellow-600 dark:text-yellow-400 mt-0.5 flex-shrink-0" />
+                            <Info className="mt-0.5 h-3 w-3 flex-shrink-0 text-yellow-600 dark:text-yellow-400" />
                             <p className="text-xs text-yellow-700 dark:text-yellow-300">
                               Some sizes unavailable. Upload larger image for
                               more options.
@@ -313,8 +313,8 @@ function IcoConverterPage() {
             {/* Compact Action Bar */}
             <Card className="border-2 border-gray-200 dark:border-gray-700">
               <CardBody className="p-4">
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                  <div className="flex-1 text-sm text-gray-600 dark:text-gray-400">
+                <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
+                  <div className="flex-1 text-gray-600 text-sm dark:text-gray-400">
                     {selectedSizes.length > 0 ? (
                       <span>
                         <strong className="text-gray-900 dark:text-gray-100">
@@ -332,7 +332,7 @@ function IcoConverterPage() {
                       size="lg"
                       variant="bordered"
                       onPress={handleReset}
-                      startContent={<RotateCcw className="w-4 h-4" />}
+                      startContent={<RotateCcw className="h-4 w-4" />}
                       className="flex-1 sm:flex-initial"
                     >
                       New
@@ -342,10 +342,10 @@ function IcoConverterPage() {
                       onPress={handleConvert}
                       isLoading={isProcessing}
                       isDisabled={selectedSizes.length === 0}
-                      className="flex-1 sm:flex-initial bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-lg hover:scale-102 transition-all duration-300 font-bold overflow-hidden"
+                      className="flex-1 overflow-hidden bg-gradient-to-r from-cyan-600 to-blue-600 font-bold text-white shadow-lg transition-all duration-300 hover:scale-102 sm:flex-initial"
                       startContent={
                         !isProcessing ? (
-                          <FileImage className="w-4 h-4" />
+                          <FileImage className="h-4 w-4" />
                         ) : undefined
                       }
                     >
@@ -356,8 +356,8 @@ function IcoConverterPage() {
                         size="lg"
                         color="success"
                         onPress={handleDownload}
-                        startContent={<Download className="w-4 h-4" />}
-                        className="flex-1 sm:flex-initial font-bold"
+                        startContent={<Download className="h-4 w-4" />}
+                        className="flex-1 font-bold sm:flex-initial"
                       >
                         Download
                       </Button>

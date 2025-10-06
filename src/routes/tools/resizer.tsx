@@ -89,10 +89,10 @@ function AnimatedPreview({
   return (
     <div className="space-y-6">
       {/* Large animated preview container */}
-      <div className="relative flex items-center justify-center min-h-[500px] w-full bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 rounded-2xl overflow-hidden border-2 border-dashed border-gray-300 dark:border-gray-600">
+      <div className="relative flex min-h-[500px] w-full items-center justify-center overflow-hidden rounded-2xl border-2 border-gray-300 border-dashed bg-gradient-to-br from-gray-50 to-gray-100 dark:border-gray-600 dark:from-gray-900 dark:to-gray-800">
         <motion.div
           layout
-          className="relative overflow-hidden rounded-xl shadow-2xl border-4 border-white dark:border-gray-800"
+          className="relative overflow-hidden rounded-xl border-4 border-white shadow-2xl dark:border-gray-800"
           style={{
             width: displayWidth,
             height: displayHeight,
@@ -107,18 +107,18 @@ function AnimatedPreview({
           <img
             src={imageUrl}
             alt="Live Preview"
-            className="w-full h-full object-cover"
+            className="h-full w-full object-cover"
           />
 
           {/* Overlay with dimensions */}
-          <div className="absolute inset-0 bg-black/20 opacity-0 hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
-            <div className="bg-black/90 text-white px-4 py-2 rounded-lg text-lg font-bold backdrop-blur-sm">
+          <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 transition-opacity duration-200 hover:opacity-100">
+            <div className="rounded-lg bg-black/90 px-4 py-2 font-bold text-lg text-white backdrop-blur-sm">
               {debouncedWidth} × {debouncedHeight}
             </div>
           </div>
 
           {/* Corner dimension labels */}
-          <div className="absolute top-2 left-2 bg-green-500 text-white px-2 py-1 rounded text-xs font-bold">
+          <div className="absolute top-2 left-2 rounded bg-green-500 px-2 py-1 font-bold text-white text-xs">
             {Math.round((debouncedWidth / originalDimensions.width) * 100)}%
           </div>
         </motion.div>
@@ -134,35 +134,35 @@ function AnimatedPreview({
       </div>
 
       {/* Info cards below preview */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950/30 dark:to-blue-900/30 border-blue-200 dark:border-blue-800">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <Card className="border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100 dark:border-blue-800 dark:from-blue-950/30 dark:to-blue-900/30">
           <CardBody className="p-4 text-center">
-            <div className="text-sm text-blue-600 dark:text-blue-400 font-medium mb-1">
+            <div className="mb-1 font-medium text-blue-600 text-sm dark:text-blue-400">
               Original
             </div>
-            <div className="text-lg font-bold text-blue-800 dark:text-blue-200">
+            <div className="font-bold text-blue-800 text-lg dark:text-blue-200">
               {originalDimensions.width} × {originalDimensions.height}
             </div>
           </CardBody>
         </Card>
 
-        <Card className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950/30 dark:to-green-900/30 border-green-200 dark:border-green-800">
+        <Card className="border-green-200 bg-gradient-to-br from-green-50 to-green-100 dark:border-green-800 dark:from-green-950/30 dark:to-green-900/30">
           <CardBody className="p-4 text-center">
-            <div className="text-sm text-green-600 dark:text-green-400 font-medium mb-1">
+            <div className="mb-1 font-medium text-green-600 text-sm dark:text-green-400">
               Target
             </div>
-            <div className="text-lg font-bold text-green-800 dark:text-green-200">
+            <div className="font-bold text-green-800 text-lg dark:text-green-200">
               {debouncedWidth} × {debouncedHeight}
             </div>
           </CardBody>
         </Card>
 
-        <Card className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950/30 dark:to-purple-900/30 border-purple-200 dark:border-purple-800">
+        <Card className="border-purple-200 bg-gradient-to-br from-purple-50 to-purple-100 dark:border-purple-800 dark:from-purple-950/30 dark:to-purple-900/30">
           <CardBody className="p-4 text-center">
-            <div className="text-sm text-purple-600 dark:text-purple-400 font-medium mb-1">
+            <div className="mb-1 font-medium text-purple-600 text-sm dark:text-purple-400">
               Scale
             </div>
-            <div className="text-lg font-bold text-purple-800 dark:text-purple-200">
+            <div className="font-bold text-lg text-purple-800 dark:text-purple-200">
               {Math.round((debouncedWidth / originalDimensions.width) * 100)}%
             </div>
           </CardBody>
@@ -312,7 +312,7 @@ function ResizerPage() {
   }, [updatePreviewDimensions]);
 
   return (
-    <section className="py-8 md:py-10 min-h-screen">
+    <section className="min-h-screen py-8 md:py-10">
       <SEO
         title="Image Resizer - Resize Images Online with Smart Presets | Image Tools"
         description="Free online image resizer. Resize images by pixels, percentage, or use smart presets. Maintain aspect ratio or customize dimensions. 100% browser-based."
@@ -332,23 +332,23 @@ function ResizerPage() {
           ]),
         }}
       />
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="mx-auto max-w-7xl px-4">
         {/* Hero Header */}
-        <div className="text-center mb-12 relative">
+        <div className="relative mb-12 text-center">
           {/* Animated background gradient */}
-          <div className="absolute inset-0 -z-10 overflow-hidden">
-            <div className="absolute top-0 left-1/4 w-96 h-96 bg-green-500/10 rounded-full blur-3xl animate-pulse" />
-            <div className="absolute top-0 right-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
+          <div className="-z-10 absolute inset-0 overflow-hidden">
+            <div className="absolute top-0 left-1/4 h-96 w-96 animate-pulse rounded-full bg-green-500/10 blur-3xl" />
+            <div className="absolute top-0 right-1/4 h-96 w-96 animate-pulse rounded-full bg-emerald-500/10 blur-3xl delay-1000" />
           </div>
 
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600 mb-6 shadow-lg shadow-green-500/30 animate-float">
-            <Maximize2 className="w-10 h-10 text-white" />
+          <div className="mb-6 inline-flex h-20 w-20 animate-float items-center justify-center rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600 shadow-green-500/30 shadow-lg">
+            <Maximize2 className="h-10 w-10 text-white" />
           </div>
 
-          <h1 className="text-4xl md:text-5xl font-black mb-4 leading-tight pb-2 bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-400 dark:to-emerald-400 bg-clip-text text-transparent">
+          <h1 className="mb-4 bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text pb-2 font-black text-4xl text-transparent leading-tight md:text-5xl dark:from-green-400 dark:to-emerald-400">
             Image Resizer
           </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-6">
+          <p className="mx-auto mb-6 max-w-2xl text-gray-600 text-lg dark:text-gray-400">
             Scale your images to perfect dimensions. Smart presets and custom
             sizing with aspect ratio lock.
           </p>
@@ -365,19 +365,19 @@ function ResizerPage() {
 
         {/* Main Content */}
         {!originalFile ? (
-          <div className="max-w-2xl mx-auto">
+          <div className="mx-auto max-w-2xl">
             <ImageUpload onImageSelect={handleImageSelect} />
           </div>
         ) : (
-          <div className="max-w-7xl mx-auto space-y-6">
+          <div className="mx-auto max-w-7xl space-y-6">
             {/* Compact Side-by-Side Layout */}
             <Card className="border-2 border-gray-200 dark:border-gray-700">
               <CardBody className="p-6">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                   {/* Left: Live Preview */}
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                      <h3 className="font-semibold text-gray-700 text-sm dark:text-gray-300">
                         Live Preview
                       </h3>
                       <div className="flex items-center gap-2">
@@ -394,7 +394,7 @@ function ResizerPage() {
                         )}
                       </div>
                     </div>
-                    <div className="relative bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden border-2 border-gray-200 dark:border-gray-700">
+                    <div className="relative overflow-hidden rounded-lg border-2 border-gray-200 bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
                       {originalDimensions && (
                         <AnimatedPreview
                           imageUrl={originalUrl}
@@ -409,7 +409,7 @@ function ResizerPage() {
                   {/* Right: Controls */}
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                      <h3 className="font-semibold text-gray-700 text-sm dark:text-gray-300">
                         Resize Settings
                       </h3>
                       <Switch
@@ -423,7 +423,7 @@ function ResizerPage() {
 
                     {/* Quick Scale Buttons */}
                     <div>
-                      <p className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">
+                      <p className="mb-2 font-medium text-gray-600 text-xs dark:text-gray-400">
                         Quick Scale
                       </p>
                       <div className="grid grid-cols-3 gap-2">
@@ -452,11 +452,11 @@ function ResizerPage() {
 
                     {/* Scale Slider */}
                     <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs font-medium text-gray-600 dark:text-gray-400">
+                      <div className="mb-2 flex items-center justify-between">
+                        <span className="font-medium text-gray-600 text-xs dark:text-gray-400">
                           Custom Scale
                         </span>
-                        <span className="text-sm font-bold text-green-600 dark:text-green-400">
+                        <span className="font-bold text-green-600 text-sm dark:text-green-400">
                           {scalePercentage}%
                         </span>
                       </div>
@@ -475,7 +475,7 @@ function ResizerPage() {
                           thumb: "bg-green-600",
                         }}
                       />
-                      <div className="flex justify-between text-xs text-gray-400 mt-1">
+                      <div className="mt-1 flex justify-between text-gray-400 text-xs">
                         <span>10%</span>
                         <span>300%</span>
                       </div>
@@ -484,7 +484,7 @@ function ResizerPage() {
                     {/* Dimension Inputs */}
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1 block">
+                        <label className="mb-1 block font-medium text-gray-600 text-xs dark:text-gray-400">
                           Width (px)
                         </label>
                         <Input
@@ -498,7 +498,7 @@ function ResizerPage() {
                         />
                       </div>
                       <div>
-                        <label className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1 block">
+                        <label className="mb-1 block font-medium text-gray-600 text-xs dark:text-gray-400">
                           Height (px)
                         </label>
                         <Input
@@ -515,7 +515,7 @@ function ResizerPage() {
 
                     {/* Presets */}
                     <div>
-                      <label className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2 block">
+                      <label className="mb-2 block font-medium text-gray-600 text-xs dark:text-gray-400">
                         Common Presets
                       </label>
                       <Select
@@ -534,7 +534,7 @@ function ResizerPage() {
 
                     {/* Target Size Display */}
                     {newDimensions && originalDimensions && (
-                      <div className="p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                      <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 dark:border-blue-800 dark:bg-blue-950/20">
                         <div className="flex items-center justify-between text-xs">
                           <span className="text-gray-600 dark:text-gray-400">
                             {originalDimensions.width} ×{" "}
@@ -555,10 +555,10 @@ function ResizerPage() {
             {/* Compact Action Bar */}
             <Card className="border-2 border-gray-200 dark:border-gray-700">
               <CardBody className="p-4">
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                  <div className="flex-1 text-sm text-gray-600 dark:text-gray-400">
+                <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
+                  <div className="flex-1 text-gray-600 text-sm dark:text-gray-400">
                     {resizedUrl ? (
-                      <span className="text-green-600 dark:text-green-400 font-medium">
+                      <span className="font-medium text-green-600 dark:text-green-400">
                         ✓ Image resized successfully
                       </span>
                     ) : (
@@ -570,7 +570,7 @@ function ResizerPage() {
                       size="lg"
                       variant="bordered"
                       onPress={handleReset}
-                      startContent={<RotateCcw className="w-4 h-4" />}
+                      startContent={<RotateCcw className="h-4 w-4" />}
                       className="flex-1 sm:flex-initial"
                     >
                       New
@@ -580,10 +580,10 @@ function ResizerPage() {
                       color="primary"
                       onPress={handleResize}
                       isLoading={isProcessing}
-                      className="flex-1 sm:flex-initial font-bold"
+                      className="flex-1 font-bold sm:flex-initial"
                       startContent={
                         !isProcessing ? (
-                          <Maximize2 className="w-4 h-4" />
+                          <Maximize2 className="h-4 w-4" />
                         ) : undefined
                       }
                     >
@@ -594,8 +594,8 @@ function ResizerPage() {
                         size="lg"
                         color="success"
                         onPress={handleDownload}
-                        startContent={<Download className="w-4 h-4" />}
-                        className="flex-1 sm:flex-initial font-bold"
+                        startContent={<Download className="h-4 w-4" />}
+                        className="flex-1 font-bold sm:flex-initial"
                       >
                         Download
                       </Button>

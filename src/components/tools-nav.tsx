@@ -52,7 +52,7 @@ export function ToolsNav() {
           key="converter"
           title={
             <div className="flex items-center gap-2">
-              <RefreshCw className="w-4 h-4 transition-transform duration-300 group-hover:rotate-180" />
+              <RefreshCw className="h-4 w-4 transition-transform duration-300 group-hover:rotate-180" />
               <span>Converter</span>
             </div>
           }
@@ -61,7 +61,7 @@ export function ToolsNav() {
           key="ico-converter"
           title={
             <div className="flex items-center gap-2">
-              <FileImage className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
+              <FileImage className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
               <span>ICO</span>
             </div>
           }
@@ -70,7 +70,7 @@ export function ToolsNav() {
           key="compressor"
           title={
             <div className="flex items-center gap-2">
-              <FileArchive className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
+              <FileArchive className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
               <span>Compressor</span>
             </div>
           }
@@ -79,7 +79,7 @@ export function ToolsNav() {
           key="background-remover"
           title={
             <div className="flex items-center gap-2">
-              <Eraser className="w-4 h-4 transition-transform duration-300 group-hover:rotate-12" />
+              <Eraser className="h-4 w-4 transition-transform duration-300 group-hover:rotate-12" />
               <span>BG Remover</span>
             </div>
           }
@@ -88,7 +88,7 @@ export function ToolsNav() {
           key="resizer"
           title={
             <div className="flex items-center gap-2">
-              <Maximize2 className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
+              <Maximize2 className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
               <span>Resizer</span>
             </div>
           }
@@ -97,7 +97,7 @@ export function ToolsNav() {
           key="editor"
           title={
             <div className="flex items-center gap-2">
-              <Edit3 className="w-4 h-4 transition-transform duration-300 group-hover:rotate-12" />
+              <Edit3 className="h-4 w-4 transition-transform duration-300 group-hover:rotate-12" />
               <span>Editor</span>
             </div>
           }
@@ -106,7 +106,7 @@ export function ToolsNav() {
           key="asset-generator"
           title={
             <div className="flex items-center gap-2">
-              <Package className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
+              <Package className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
               <span>Asset Generator</span>
             </div>
           }
@@ -115,7 +115,7 @@ export function ToolsNav() {
           key="og-designer"
           title={
             <div className="flex items-center gap-2">
-              <Palette className="w-4 h-4 transition-transform duration-300 group-hover:rotate-12" />
+              <Palette className="h-4 w-4 transition-transform duration-300 group-hover:rotate-12" />
               <span>OG Designer</span>
             </div>
           }
@@ -124,7 +124,7 @@ export function ToolsNav() {
           key="playstore-designer"
           title={
             <div className="flex items-center gap-2">
-              <Smartphone className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
+              <Smartphone className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
               <span>Play Store</span>
             </div>
           }

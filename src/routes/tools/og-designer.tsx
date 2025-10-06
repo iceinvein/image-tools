@@ -341,7 +341,7 @@ function OGDesignerPage() {
   };
 
   return (
-    <section className="py-8 md:py-10 min-h-screen">
+    <section className="min-h-screen py-8 md:py-10">
       <SEO
         title="Free OG Image Designer - Create Custom Open Graph Images | Image Tools"
         description="Free online OG image designer. Design beautiful Open Graph images for social media. Customize backgrounds, add text, images, and gradients. Perfect for Twitter Cards, Facebook, and LinkedIn. 100% browser-based, no uploads required."
@@ -361,22 +361,22 @@ function OGDesignerPage() {
           ]),
         }}
       />
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="mx-auto max-w-7xl px-4">
         {/* Hero Header */}
-        <div className="text-center mb-12 relative">
-          <div className="absolute inset-0 -z-10 overflow-hidden">
-            <div className="absolute top-0 left-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl animate-pulse" />
-            <div className="absolute top-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
+        <div className="relative mb-12 text-center">
+          <div className="-z-10 absolute inset-0 overflow-hidden">
+            <div className="absolute top-0 left-1/4 h-96 w-96 animate-pulse rounded-full bg-pink-500/10 blur-3xl" />
+            <div className="absolute top-0 right-1/4 h-96 w-96 animate-pulse rounded-full bg-purple-500/10 blur-3xl delay-1000" />
           </div>
 
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-pink-500 to-purple-600 mb-6 shadow-lg shadow-pink-500/30 animate-float">
-            <Palette className="w-10 h-10 text-white" />
+          <div className="mb-6 inline-flex h-20 w-20 animate-float items-center justify-center rounded-2xl bg-gradient-to-br from-pink-500 to-purple-600 shadow-lg shadow-pink-500/30">
+            <Palette className="h-10 w-10 text-white" />
           </div>
 
-          <h1 className="text-4xl md:text-5xl font-black mb-4 leading-tight pb-2 bg-gradient-to-r from-pink-600 to-purple-600 dark:from-pink-400 dark:to-purple-400 bg-clip-text text-transparent">
+          <h1 className="mb-4 bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text pb-2 font-black text-4xl text-transparent leading-tight md:text-5xl dark:from-pink-400 dark:to-purple-400">
             OG Image Designer
           </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-6">
+          <p className="mx-auto mb-6 max-w-2xl text-gray-600 text-lg dark:text-gray-400">
             Design beautiful Open Graph images for social media with full
             control over layout, text, and backgrounds.
           </p>
@@ -395,24 +395,24 @@ function OGDesignerPage() {
         </div>
 
         {/* Main Content */}
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="grid gap-8 lg:grid-cols-2">
           {/* Canvas Preview */}
           <Card className="border-2 border-gray-200 dark:border-gray-700">
-            <CardHeader className="bg-gradient-to-r from-pink-50 to-purple-50 dark:from-pink-950/30 dark:to-purple-950/30 border-b border-gray-200 dark:border-gray-700">
-              <h2 className="text-xl font-bold">Preview</h2>
+            <CardHeader className="border-gray-200 border-b bg-gradient-to-r from-pink-50 to-purple-50 dark:border-gray-700 dark:from-pink-950/30 dark:to-purple-950/30">
+              <h2 className="font-bold text-xl">Preview</h2>
             </CardHeader>
             <CardBody className="p-6">
-              <div className="relative w-full aspect-[1200/630] bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden">
+              <div className="relative aspect-[1200/630] w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
                 <canvas
                   ref={canvasRef}
-                  className="w-full h-full object-contain"
+                  className="h-full w-full object-contain"
                 />
               </div>
               <Button
                 color="primary"
                 size="lg"
-                className="w-full mt-4"
-                startContent={<Download className="w-5 h-5" />}
+                className="mt-4 w-full"
+                startContent={<Download className="h-5 w-5" />}
                 onPress={handleDownload}
               >
                 Download OG Image
@@ -422,8 +422,8 @@ function OGDesignerPage() {
 
           {/* Controls */}
           <Card className="border-2 border-gray-200 dark:border-gray-700">
-            <CardHeader className="bg-gradient-to-r from-pink-50 to-purple-50 dark:from-pink-950/30 dark:to-purple-950/30 border-b border-gray-200 dark:border-gray-700">
-              <h2 className="text-xl font-bold">Design Controls</h2>
+            <CardHeader className="border-gray-200 border-b bg-gradient-to-r from-pink-50 to-purple-50 dark:border-gray-700 dark:from-pink-950/30 dark:to-purple-950/30">
+              <h2 className="font-bold text-xl">Design Controls</h2>
             </CardHeader>
             <CardBody className="p-6">
               <Tabs>
@@ -431,12 +431,12 @@ function OGDesignerPage() {
                   key="background"
                   title={
                     <div className="flex items-center gap-2">
-                      <Palette className="w-4 h-4" />
+                      <Palette className="h-4 w-4" />
                       <span>Background</span>
                     </div>
                   }
                 >
-                  <div className="space-y-4 mt-4">
+                  <div className="mt-4 space-y-4">
                     <Select
                       label="Background Type"
                       selectedKeys={[config.bgType]}
@@ -458,7 +458,7 @@ function OGDesignerPage() {
                       <div>
                         <label
                           htmlFor={bgColorId}
-                          className="text-sm font-semibold mb-2 block"
+                          className="mb-2 block font-semibold text-sm"
                         >
                           Color
                         </label>
@@ -469,7 +469,7 @@ function OGDesignerPage() {
                           onChange={(e) =>
                             updateConfig({ bgColor1: e.target.value })
                           }
-                          className="w-full h-12 rounded-lg cursor-pointer"
+                          className="h-12 w-full cursor-pointer rounded-lg"
                         />
                       </div>
                     )}
@@ -480,7 +480,7 @@ function OGDesignerPage() {
                           <div>
                             <label
                               htmlFor={gradientColor1Id}
-                              className="text-sm font-semibold mb-2 block"
+                              className="mb-2 block font-semibold text-sm"
                             >
                               Color 1
                             </label>
@@ -491,13 +491,13 @@ function OGDesignerPage() {
                               onChange={(e) =>
                                 updateConfig({ bgColor1: e.target.value })
                               }
-                              className="w-full h-12 rounded-lg cursor-pointer"
+                              className="h-12 w-full cursor-pointer rounded-lg"
                             />
                           </div>
                           <div>
                             <label
                               htmlFor={gradientColor2Id}
-                              className="text-sm font-semibold mb-2 block"
+                              className="mb-2 block font-semibold text-sm"
                             >
                               Color 2
                             </label>
@@ -508,7 +508,7 @@ function OGDesignerPage() {
                               onChange={(e) =>
                                 updateConfig({ bgColor2: e.target.value })
                               }
-                              className="w-full h-12 rounded-lg cursor-pointer"
+                              className="h-12 w-full cursor-pointer rounded-lg"
                             />
                           </div>
                         </div>
@@ -531,7 +531,7 @@ function OGDesignerPage() {
                         </Select>
 
                         <div>
-                          <div className="text-sm font-semibold mb-2 block">
+                          <div className="mb-2 block font-semibold text-sm">
                             Gradient Presets
                           </div>
                           <div className="grid grid-cols-3 gap-2">
@@ -545,7 +545,7 @@ function OGDesignerPage() {
                                     bgColor2: preset.color2,
                                   })
                                 }
-                                className="h-12 rounded-lg border-2 border-gray-300 dark:border-gray-600 hover:border-primary transition-colors"
+                                className="h-12 rounded-lg border-2 border-gray-300 transition-colors hover:border-primary dark:border-gray-600"
                                 style={{
                                   background: `linear-gradient(to right, ${preset.color1}, ${preset.color2})`,
                                 }}
@@ -574,12 +574,12 @@ function OGDesignerPage() {
                   key="image"
                   title={
                     <div className="flex items-center gap-2">
-                      <ImageIcon className="w-4 h-4" />
+                      <ImageIcon className="h-4 w-4" />
                       <span>Image</span>
                     </div>
                   }
                 >
-                  <div className="space-y-4 mt-4">
+                  <div className="mt-4 space-y-4">
                     {!config.image ? (
                       <ImageUpload
                         onImageSelect={handleImageUpload}
@@ -620,7 +620,7 @@ function OGDesignerPage() {
                         </Select>
 
                         <div>
-                          <div className="text-sm font-semibold mb-2 block">
+                          <div className="mb-2 block font-semibold text-sm">
                             Size: {config.imageSize}%
                           </div>
                           <Slider
@@ -644,12 +644,12 @@ function OGDesignerPage() {
                   key="text"
                   title={
                     <div className="flex items-center gap-2">
-                      <Type className="w-4 h-4" />
+                      <Type className="h-4 w-4" />
                       <span>Text</span>
                     </div>
                   }
                 >
-                  <div className="space-y-4 mt-4">
+                  <div className="mt-4 space-y-4">
                     <Input
                       label="Title"
                       value={config.title}
@@ -658,7 +658,7 @@ function OGDesignerPage() {
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <div className="text-sm font-semibold mb-2 block">
+                        <div className="mb-2 block font-semibold text-sm">
                           Title Size: {config.titleSize}px
                         </div>
                         <Slider
@@ -676,7 +676,7 @@ function OGDesignerPage() {
                       <div>
                         <label
                           htmlFor={titleColorId}
-                          className="text-sm font-semibold mb-2 block"
+                          className="mb-2 block font-semibold text-sm"
                         >
                           Title Color
                         </label>
@@ -687,7 +687,7 @@ function OGDesignerPage() {
                           onChange={(e) =>
                             updateConfig({ titleColor: e.target.value })
                           }
-                          className="w-full h-10 rounded-lg cursor-pointer"
+                          className="h-10 w-full cursor-pointer rounded-lg"
                         />
                       </div>
                     </div>
@@ -702,7 +702,7 @@ function OGDesignerPage() {
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <div className="text-sm font-semibold mb-2 block">
+                        <div className="mb-2 block font-semibold text-sm">
                           Subtitle Size: {config.subtitleSize}px
                         </div>
                         <Slider
@@ -720,7 +720,7 @@ function OGDesignerPage() {
                       <div>
                         <label
                           htmlFor={subtitleColorId}
-                          className="text-sm font-semibold mb-2 block"
+                          className="mb-2 block font-semibold text-sm"
                         >
                           Subtitle Color
                         </label>
@@ -731,13 +731,13 @@ function OGDesignerPage() {
                           onChange={(e) =>
                             updateConfig({ subtitleColor: e.target.value })
                           }
-                          className="w-full h-10 rounded-lg cursor-pointer"
+                          className="h-10 w-full cursor-pointer rounded-lg"
                         />
                       </div>
                     </div>
 
                     <div>
-                      <div className="text-sm font-semibold mb-2 block">
+                      <div className="mb-2 block font-semibold text-sm">
                         Padding: {config.padding}px
                       </div>
                       <Slider

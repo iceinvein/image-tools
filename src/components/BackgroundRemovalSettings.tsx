@@ -51,9 +51,9 @@ export function BackgroundRemovalSettingsComponent({
   return (
     <Card className="border-2 border-gray-200 dark:border-gray-700">
       <CardHeader className="pb-3">
-        <div className="flex items-center justify-between w-full">
+        <div className="flex w-full items-center justify-between">
           <div className="flex items-center gap-2">
-            <Settings className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+            <Settings className="h-4 w-4 text-gray-600 dark:text-gray-400" />
             <span className="font-semibold text-gray-900 dark:text-gray-100">
               Advanced Settings
             </span>
@@ -66,19 +66,19 @@ export function BackgroundRemovalSettingsComponent({
             className="min-w-0 px-2"
           >
             {isExpanded ? (
-              <ChevronUp className="w-4 h-4" />
+              <ChevronUp className="h-4 w-4" />
             ) : (
-              <ChevronDown className="w-4 h-4" />
+              <ChevronDown className="h-4 w-4" />
             )}
           </Button>
         </div>
       </CardHeader>
 
       {isExpanded && (
-        <CardBody className="pt-0 space-y-4">
+        <CardBody className="space-y-4 pt-0">
           {/* Quality Presets */}
           <div className="space-y-2">
-            <div className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <div className="font-medium text-gray-700 text-sm dark:text-gray-300">
               Quality Preset
             </div>
             <div className="flex gap-2">
@@ -98,14 +98,14 @@ export function BackgroundRemovalSettingsComponent({
                   isDisabled={isProcessing}
                   className="flex-1"
                 >
-                  {key === "fast" && <Zap className="w-3 h-3 mr-1" />}
-                  {key === "balanced" && <Clock className="w-3 h-3 mr-1" />}
-                  {key === "quality" && <Sparkles className="w-3 h-3 mr-1" />}
+                  {key === "fast" && <Zap className="mr-1 h-3 w-3" />}
+                  {key === "balanced" && <Clock className="mr-1 h-3 w-3" />}
+                  {key === "quality" && <Sparkles className="mr-1 h-3 w-3" />}
                   {key.charAt(0).toUpperCase() + key.slice(1)}
                 </Button>
               ))}
             </div>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
+            <p className="text-gray-500 text-xs dark:text-gray-400">
               {
                 modelPresets[
                   (Object.keys(modelPresets).find(
@@ -124,7 +124,7 @@ export function BackgroundRemovalSettingsComponent({
           <div className="space-y-2">
             <label
               htmlFor={outputFormatId}
-              className="text-sm font-medium text-gray-700 dark:text-gray-300"
+              className="font-medium text-gray-700 text-sm dark:text-gray-300"
             >
               Output Format
             </label>
@@ -152,7 +152,7 @@ export function BackgroundRemovalSettingsComponent({
           <div className="space-y-2">
             <label
               htmlFor={outputTypeId}
-              className="text-sm font-medium text-gray-700 dark:text-gray-300"
+              className="font-medium text-gray-700 text-sm dark:text-gray-300"
             >
               Output Type
             </label>
@@ -176,7 +176,7 @@ export function BackgroundRemovalSettingsComponent({
               </SelectItem>
               <SelectItem key="mask">Mask - Black and white mask</SelectItem>
             </Select>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
+            <p className="text-gray-500 text-xs dark:text-gray-400">
               {getOutputTypeDescription(settings.outputType)}
             </p>
           </div>
@@ -188,7 +188,7 @@ export function BackgroundRemovalSettingsComponent({
               <div className="flex items-center justify-between">
                 <label
                   htmlFor={qualityId}
-                  className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                  className="font-medium text-gray-700 text-sm dark:text-gray-300"
                 >
                   Quality
                 </label>
@@ -219,7 +219,7 @@ export function BackgroundRemovalSettingsComponent({
           <div className="space-y-2">
             <label
               htmlFor={deviceId}
-              className="text-sm font-medium text-gray-700 dark:text-gray-300"
+              className="font-medium text-gray-700 text-sm dark:text-gray-300"
             >
               Processing Device
             </label>

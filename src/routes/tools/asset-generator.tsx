@@ -77,7 +77,7 @@ function AssetGeneratorPage() {
     progress.total > 0 ? (progress.current / progress.total) * 100 : 0;
 
   return (
-    <section className="py-8 md:py-10 min-h-screen">
+    <section className="min-h-screen py-8 md:py-10">
       <SEO
         title="Free Asset Generator - Generate Web & App Icons | Image Tools"
         description="Free online asset generator. Generate all required image assets for web and mobile app development from a single 1024x1024 image. Create favicons, PWA icons, iOS app icons, Android icons, and social media images. 100% browser-based, no uploads required."
@@ -97,23 +97,23 @@ function AssetGeneratorPage() {
           ]),
         }}
       />
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="mx-auto max-w-7xl px-4">
         {/* Hero Header */}
-        <div className="text-center mb-12 relative">
+        <div className="relative mb-12 text-center">
           {/* Animated background gradient */}
-          <div className="absolute inset-0 -z-10 overflow-hidden">
-            <div className="absolute top-0 left-1/4 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl animate-pulse" />
-            <div className="absolute top-0 right-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
+          <div className="-z-10 absolute inset-0 overflow-hidden">
+            <div className="absolute top-0 left-1/4 h-96 w-96 animate-pulse rounded-full bg-orange-500/10 blur-3xl" />
+            <div className="absolute top-0 right-1/4 h-96 w-96 animate-pulse rounded-full bg-pink-500/10 blur-3xl delay-1000" />
           </div>
 
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-orange-500 to-pink-600 mb-6 shadow-lg shadow-orange-500/30 animate-float">
-            <Package className="w-10 h-10 text-white" />
+          <div className="mb-6 inline-flex h-20 w-20 animate-float items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 to-pink-600 shadow-lg shadow-orange-500/30">
+            <Package className="h-10 w-10 text-white" />
           </div>
 
-          <h1 className="text-4xl md:text-5xl font-black mb-4 leading-tight pb-2 bg-gradient-to-r from-orange-600 to-pink-600 dark:from-orange-400 dark:to-pink-400 bg-clip-text text-transparent">
+          <h1 className="mb-4 bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text pb-2 font-black text-4xl text-transparent leading-tight md:text-5xl dark:from-orange-400 dark:to-pink-400">
             Asset Generator
           </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-6">
+          <p className="mx-auto mb-6 max-w-2xl text-gray-600 text-lg dark:text-gray-400">
             Upload a 1024×1024 image and generate all required assets for web
             and mobile app development in one click.
           </p>
@@ -133,7 +133,7 @@ function AssetGeneratorPage() {
 
         {/* Main Content */}
         {!originalFile ? (
-          <div className="max-w-2xl mx-auto">
+          <div className="mx-auto max-w-2xl">
             <ImageUpload
               onImageSelect={handleImageSelect}
               acceptedFormats={["image/png", "image/jpeg", "image/webp"]}
@@ -141,12 +141,12 @@ function AssetGeneratorPage() {
           </div>
         ) : (
           <div
-            className={`grid gap-8 mt-8 ${generatedAssets.length > 0 ? "lg:grid-cols-2" : ""}`}
+            className={`mt-8 grid gap-8 ${generatedAssets.length > 0 ? "lg:grid-cols-2" : ""}`}
           >
             {/* Pack Selection */}
             <Card className="border-2 border-gray-200 dark:border-gray-700">
-              <CardHeader className="bg-gradient-to-r from-orange-50 to-pink-50 dark:from-orange-950/30 dark:to-pink-950/30 border-b border-gray-200 dark:border-gray-700">
-                <h2 className="text-xl font-bold">Select Asset Pack</h2>
+              <CardHeader className="border-gray-200 border-b bg-gradient-to-r from-orange-50 to-pink-50 dark:border-gray-700 dark:from-orange-950/30 dark:to-pink-950/30">
+                <h2 className="font-bold text-xl">Select Asset Pack</h2>
               </CardHeader>
               <CardBody className="p-6">
                 <Tabs
@@ -162,17 +162,17 @@ function AssetGeneratorPage() {
                 >
                   {ASSET_PACKS.map((pack) => (
                     <Tab key={pack.id} title={pack.name}>
-                      <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
-                        <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
+                      <div className="mt-4 rounded-lg bg-gray-50 p-4 dark:bg-gray-800/50">
+                        <p className="mb-3 text-gray-600 text-sm dark:text-gray-300">
                           {pack.description}
                         </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+                        <p className="mb-3 text-gray-500 text-xs dark:text-gray-400">
                           Generates {pack.sizes.length} images
                           {pack.includeIco && " + 1 ICO file"}
                         </p>
                         {(pack.id === "web" || pack.id === "complete") && (
-                          <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-800">
-                            <p className="text-xs text-gray-600 dark:text-gray-400">
+                          <div className="mt-3 rounded-lg border border-blue-200 bg-blue-50 p-3 dark:border-blue-800 dark:bg-blue-950/30">
+                            <p className="text-gray-600 text-xs dark:text-gray-400">
                               <span className="font-semibold text-blue-600 dark:text-blue-400">
                                 Note:
                               </span>{" "}
@@ -188,7 +188,7 @@ function AssetGeneratorPage() {
                   ))}
                 </Tabs>
 
-                <div className="flex gap-3 mt-6">
+                <div className="mt-6 flex gap-3">
                   <Button
                     color="primary"
                     size="lg"
@@ -196,9 +196,9 @@ function AssetGeneratorPage() {
                     isDisabled={isGenerating}
                     startContent={
                       isGenerating ? (
-                        <Loader2 className="w-5 h-5 animate-spin" />
+                        <Loader2 className="h-5 w-5 animate-spin" />
                       ) : (
-                        <Package className="w-5 h-5" />
+                        <Package className="h-5 w-5" />
                       )
                     }
                     className="flex-1"
@@ -237,10 +237,10 @@ function AssetGeneratorPage() {
             {/* Generated Assets */}
             {generatedAssets.length > 0 && (
               <Card className="border-2 border-green-200 dark:border-green-800">
-                <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 border-b border-green-200 dark:border-green-700 flex justify-between items-center">
+                <CardHeader className="flex items-center justify-between border-green-200 border-b bg-gradient-to-r from-green-50 to-emerald-50 dark:border-green-700 dark:from-green-950/30 dark:to-emerald-950/30">
                   <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400" />
-                    <h2 className="text-xl font-bold">
+                    <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-400" />
+                    <h2 className="font-bold text-xl">
                       Generated Assets ({generatedAssets.length})
                     </h2>
                   </div>
@@ -248,25 +248,25 @@ function AssetGeneratorPage() {
                     color="success"
                     size="sm"
                     onPress={handleDownloadAll}
-                    startContent={<Download className="w-4 h-4" />}
+                    startContent={<Download className="h-4 w-4" />}
                   >
                     Download All
                   </Button>
                 </CardHeader>
                 <CardBody className="p-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                     {generatedAssets.map((asset) => (
                       <div
                         key={asset.name}
-                        className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-primary transition-colors"
+                        className="rounded-lg border border-gray-200 p-4 transition-colors hover:border-primary dark:border-gray-700"
                       >
-                        <div className="flex items-start justify-between mb-2">
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-semibold truncate">
+                        <div className="mb-2 flex items-start justify-between">
+                          <div className="min-w-0 flex-1">
+                            <p className="truncate font-semibold text-sm">
                               {asset.name}
                             </p>
                             {asset.description && (
-                              <p className="text-xs text-gray-500 dark:text-gray-400">
+                              <p className="text-gray-500 text-xs dark:text-gray-400">
                                 {asset.description}
                               </p>
                             )}
@@ -278,10 +278,10 @@ function AssetGeneratorPage() {
                             isIconOnly
                             onPress={() => handleDownload(asset)}
                           >
-                            <Download className="w-4 h-4" />
+                            <Download className="h-4 w-4" />
                           </Button>
                         </div>
-                        <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+                        <div className="flex items-center justify-between text-gray-500 text-xs dark:text-gray-400">
                           <span>{asset.size}</span>
                         </div>
                       </div>

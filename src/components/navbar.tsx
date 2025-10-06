@@ -28,7 +28,7 @@ export const Navbar = () => {
               <button
                 type="button"
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                className="rounded-lg p-2 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
                 aria-label="Toggle tools menu"
               >
                 <svg
@@ -57,7 +57,7 @@ export const Navbar = () => {
             </RouterLink>
           </NavbarBrand>
           {siteConfig.navItems.length > 0 && (
-            <div className="hidden sm:flex gap-4 ml-4">
+            <div className="ml-4 hidden gap-4 sm:flex">
               {siteConfig.navItems.map((item, index) => (
                 <NavbarItem
                   key={item.href}
@@ -66,10 +66,10 @@ export const Navbar = () => {
                 >
                   <RouterLink
                     to={item.href}
-                    className="text-foreground hover:text-primary transition-all duration-300 hover:scale-105 relative group"
+                    className="group relative text-foreground transition-all duration-300 hover:scale-105 hover:text-primary"
                   >
                     {item.label}
-                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full" />
+                    <span className="absolute bottom-0 left-0 h-0.5 w-0 bg-primary transition-all duration-300 group-hover:w-full" />
                   </RouterLink>
                 </NavbarItem>
               ))}

@@ -93,24 +93,24 @@ function BackgroundRemoverPage() {
         description="Remove image backgrounds automatically with AI. Free browser-based background removal tool. No upload required, works offline."
         canonicalUrl="https://image-utilities.netlify.app/tools/background-remover"
       />
-      <section className="py-8 md:py-10 min-h-screen">
-        <div className="max-w-7xl mx-auto px-4">
+      <section className="min-h-screen py-8 md:py-10">
+        <div className="mx-auto max-w-7xl px-4">
           {/* Hero Header */}
-          <div className="text-center mb-12 relative">
+          <div className="relative mb-12 text-center">
             {/* Animated background gradient */}
-            <div className="absolute inset-0 -z-10 overflow-hidden">
-              <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse" />
-              <div className="absolute top-0 right-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
+            <div className="-z-10 absolute inset-0 overflow-hidden">
+              <div className="absolute top-0 left-1/4 h-96 w-96 animate-pulse rounded-full bg-purple-500/10 blur-3xl" />
+              <div className="absolute top-0 right-1/4 h-96 w-96 animate-pulse rounded-full bg-pink-500/10 blur-3xl delay-1000" />
             </div>
 
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-600 mb-6 shadow-lg shadow-purple-500/30 animate-float">
-              <Eraser className="w-10 h-10 text-white" />
+            <div className="mb-6 inline-flex h-20 w-20 animate-float items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500 to-pink-600 shadow-lg shadow-purple-500/30">
+              <Eraser className="h-10 w-10 text-white" />
             </div>
 
-            <h1 className="text-4xl md:text-5xl font-black mb-4 leading-tight pb-2 bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400 bg-clip-text text-transparent">
+            <h1 className="mb-4 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text pb-2 font-black text-4xl text-transparent leading-tight md:text-5xl dark:from-purple-400 dark:to-pink-400">
               Background Remover
             </h1>
-            <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-6">
+            <p className="mx-auto mb-6 max-w-2xl text-gray-600 text-lg dark:text-gray-400">
               Remove image backgrounds automatically with AI. Runs entirely in
               your browser for complete privacy.
             </p>
@@ -120,7 +120,7 @@ function BackgroundRemoverPage() {
                 color="secondary"
                 variant="flat"
                 size="sm"
-                startContent={<Sparkles className="w-3 h-3" />}
+                startContent={<Sparkles className="h-3 w-3" />}
               >
                 AI-Powered
               </Chip>
@@ -135,33 +135,33 @@ function BackgroundRemoverPage() {
 
           {/* Main Content */}
           {!originalFile ? (
-            <div className="max-w-2xl mx-auto">
+            <div className="mx-auto max-w-2xl">
               <ImageUpload
                 onImageSelect={handleImageSelect}
                 acceptedFormats={["image/jpeg", "image/png", "image/webp"]}
               />
             </div>
           ) : (
-            <div className="max-w-6xl mx-auto space-y-6">
+            <div className="mx-auto max-w-6xl space-y-6">
               {/* Compact Image Comparison */}
               <Card className="border-2 border-gray-200 dark:border-gray-700">
                 <CardBody className="p-6">
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                     {/* Original Image */}
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
-                        <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        <h3 className="font-semibold text-gray-700 text-sm dark:text-gray-300">
                           Original
                         </h3>
                         <Chip size="sm" variant="flat" color="default">
                           With Background
                         </Chip>
                       </div>
-                      <div className="relative aspect-video bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden border-2 border-gray-200 dark:border-gray-700">
+                      <div className="relative aspect-video overflow-hidden rounded-lg border-2 border-gray-200 bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
                         <img
                           src={originalUrl}
                           alt="Original"
-                          className="w-full h-full object-contain"
+                          className="h-full w-full object-contain"
                         />
                       </div>
                     </div>
@@ -169,7 +169,7 @@ function BackgroundRemoverPage() {
                     {/* Result Image */}
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
-                        <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        <h3 className="font-semibold text-gray-700 text-sm dark:text-gray-300">
                           {result ? "Result" : "Preview"}
                         </h3>
                         {result && (
@@ -179,7 +179,7 @@ function BackgroundRemoverPage() {
                         )}
                       </div>
                       <div
-                        className="relative aspect-video rounded-lg overflow-hidden border-2 border-dashed border-gray-300 dark:border-gray-600"
+                        className="relative aspect-video overflow-hidden rounded-lg border-2 border-gray-300 border-dashed dark:border-gray-600"
                         style={
                           result
                             ? {
@@ -200,12 +200,12 @@ function BackgroundRemoverPage() {
                           <img
                             src={result.url}
                             alt="Result"
-                            className="w-full h-full object-contain"
+                            className="h-full w-full object-contain"
                           />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center text-gray-400 bg-gray-100 dark:bg-gray-800">
+                          <div className="flex h-full w-full items-center justify-center bg-gray-100 text-gray-400 dark:bg-gray-800">
                             <div className="text-center">
-                              <Sparkles className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                              <Sparkles className="mx-auto mb-2 h-12 w-12 opacity-50" />
                               <p className="text-sm">Click remove to process</p>
                             </div>
                           </div>
@@ -222,8 +222,8 @@ function BackgroundRemoverPage() {
                   <CardBody className="p-4">
                     <div className="space-y-3">
                       <div className="flex items-center gap-3">
-                        <Sparkles className="w-5 h-5 text-purple-500 animate-pulse" />
-                        <span className="font-semibold text-sm text-gray-900 dark:text-gray-100">
+                        <Sparkles className="h-5 w-5 animate-pulse text-purple-500" />
+                        <span className="font-semibold text-gray-900 text-sm dark:text-gray-100">
                           {progress.message}
                         </span>
                       </div>
@@ -233,7 +233,7 @@ function BackgroundRemoverPage() {
                         size="sm"
                         className="max-w-full"
                       />
-                      <p className="text-xs text-gray-600 dark:text-gray-400">
+                      <p className="text-gray-600 text-xs dark:text-gray-400">
                         This may take a few moments on first use while the AI
                         model loads...
                       </p>
@@ -244,9 +244,9 @@ function BackgroundRemoverPage() {
 
               {/* Error Message */}
               {error && (
-                <Card className="border-2 border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/20">
+                <Card className="border-2 border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/20">
                   <CardBody className="p-3">
-                    <p className="text-sm text-red-600 dark:text-red-400 font-medium">
+                    <p className="font-medium text-red-600 text-sm dark:text-red-400">
                       {error}
                     </p>
                   </CardBody>
@@ -265,16 +265,16 @@ function BackgroundRemoverPage() {
               {/* Compact Action Bar */}
               <Card className="border-2 border-gray-200 dark:border-gray-700">
                 <CardBody className="p-4">
-                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                    <div className="flex-1 text-sm text-gray-600 dark:text-gray-400">
+                  <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
+                    <div className="flex-1 text-gray-600 text-sm dark:text-gray-400">
                       {!result && !isProcessing && (
                         <div className="flex items-center gap-2">
-                          <Info className="w-4 h-4 text-blue-500 flex-shrink-0" />
+                          <Info className="h-4 w-4 flex-shrink-0 text-blue-500" />
                           <span>AI model (~50MB) downloads on first use</span>
                         </div>
                       )}
                       {result && (
-                        <span className="text-green-600 dark:text-green-400 font-medium">
+                        <span className="font-medium text-green-600 dark:text-green-400">
                           ✓ Background removed successfully
                         </span>
                       )}
@@ -290,7 +290,7 @@ function BackgroundRemoverPage() {
                           setError(null);
                           setProgress(null);
                         }}
-                        startContent={<RotateCcw className="w-4 h-4" />}
+                        startContent={<RotateCcw className="h-4 w-4" />}
                         className="flex-1 sm:flex-initial"
                       >
                         New
@@ -301,10 +301,10 @@ function BackgroundRemoverPage() {
                         onPress={() => handleRemoveBackground()}
                         isDisabled={isProcessing}
                         isLoading={isProcessing}
-                        className="flex-1 sm:flex-initial font-bold"
+                        className="flex-1 font-bold sm:flex-initial"
                         startContent={
                           !isProcessing ? (
-                            <Sparkles className="w-4 h-4" />
+                            <Sparkles className="h-4 w-4" />
                           ) : undefined
                         }
                       >
@@ -315,8 +315,8 @@ function BackgroundRemoverPage() {
                           size="lg"
                           color="success"
                           onPress={handleDownload}
-                          startContent={<Download className="w-4 h-4" />}
-                          className="flex-1 sm:flex-initial font-bold"
+                          startContent={<Download className="h-4 w-4" />}
+                          className="flex-1 font-bold sm:flex-initial"
                         >
                           Download
                         </Button>

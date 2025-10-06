@@ -96,7 +96,7 @@ function ConverterPage() {
     targetFormat === "image/jpeg" || targetFormat === "image/webp";
 
   return (
-    <section className="py-8 md:py-10 min-h-screen">
+    <section className="min-h-screen py-8 md:py-10">
       <SEO
         title="Image Converter - Convert Images to JPEG, PNG, WebP | Image Tools"
         description="Free online image converter. Convert images between JPEG, PNG, and WebP formats with customizable quality settings. 100% browser-based, no uploads required."
@@ -116,23 +116,23 @@ function ConverterPage() {
           ]),
         }}
       />
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="mx-auto max-w-7xl px-4">
         {/* Hero Header */}
-        <div className="text-center mb-12 relative">
+        <div className="relative mb-12 text-center">
           {/* Animated background gradient */}
-          <div className="absolute inset-0 -z-10 overflow-hidden">
-            <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse" />
-            <div className="absolute top-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
+          <div className="-z-10 absolute inset-0 overflow-hidden">
+            <div className="absolute top-0 left-1/4 h-96 w-96 animate-pulse rounded-full bg-blue-500/10 blur-3xl" />
+            <div className="absolute top-0 right-1/4 h-96 w-96 animate-pulse rounded-full bg-purple-500/10 blur-3xl delay-1000" />
           </div>
 
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 mb-6 shadow-lg shadow-blue-500/30 animate-float">
-            <RefreshCw className="w-10 h-10 text-white" />
+          <div className="mb-6 inline-flex h-20 w-20 animate-float items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 shadow-blue-500/30 shadow-lg">
+            <RefreshCw className="h-10 w-10 text-white" />
           </div>
 
-          <h1 className="text-4xl md:text-5xl font-black mb-4 leading-tight pb-2 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
+          <h1 className="mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text pb-2 font-black text-4xl text-transparent leading-tight md:text-5xl dark:from-blue-400 dark:to-purple-400">
             Image Converter
           </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-6">
+          <p className="mx-auto mb-6 max-w-2xl text-gray-600 text-lg dark:text-gray-400">
             Transform your images between formats with zero quality loss.
             Professional-grade conversion with customizable settings.
           </p>
@@ -149,19 +149,19 @@ function ConverterPage() {
 
         {/* Main Content */}
         {!originalFile ? (
-          <div className="max-w-2xl mx-auto">
+          <div className="mx-auto max-w-2xl">
             <ImageUpload onImageSelect={handleImageSelect} />
           </div>
         ) : (
-          <div className="max-w-6xl mx-auto space-y-6">
+          <div className="mx-auto max-w-6xl space-y-6">
             {/* Compact Image Comparison */}
             <Card className="border-2 border-gray-200 dark:border-gray-700">
               <CardBody className="p-6">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                   {/* Original Image */}
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                      <h3 className="font-semibold text-gray-700 text-sm dark:text-gray-300">
                         Original
                       </h3>
                       <Chip size="sm" variant="flat" color="default">
@@ -170,15 +170,15 @@ function ConverterPage() {
                           : ""}
                       </Chip>
                     </div>
-                    <div className="relative aspect-video bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden border-2 border-gray-200 dark:border-gray-700">
+                    <div className="relative aspect-video overflow-hidden rounded-lg border-2 border-gray-200 bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
                       <img
                         src={originalUrl}
                         alt="Original"
-                        className="w-full h-full object-contain"
+                        className="h-full w-full object-contain"
                       />
                     </div>
-                    <div className="flex items-center justify-between text-xs text-gray-600 dark:text-gray-400">
-                      <span className="truncate max-w-[200px]">
+                    <div className="flex items-center justify-between text-gray-600 text-xs dark:text-gray-400">
+                      <span className="max-w-[200px] truncate">
                         {originalFile.name}
                       </span>
                       <span className="font-medium">
@@ -190,7 +190,7 @@ function ConverterPage() {
                   {/* Converted Image */}
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                      <h3 className="font-semibold text-gray-700 text-sm dark:text-gray-300">
                         {convertedUrl ? "Converted" : "Preview"}
                       </h3>
                       {convertedUrl && convertedBlob && (
@@ -199,17 +199,17 @@ function ConverterPage() {
                         </Chip>
                       )}
                     </div>
-                    <div className="relative aspect-video bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden border-2 border-dashed border-gray-300 dark:border-gray-600">
+                    <div className="relative aspect-video overflow-hidden rounded-lg border-2 border-gray-300 border-dashed bg-gray-100 dark:border-gray-600 dark:bg-gray-800">
                       {convertedUrl ? (
                         <img
                           src={convertedUrl}
                           alt="Converted"
-                          className="w-full h-full object-contain"
+                          className="h-full w-full object-contain"
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-gray-400">
+                        <div className="flex h-full w-full items-center justify-center text-gray-400">
                           <div className="text-center">
-                            <RefreshCw className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                            <RefreshCw className="mx-auto mb-2 h-12 w-12 opacity-50" />
                             <p className="text-sm">
                               Adjust settings and convert
                             </p>
@@ -218,8 +218,8 @@ function ConverterPage() {
                       )}
                     </div>
                     {convertedUrl && convertedBlob ? (
-                      <div className="flex items-center justify-between text-xs text-gray-600 dark:text-gray-400">
-                        <span className="truncate max-w-[200px]">
+                      <div className="flex items-center justify-between text-gray-600 text-xs dark:text-gray-400">
+                        <span className="max-w-[200px] truncate">
                           converted.{getFileExtension(targetFormat)}
                         </span>
                         <span
@@ -249,9 +249,9 @@ function ConverterPage() {
             {/* Compact Controls Bar */}
             <Card className="border-2 border-gray-200 dark:border-gray-700">
               <CardBody className="p-4">
-                <div className="flex flex-col lg:flex-row items-stretch lg:items-end gap-4">
+                <div className="flex flex-col items-stretch gap-4 lg:flex-row lg:items-end">
                   {/* Format Selection */}
-                  <div className="flex-1 min-w-[200px]">
+                  <div className="min-w-[200px] flex-1">
                     <Select
                       label="Target Format"
                       labelPlacement="outside"
@@ -274,13 +274,13 @@ function ConverterPage() {
 
                   {/* Quality Slider */}
                   {supportsQuality && (
-                    <div className="flex-1 min-w-[200px]">
+                    <div className="min-w-[200px] flex-1">
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                          <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
+                          <span className="font-medium text-gray-700 text-xs dark:text-gray-300">
                             Quality
                           </span>
-                          <span className="text-sm font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                          <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text font-bold text-sm text-transparent">
                             {quality}%
                           </span>
                         </div>
@@ -312,7 +312,7 @@ function ConverterPage() {
                       size="lg"
                       variant="bordered"
                       onPress={handleReset}
-                      startContent={<RotateCcw className="w-4 h-4" />}
+                      startContent={<RotateCcw className="h-4 w-4" />}
                       className="flex-1 lg:flex-initial"
                     >
                       New
@@ -321,10 +321,10 @@ function ConverterPage() {
                       size="lg"
                       onPress={handleConvert}
                       isLoading={isProcessing}
-                      className="flex-1 lg:flex-initial bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:scale-102 transition-all duration-300 font-bold overflow-hidden"
+                      className="flex-1 overflow-hidden bg-gradient-to-r from-blue-600 to-purple-600 font-bold text-white shadow-lg transition-all duration-300 hover:scale-102 lg:flex-initial"
                       startContent={
                         !isProcessing ? (
-                          <RefreshCw className="w-4 h-4" />
+                          <RefreshCw className="h-4 w-4" />
                         ) : undefined
                       }
                     >
@@ -335,8 +335,8 @@ function ConverterPage() {
                         size="lg"
                         color="success"
                         onPress={handleDownload}
-                        startContent={<Download className="w-4 h-4" />}
-                        className="flex-1 lg:flex-initial font-bold"
+                        startContent={<Download className="h-4 w-4" />}
+                        className="flex-1 font-bold lg:flex-initial"
                       >
                         Download
                       </Button>
