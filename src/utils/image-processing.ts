@@ -179,6 +179,8 @@ export function getFileExtension(mimeType: string): string {
     "image/bmp": "bmp",
     "image/tiff": "tiff",
     "image/x-icon": "ico",
+    "image/svg+xml": "svg",
+    "image/avif": "avif",
   };
 
   return extensions[mimeType] || "jpg";

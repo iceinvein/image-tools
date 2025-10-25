@@ -5,7 +5,7 @@ import { Progress } from "@heroui/progress";
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { Download, Eraser, Info, RotateCcw, Sparkles } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { BackgroundRemovalSettings as SettingsComponent } from "@/components/BackgroundRemovalSettings";
 import { ImageUpload } from "@/components/image-upload";
 import { SEO } from "@/components/seo";
@@ -33,6 +33,7 @@ function BackgroundRemoverPage() {
   const [error, setError] = useState<string | null>(null);
   const [settings, setSettings] =
     useState<BackgroundRemovalSettings>(defaultSettings);
+  const prevOutputTypeRef = useRef<string>(defaultSettings.outputType);
 
   const handleImageSelect = async (file: File, imageUrl: string) => {
     setOriginalFile(file);
@@ -42,36 +43,39 @@ function BackgroundRemoverPage() {
     setProgress(null);
   };
 
-  const handleRemoveBackground = async (file?: File) => {
-    const fileToProcess = file || originalFile;
-    if (!fileToProcess) return;
+  const handleRemoveBackground = useCallback(
+    async (file?: File) => {
+      const fileToProcess = file || originalFile;
+      if (!fileToProcess) return;
 
-    setIsProcessing(true);
-    setError(null);
-    setProgress({
-      stage: "loading",
-      progress: 0,
-      message: "Initializing...",
-    });
+      setIsProcessing(true);
+      setError(null);
+      setProgress({
+        stage: "loading",
+        progress: 0,
+        message: "Initializing...",
+      });
 
-    try {
-      const removed = await removeBg(
-        fileToProcess,
-        settings,
-        (prog: RemovalProgress) => {
-          setProgress(prog);
-        },
-      );
-      setResult(removed);
-    } catch (err) {
-      console.error("Background removal failed:", err);
-      setError(
-        err instanceof Error ? err.message : "Failed to remove background",
-      );
-    } finally {
-      setIsProcessing(false);
-    }
-  };
+      try {
+        const removed = await removeBg(
+          fileToProcess,
+          settings,
+          (prog: RemovalProgress) => {
+            setProgress(prog);
+          },
+        );
+        setResult(removed);
+      } catch (err) {
+        console.error("Background removal failed:", err);
+        setError(
+          err instanceof Error ? err.message : "Failed to remove background",
+        );
+      } finally {
+        setIsProcessing(false);
+      }
+    },
+    [originalFile, settings],
+  );
 
   const handleDownload = () => {
     if (!result || !originalFile) return;
@@ -86,6 +90,20 @@ function BackgroundRemoverPage() {
           : "mask";
     downloadBlob(result.blob, `${baseName}-${suffix}.${extension}`);
   };
+
+  // Auto re-process when output type changes (if we already have a result)
+  useEffect(() => {
+    // Only trigger if output type actually changed and we have a result
+    if (
+      prevOutputTypeRef.current !== settings.outputType &&
+      result &&
+      originalFile &&
+      !isProcessing
+    ) {
+      prevOutputTypeRef.current = settings.outputType;
+      handleRemoveBackground();
+    }
+  }, [settings.outputType, result, originalFile, isProcessing, handleRemoveBackground]);
 
   return (
     <>
@@ -185,14 +203,18 @@ function BackgroundRemoverPage() {
                           </h3>
                           {result && (
                             <Chip size="sm" variant="flat" color="success">
-                              Background Removed
+                              {settings.outputType === "foreground"
+                                ? "Background Removed"
+                                : settings.outputType === "background"
+                                  ? "Background Only"
+                                  : "B&W Mask"}
                             </Chip>
                           )}
                         </div>
                         <div
                           className="relative aspect-video overflow-hidden rounded-lg border-2 border-gray-300 border-dashed dark:border-gray-600"
                           style={
-                            result
+                            result && settings.outputType !== "mask"
                               ? {
                                   backgroundImage: `
                                   linear-gradient(45deg, #e5e7eb 25%, transparent 25%),
@@ -204,7 +226,11 @@ function BackgroundRemoverPage() {
                                   backgroundPosition:
                                     "0 0, 0 10px, 10px -10px, -10px 0px",
                                 }
-                              : undefined
+                              : result && settings.outputType === "mask"
+                                ? {
+                                    backgroundColor: "#ffffff",
+                                  }
+                                : undefined
                           }
                         >
                           {result ? (

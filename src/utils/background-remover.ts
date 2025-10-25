@@ -1,13 +1,8 @@
-import { type Config, removeBackground } from "@imgly/background-removal";
-
-// Extended config type to include all documented options
-interface ExtendedConfig extends Omit<Config, "output"> {
-  output?: {
-    format?: "image/png" | "image/jpeg" | "image/webp";
-    quality?: number;
-    type?: "foreground" | "background" | "mask";
-  };
-}
+import {
+  type Config,
+  removeBackground,
+  segmentForeground,
+} from "@imgly/background-removal";
 
 export interface RemovalResult {
   blob: Blob;
@@ -70,7 +65,7 @@ export async function removeBg(
     });
 
     // Configure background removal
-    const config: ExtendedConfig = {
+    const config: Config = {
       progress: (_key, current, total) => {
         const progressPercent = Math.round((current / total) * 100);
         onProgress?.({
@@ -84,12 +79,42 @@ export async function removeBg(
       output: {
         format: settings.outputFormat,
         quality: settings.quality,
-        type: settings.outputType,
       },
     };
 
-    // Remove background
-    const blob = await removeBackground(file, config);
+    console.log("Background removal config:", {
+      model: settings.model,
+      device: settings.device,
+      outputType: settings.outputType,
+      outputFormat: settings.outputFormat,
+      quality: settings.quality,
+    });
+
+    // Use the appropriate function based on output type
+    let blob: Blob;
+    if (settings.outputType === "mask") {
+      console.log("Processing mask output...");
+      // For mask, use segmentForeground which returns the alpha mask
+      // We need to convert it to a visible grayscale image
+      const maskBlob = await segmentForeground(file, config);
+      console.log("Mask blob received:", maskBlob.size, "bytes");
+      blob = await convertMaskToGrayscale(maskBlob, settings);
+      console.log("Grayscale mask created:", blob.size, "bytes");
+    } else if (settings.outputType === "background") {
+      console.log("Processing background output...");
+      // For background only, we need to invert the mask and apply it
+      // First get the mask
+      const maskBlob = await segmentForeground(file, config);
+      console.log("Mask blob received:", maskBlob.size, "bytes");
+      // Then we need to apply the inverted mask to get background only
+      blob = await applyInvertedMask(file, maskBlob, settings);
+      console.log("Background blob created:", blob.size, "bytes");
+    } else {
+      console.log("Processing foreground output...");
+      // For foreground (default), use removeBackground
+      blob = await removeBackground(file, config);
+      console.log("Foreground blob created:", blob.size, "bytes");
+    }
 
     // Create URL for preview
     const url = URL.createObjectURL(blob);
@@ -172,6 +197,182 @@ export function getFileExtension(
     default:
       return "png";
   }
+}
+
+/**
+ * Convert alpha mask to visible grayscale image
+ */
+async function convertMaskToGrayscale(
+  maskBlob: Blob,
+  settings: BackgroundRemovalSettings,
+): Promise<Blob> {
+  // Load mask image
+  const maskUrl = URL.createObjectURL(maskBlob);
+  const maskImg = await loadImageFromUrl(maskUrl);
+  URL.revokeObjectURL(maskUrl);
+
+  // Create canvas
+  const canvas = document.createElement("canvas");
+  canvas.width = maskImg.width;
+  canvas.height = maskImg.height;
+  const ctx = canvas.getContext("2d");
+
+  if (!ctx) {
+    throw new Error("Could not get canvas context");
+  }
+
+  // Draw mask image
+  ctx.drawImage(maskImg, 0, 0);
+
+  // Get image data
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const data = imageData.data;
+
+  // Convert alpha channel to grayscale
+  // The mask from segmentForeground has the alpha in the alpha channel
+  // We need to copy it to RGB channels to make it visible
+  for (let i = 0; i < data.length; i += 4) {
+    const alpha = data[i + 3]; // Get alpha value
+    data[i] = alpha; // R
+    data[i + 1] = alpha; // G
+    data[i + 2] = alpha; // B
+    data[i + 3] = 255; // Make fully opaque
+  }
+
+  // Put modified image data back
+  ctx.putImageData(imageData, 0, 0);
+
+  // Convert to blob
+  return new Promise((resolve, reject) => {
+    canvas.toBlob(
+      (blob) => {
+        if (blob) {
+          resolve(blob);
+        } else {
+          reject(new Error("Failed to create mask blob"));
+        }
+      },
+      settings.outputFormat,
+      settings.quality,
+    );
+  });
+}
+
+/**
+ * Apply inverted mask to get background only
+ */
+async function applyInvertedMask(
+  originalFile: File,
+  maskBlob: Blob,
+  settings: BackgroundRemovalSettings,
+): Promise<Blob> {
+  // Load original image
+  const originalImg = await loadImageFromFile(originalFile);
+
+  // Load mask image
+  const maskUrl = URL.createObjectURL(maskBlob);
+  const maskImg = await loadImageFromUrl(maskUrl);
+  URL.revokeObjectURL(maskUrl);
+
+  // Create canvas
+  const canvas = document.createElement("canvas");
+  canvas.width = originalImg.width;
+  canvas.height = originalImg.height;
+  const ctx = canvas.getContext("2d");
+
+  if (!ctx) {
+    throw new Error("Could not get canvas context");
+  }
+
+  // Draw original image
+  ctx.drawImage(originalImg, 0, 0);
+
+  // Get image data
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const data = imageData.data;
+
+  // Create a temporary canvas for the mask
+  const maskCanvas = document.createElement("canvas");
+  maskCanvas.width = maskImg.width;
+  maskCanvas.height = maskImg.height;
+  const maskCtx = maskCanvas.getContext("2d");
+
+  if (!maskCtx) {
+    throw new Error("Could not get mask canvas context");
+  }
+
+  maskCtx.drawImage(maskImg, 0, 0);
+  const maskData = maskCtx.getImageData(0, 0, maskCanvas.width, maskCanvas.height);
+  const mask = maskData.data;
+
+  // Apply inverted mask (keep background, remove foreground)
+  for (let i = 0; i < data.length; i += 4) {
+    // Get mask alpha value (assuming grayscale mask)
+    const maskAlpha = mask[i + 3] / 255;
+
+    // Invert the mask: where mask is opaque (foreground), make transparent
+    // where mask is transparent (background), keep opaque
+    data[i + 3] = Math.round((1 - maskAlpha) * 255);
+  }
+
+  // Put modified image data back
+  ctx.putImageData(imageData, 0, 0);
+
+  // Convert to blob
+  return new Promise((resolve, reject) => {
+    canvas.toBlob(
+      (blob) => {
+        if (blob) {
+          resolve(blob);
+        } else {
+          reject(new Error("Failed to create background blob"));
+        }
+      },
+      settings.outputFormat,
+      settings.quality,
+    );
+  });
+}
+
+/**
+ * Load image from File
+ */
+function loadImageFromFile(file: File): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      resolve(img);
+    };
+
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("Failed to load image from file"));
+    };
+
+    img.src = url;
+  });
+}
+
+/**
+ * Load image from URL
+ */
+function loadImageFromUrl(url: string): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+
+    img.onload = () => {
+      resolve(img);
+    };
+
+    img.onerror = () => {
+      reject(new Error("Failed to load image from URL"));
+    };
+
+    img.src = url;
+  });
 }
 
 /**
