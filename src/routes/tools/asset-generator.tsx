@@ -5,7 +5,7 @@ import { Progress } from "@heroui/progress";
 import { Tab, Tabs } from "@heroui/tabs";
 import { createFileRoute } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
-import { CheckCircle2, Download, Loader2, Package } from "lucide-react";
+import { Archive, CheckCircle2, Download, Loader2, Package } from "lucide-react";
 import { useState } from "react";
 
 import { ImageUpload } from "@/components/image-upload";
@@ -20,7 +20,7 @@ import {
   type GeneratedAsset,
   generateAssetPack,
 } from "@/utils/asset-generator";
-import { downloadBlob } from "@/utils/image-processing";
+import { downloadAsZip, downloadBlob } from "@/utils/image-processing";
 
 function AssetGeneratorPage() {
   const [originalFile, setOriginalFile] = useState<File | null>(null);
@@ -63,10 +63,14 @@ function AssetGeneratorPage() {
     downloadBlob(asset.blob, asset.name);
   };
 
-  const handleDownloadAll = () => {
-    generatedAssets.forEach((asset) => {
-      setTimeout(() => downloadBlob(asset.blob, asset.name), 100);
-    });
+  const handleDownloadAll = async () => {
+    const files = generatedAssets.map((asset) => ({
+      blob: asset.blob,
+      name: asset.name,
+    }));
+
+    const zipFilename = `${selectedPack.name.toLowerCase().replace(/\s+/g, "-")}-assets.zip`;
+    await downloadAsZip(files, zipFilename);
   };
 
   const handleReset = () => {
@@ -358,9 +362,9 @@ function AssetGeneratorPage() {
                       color="success"
                       size="sm"
                       onPress={handleDownloadAll}
-                      startContent={<Download className="h-4 w-4" />}
+                      startContent={<Archive className="h-4 w-4" />}
                     >
-                      Download All
+                      Download as ZIP
                     </Button>
                   </CardHeader>
                   <CardBody className="p-6">
@@ -375,19 +379,22 @@ function AssetGeneratorPage() {
                             delay: index * 0.05,
                             ease: "easeOut",
                           }}
-                          className="rounded-lg border border-gray-200 p-4 transition-colors hover:border-primary dark:border-gray-700"
+                          className="flex flex-col gap-3 rounded-lg border border-gray-200 p-4 transition-colors hover:border-primary dark:border-gray-700"
                         >
-                          <div className="mb-2 flex items-start justify-between">
-                            <div className="min-w-0 flex-1">
-                              <p className="truncate font-semibold text-sm">
-                                {asset.name}
+                          <div className="flex flex-col gap-1">
+                            <p className="break-words font-semibold text-sm leading-tight">
+                              {asset.name}
+                            </p>
+                            {asset.description && (
+                              <p className="text-gray-500 text-xs dark:text-gray-400">
+                                {asset.description}
                               </p>
-                              {asset.description && (
-                                <p className="text-gray-500 text-xs dark:text-gray-400">
-                                  {asset.description}
-                                </p>
-                              )}
-                            </div>
+                            )}
+                          </div>
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="text-gray-500 text-xs dark:text-gray-400">
+                              {asset.size}
+                            </span>
                             <Button
                               size="sm"
                               color="primary"
@@ -397,9 +404,6 @@ function AssetGeneratorPage() {
                             >
                               <Download className="h-4 w-4" />
                             </Button>
-                          </div>
-                          <div className="flex items-center justify-between text-gray-500 text-xs dark:text-gray-400">
-                            <span>{asset.size}</span>
                           </div>
                         </motion.div>
                       ))}

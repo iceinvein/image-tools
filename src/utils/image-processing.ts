@@ -1,3 +1,5 @@
+import JSZip from "jszip";
+
 export interface ImageDimensions {
   width: number;
   height: number;
@@ -165,6 +167,27 @@ export function downloadBlob(blob: Blob, filename: string): void {
   document.body.removeChild(a);
   // Delay revoking the URL to ensure download starts
   setTimeout(() => URL.revokeObjectURL(url), 100);
+}
+
+/**
+ * Download multiple files as a ZIP archive
+ */
+export async function downloadAsZip(
+  files: Array<{ blob: Blob; name: string }>,
+  zipFilename: string,
+): Promise<void> {
+  const zip = new JSZip();
+
+  // Add all files to the ZIP
+  for (const file of files) {
+    zip.file(file.name, file.blob);
+  }
+
+  // Generate the ZIP file
+  const zipBlob = await zip.generateAsync({ type: "blob" });
+
+  // Download the ZIP
+  downloadBlob(zipBlob, zipFilename);
 }
 
 /**

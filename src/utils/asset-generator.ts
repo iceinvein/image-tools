@@ -499,18 +499,3 @@ function loadImage(file: File): Promise<HTMLImageElement> {
     img.src = url;
   });
 }
-
-/**
- * Download all assets as a ZIP file
- */
-export async function downloadAssetsAsZip(
-  assets: GeneratedAsset[],
-  _packName: string,
-): Promise<void> {
-  // Note: This would require a ZIP library like JSZip
-  // For now, we'll download individually
-  console.log("ZIP download would include:", assets.length, "files");
-  alert(
-    `ZIP download feature coming soon! For now, download files individually.`,
-  );
-}
