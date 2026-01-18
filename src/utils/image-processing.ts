@@ -11,6 +11,8 @@ export interface ProcessingOptions {
   width?: number;
   height?: number;
   maintainAspectRatio?: boolean;
+  fitMethod?: "scale" | "contain" | "cover" | "stretch";
+  backgroundColor?: string;
 }
 
 /**
@@ -80,7 +82,7 @@ export async function convertImage(
 }
 
 /**
- * Resize image while maintaining aspect ratio
+ * Resize image with various fit methods
  */
 export async function resizeImage(
   file: File,
@@ -88,6 +90,8 @@ export async function resizeImage(
   targetHeight: number,
   maintainAspectRatio: boolean = true,
   quality: number = 0.9,
+  fitMethod: "scale" | "contain" | "cover" | "stretch" = "scale",
+  backgroundColor: string = "transparent",
 ): Promise<Blob> {
   const img = await loadImage(file);
   const canvas = document.createElement("canvas");
@@ -97,18 +101,68 @@ export async function resizeImage(
     throw new Error("Could not get canvas context");
   }
 
-  const { width, height } = calculateDimensions(
-    img.naturalWidth,
-    img.naturalHeight,
-    targetWidth,
-    targetHeight,
-    maintainAspectRatio,
-  );
+  let drawWidth = targetWidth;
+  let drawHeight = targetHeight;
+  let offsetX = 0;
+  let offsetY = 0;
 
-  canvas.width = width;
-  canvas.height = height;
+  if (fitMethod === "scale") {
+    const dims = calculateDimensions(
+      img.naturalWidth,
+      img.naturalHeight,
+      targetWidth,
+      targetHeight,
+      maintainAspectRatio,
+    );
+    canvas.width = dims.width;
+    canvas.height = dims.height;
+    drawWidth = dims.width;
+    drawHeight = dims.height;
+  } else if (fitMethod === "stretch") {
+    canvas.width = targetWidth;
+    canvas.height = targetHeight;
+  } else if (fitMethod === "contain") {
+    canvas.width = targetWidth;
+    canvas.height = targetHeight;
 
-  ctx.drawImage(img, 0, 0, width, height);
+    const aspectRatio = img.naturalWidth / img.naturalHeight;
+    const targetRatio = targetWidth / targetHeight;
+
+    if (aspectRatio > targetRatio) {
+      drawWidth = targetWidth;
+      drawHeight = targetWidth / aspectRatio;
+    } else {
+      drawWidth = targetHeight * aspectRatio;
+      drawHeight = targetHeight;
+    }
+
+    offsetX = (targetWidth - drawWidth) / 2;
+    offsetY = (targetHeight - drawHeight) / 2;
+
+    if (backgroundColor !== "transparent") {
+      ctx.fillStyle = backgroundColor;
+      ctx.fillRect(0, 0, targetWidth, targetHeight);
+    }
+  } else if (fitMethod === "cover") {
+    canvas.width = targetWidth;
+    canvas.height = targetHeight;
+
+    const aspectRatio = img.naturalWidth / img.naturalHeight;
+    const targetRatio = targetWidth / targetHeight;
+
+    if (aspectRatio > targetRatio) {
+      drawWidth = targetHeight * aspectRatio;
+      drawHeight = targetHeight;
+    } else {
+      drawWidth = targetWidth;
+      drawHeight = targetWidth / aspectRatio;
+    }
+
+    offsetX = (targetWidth - drawWidth) / 2;
+    offsetY = (targetHeight - drawHeight) / 2;
+  }
+
+  ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
 
   return new Promise((resolve, reject) => {
     canvas.toBlob(

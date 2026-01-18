@@ -42,6 +42,29 @@ const scalePresets = [
   { value: 200, label: "200%" },
 ];
 
+const fitMethods = [
+  {
+    key: "scale",
+    label: "Scale to Fit",
+    description: "Maintain aspect ratio, canvas shrinks",
+  },
+  {
+    key: "contain",
+    label: "Contain (Padding)",
+    description: "Fit inside target with padding",
+  },
+  {
+    key: "cover",
+    label: "Cover (Crop)",
+    description: "Fill target, crop edges if needed",
+  },
+  {
+    key: "stretch",
+    label: "Stretch",
+    description: "Fill target by stretching image",
+  },
+];
+
 // Custom hook for debounced state
 function useDebouncedState<T>(value: T, duration: number = 0.3): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
@@ -63,6 +86,8 @@ interface AnimatedPreviewProps {
   originalDimensions: { width: number; height: number };
   targetWidth: number;
   targetHeight: number;
+  fitMethod: "scale" | "contain" | "cover" | "stretch";
+  backgroundColor: string;
 }
 
 function AnimatedPreview({
@@ -70,21 +95,48 @@ function AnimatedPreview({
   originalDimensions,
   targetWidth,
   targetHeight,
+  fitMethod,
+  backgroundColor,
 }: AnimatedPreviewProps) {
   const debouncedWidth = useDebouncedState(targetWidth);
   const debouncedHeight = useDebouncedState(targetHeight);
 
-  // Calculate aspect ratio for the preview container
-  const aspectRatio = debouncedWidth / debouncedHeight;
-
-  // Calculate scale for display with more generous space (max 600px width)
+  // Calculate display dimensions for the preview
   const maxPreviewWidth = 600;
   const maxPreviewHeight = 400;
-  const scaleByWidth = maxPreviewWidth / debouncedWidth;
-  const scaleByHeight = maxPreviewHeight / debouncedHeight;
+
+  let containerWidth = debouncedWidth;
+  let containerHeight = debouncedHeight;
+
+  if (fitMethod === "scale") {
+    const aspectRatio = originalDimensions.width / originalDimensions.height;
+    if (debouncedWidth / debouncedHeight > aspectRatio) {
+      containerWidth = Math.round(debouncedHeight * aspectRatio);
+      containerHeight = debouncedHeight;
+    } else {
+      containerWidth = debouncedWidth;
+      containerHeight = Math.round(debouncedWidth / aspectRatio);
+    }
+  }
+
+  const scaleByWidth = maxPreviewWidth / containerWidth;
+  const scaleByHeight = maxPreviewHeight / containerHeight;
   const scale = Math.min(scaleByWidth, scaleByHeight, 1);
-  const displayWidth = debouncedWidth * scale;
-  const displayHeight = debouncedHeight * scale;
+  const displayWidth = containerWidth * scale;
+  const displayHeight = containerHeight * scale;
+
+  const getObjectFit = () => {
+    switch (fitMethod) {
+      case "contain":
+        return "contain";
+      case "cover":
+        return "cover";
+      case "stretch":
+        return "fill";
+      default:
+        return "contain";
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -96,7 +148,17 @@ function AnimatedPreview({
           style={{
             width: displayWidth,
             height: displayHeight,
-            aspectRatio: aspectRatio,
+            backgroundColor:
+              backgroundColor === "transparent" ? "white" : backgroundColor,
+            backgroundImage:
+              backgroundColor === "transparent"
+                ? `linear-gradient(45deg, #ccc 25%, transparent 25%), 
+                 linear-gradient(-45deg, #ccc 25%, transparent 25%), 
+                 linear-gradient(45deg, transparent 75%, #ccc 75%), 
+                 linear-gradient(-45deg, transparent 75%, #ccc 75%)`
+                : "none",
+            backgroundSize: "20px 20px",
+            backgroundPosition: "0 0, 0 10px, 10px -10px, -10px 0px",
           }}
           transition={{
             type: "spring",
@@ -107,19 +169,18 @@ function AnimatedPreview({
           <img
             src={imageUrl}
             alt="Live Preview"
-            className="h-full w-full object-cover"
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: getObjectFit() as any,
+            }}
           />
 
           {/* Overlay with dimensions */}
           <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 transition-opacity duration-200 hover:opacity-100">
             <div className="rounded-lg bg-black/90 px-4 py-2 font-bold text-lg text-white backdrop-blur-sm">
-              {debouncedWidth} × {debouncedHeight}
+              {Math.round(containerWidth)} × {Math.round(containerHeight)}
             </div>
-          </div>
-
-          {/* Corner dimension labels */}
-          <div className="absolute top-2 left-2 rounded bg-green-500 px-2 py-1 font-bold text-white text-xs">
-            {Math.round((debouncedWidth / originalDimensions.width) * 100)}%
           </div>
         </motion.div>
 
@@ -152,7 +213,7 @@ function AnimatedPreview({
               Target
             </div>
             <div className="font-bold text-green-800 text-lg dark:text-green-200">
-              {debouncedWidth} × {debouncedHeight}
+              {Math.round(containerWidth)} × {Math.round(containerHeight)}
             </div>
           </CardBody>
         </Card>
@@ -163,7 +224,7 @@ function AnimatedPreview({
               Scale
             </div>
             <div className="font-bold text-lg text-purple-800 dark:text-purple-200">
-              {Math.round((debouncedWidth / originalDimensions.width) * 100)}%
+              {Math.round((containerWidth / originalDimensions.width) * 100)}%
             </div>
           </CardBody>
         </Card>
@@ -188,6 +249,10 @@ function ResizerPage() {
   const [targetWidth, setTargetWidth] = useState<number>(800);
   const [targetHeight, setTargetHeight] = useState<number>(600);
   const [maintainAspectRatio, setMaintainAspectRatio] = useState<boolean>(true);
+  const [fitMethod, setFitMethod] = useState<
+    "scale" | "contain" | "cover" | "stretch"
+  >("scale");
+  const [backgroundColor, setBackgroundColor] = useState<string>("transparent");
   const [selectedPreset, setSelectedPreset] = useState<string>("custom");
   const [isProcessing, setIsProcessing] = useState(false);
   const [scalePercentage, setScalePercentage] = useState<number>(100);
@@ -254,15 +319,25 @@ function ResizerPage() {
   const updatePreviewDimensions = useCallback(() => {
     if (!originalDimensions) return;
 
-    const calculated = calculateDimensions(
-      originalDimensions.width,
-      originalDimensions.height,
-      targetWidth,
-      targetHeight,
-      maintainAspectRatio,
-    );
-    setNewDimensions(calculated);
-  }, [originalDimensions, targetWidth, targetHeight, maintainAspectRatio]);
+    if (fitMethod === "scale") {
+      const calculated = calculateDimensions(
+        originalDimensions.width,
+        originalDimensions.height,
+        targetWidth,
+        targetHeight,
+        maintainAspectRatio,
+      );
+      setNewDimensions(calculated);
+    } else {
+      setNewDimensions({ width: targetWidth, height: targetHeight });
+    }
+  }, [
+    originalDimensions,
+    targetWidth,
+    targetHeight,
+    maintainAspectRatio,
+    fitMethod,
+  ]);
 
   const handleResize = async () => {
     if (!originalFile) return;
@@ -274,6 +349,9 @@ function ResizerPage() {
         targetWidth,
         targetHeight,
         maintainAspectRatio,
+        0.9,
+        fitMethod,
+        backgroundColor,
       );
       setResizedBlob(blob);
 
@@ -392,16 +470,9 @@ function ResizerPage() {
                         </h3>
                         <div className="flex items-center gap-2">
                           <Chip size="sm" variant="flat" color="success">
-                            {targetWidth} × {targetHeight}
+                            {Math.round(newDimensions?.width || targetWidth)} ×{" "}
+                            {Math.round(newDimensions?.height || targetHeight)}
                           </Chip>
-                          {originalDimensions && (
-                            <Chip size="sm" variant="flat" color="default">
-                              {Math.round(
-                                (targetWidth / originalDimensions.width) * 100,
-                              )}
-                              %
-                            </Chip>
-                          )}
                         </div>
                       </div>
                       <div className="relative overflow-hidden rounded-lg border-2 border-gray-200 bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
@@ -411,6 +482,8 @@ function ResizerPage() {
                             originalDimensions={originalDimensions}
                             targetWidth={targetWidth}
                             targetHeight={targetHeight}
+                            fitMethod={fitMethod}
+                            backgroundColor={backgroundColor}
                           />
                         )}
                       </div>
@@ -460,38 +533,61 @@ function ResizerPage() {
                         </div>
                       </div>
 
-                      {/* Scale Slider */}
+                      {/* Fit Method Selection */}
                       <div>
-                        <div className="mb-2 flex items-center justify-between">
-                          <span className="font-medium text-gray-600 text-xs dark:text-gray-400">
-                            Custom Scale
-                          </span>
-                          <span className="font-bold text-green-600 text-sm dark:text-green-400">
-                            {scalePercentage}%
-                          </span>
-                        </div>
-                        <Slider
+                        <label className="mb-2 block font-medium text-gray-600 text-xs dark:text-gray-400">
+                          Fit Method
+                        </label>
+                        <Select
                           size="sm"
-                          value={scalePercentage}
-                          onChange={(value) =>
-                            handleScaleChange(value as number)
-                          }
-                          minValue={10}
-                          maxValue={300}
-                          step={5}
-                          aria-label="Scale percentage"
-                          classNames={{
-                            track: "bg-gray-200 dark:bg-gray-700",
-                            filler:
-                              "bg-gradient-to-r from-green-500 to-emerald-500",
-                            thumb: "bg-green-600",
-                          }}
-                        />
-                        <div className="mt-1 flex justify-between text-gray-400 text-xs">
-                          <span>10%</span>
-                          <span>300%</span>
-                        </div>
+                          selectedKeys={[fitMethod]}
+                          onChange={(e) => setFitMethod(e.target.value as any)}
+                          aria-label="Fit method"
+                        >
+                          {fitMethods.map((method) => (
+                            <SelectItem
+                              key={method.key}
+                              description={method.description}
+                            >
+                              {method.label}
+                            </SelectItem>
+                          ))}
+                        </Select>
                       </div>
+
+                      {/* Background Color Selection (only for Contain) */}
+                      {fitMethod === "contain" && (
+                        <div>
+                          <label className="mb-2 block font-medium text-gray-600 text-xs dark:text-gray-400">
+                            Background Color
+                          </label>
+                          <div className="flex flex-wrap gap-2">
+                            {[
+                              "transparent",
+                              "#ffffff",
+                              "#000000",
+                              "#f3f4f6",
+                            ].map((color) => (
+                              <button
+                                key={color}
+                                type="button"
+                                className={`h-8 w-8 rounded-full border-2 ${backgroundColor === color ? "border-green-500" : "border-gray-200"}`}
+                                style={{
+                                  backgroundColor:
+                                    color === "transparent" ? "white" : color,
+                                  backgroundImage:
+                                    color === "transparent"
+                                      ? "linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%)"
+                                      : "none",
+                                  backgroundSize: "8px 8px",
+                                }}
+                                onClick={() => setBackgroundColor(color)}
+                                title={color}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      )}
 
                       {/* Dimension Inputs */}
                       <div className="grid grid-cols-2 gap-3">
@@ -554,7 +650,8 @@ function ResizerPage() {
                             </span>
                             <span className="text-gray-400">→</span>
                             <span className="font-bold text-blue-600 dark:text-blue-400">
-                              {newDimensions.width} × {newDimensions.height}
+                              {Math.round(newDimensions.width)} ×{" "}
+                              {Math.round(newDimensions.height)}
                             </span>
                           </div>
                         </div>
