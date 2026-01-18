@@ -103,7 +103,13 @@ function BackgroundRemoverPage() {
       prevOutputTypeRef.current = settings.outputType;
       handleRemoveBackground();
     }
-  }, [settings.outputType, result, originalFile, isProcessing, handleRemoveBackground]);
+  }, [
+    settings.outputType,
+    result,
+    originalFile,
+    isProcessing,
+    handleRemoveBackground,
+  ]);
 
   return (
     <>

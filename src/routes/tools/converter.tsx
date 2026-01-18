@@ -101,7 +101,7 @@ function ConverterPage() {
       <SEO
         title="Image Converter - Convert Images to JPEG, PNG, WebP | Image Tools"
         description="Free online image converter. Convert images between JPEG, PNG, and WebP formats with customizable quality settings. 100% browser-based, no uploads required."
-        keywords="image converter, convert image format, jpeg to png, png to webp, webp converter, image format conversion, online image converter"
+        keywords="image converter, convert image format, jpeg to png, png to webp, webp converter, image format conversion, online image converter, svg converter, svg to png"
         canonicalUrl="https://image-utilities.netlify.app/tools/converter"
         structuredData={{
           ...createSoftwareApplicationSchema(
@@ -151,7 +151,16 @@ function ConverterPage() {
         {/* Main Content */}
         {!originalFile ? (
           <div className="mx-auto max-w-2xl">
-            <ImageUpload onImageSelect={handleImageSelect} />
+            <ImageUpload
+              onImageSelect={handleImageSelect}
+              acceptedFormats={[
+                "image/jpeg",
+                "image/png",
+                "image/webp",
+                "image/gif",
+                "image/svg+xml",
+              ]}
+            />
           </div>
         ) : (
           <motion.div

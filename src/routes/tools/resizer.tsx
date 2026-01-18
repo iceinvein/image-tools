@@ -1,237 +1,29 @@
-import { Button } from "@heroui/button";
 import { Card, CardBody } from "@heroui/card";
 import { Chip } from "@heroui/chip";
-import { Input } from "@heroui/input";
-import { Select, SelectItem } from "@heroui/select";
-import { Slider } from "@heroui/slider";
-import { Switch } from "@heroui/switch";
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { Download, Maximize2, RotateCcw } from "lucide-react";
-import React, { useCallback, useEffect, useState } from "react";
+import { Maximize2 } from "lucide-react";
+import React, { useCallback, useState } from "react";
+
 import { ImageUpload } from "@/components/image-upload";
 import {
   createBreadcrumbSchema,
   createSoftwareApplicationSchema,
   SEO,
 } from "@/components/seo";
+import { AnimatedPreview } from "@/components/tools/resizer/animated-preview";
+import { ResizerActions } from "@/components/tools/resizer/resizer-actions";
+import {
+  type FitMethod,
+  ResizerControls,
+} from "@/components/tools/resizer/resizer-controls";
 import {
   calculateDimensions,
   downloadBlob,
+  getFileExtension,
   getImageDimensions,
   resizeImage,
 } from "@/utils/image-processing";
-
-const presets = [
-  { key: "custom", label: "Custom Size", category: "custom" },
-  { key: "1920x1080", label: "Full HD (1920×1080)", category: "screen" },
-  { key: "1280x720", label: "HD (1280×720)", category: "screen" },
-  { key: "800x600", label: "SVGA (800×600)", category: "screen" },
-  { key: "640x480", label: "VGA (640×480)", category: "screen" },
-  { key: "300x300", label: "Square Small (300×300)", category: "square" },
-  { key: "500x500", label: "Square Medium (500×500)", category: "square" },
-  { key: "1000x1000", label: "Square Large (1000×1000)", category: "square" },
-];
-
-const scalePresets = [
-  { value: 25, label: "25%" },
-  { value: 50, label: "50%" },
-  { value: 75, label: "75%" },
-  { value: 100, label: "100%" },
-  { value: 150, label: "150%" },
-  { value: 200, label: "200%" },
-];
-
-const fitMethods = [
-  {
-    key: "scale",
-    label: "Scale to Fit",
-    description: "Maintain aspect ratio, canvas shrinks",
-  },
-  {
-    key: "contain",
-    label: "Contain (Padding)",
-    description: "Fit inside target with padding",
-  },
-  {
-    key: "cover",
-    label: "Cover (Crop)",
-    description: "Fill target, crop edges if needed",
-  },
-  {
-    key: "stretch",
-    label: "Stretch",
-    description: "Fill target by stretching image",
-  },
-];
-
-// Custom hook for debounced state
-function useDebouncedState<T>(value: T, duration: number = 0.3): T {
-  const [debouncedValue, setDebouncedValue] = useState<T>(value);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedValue(value);
-    }, duration * 1000);
-
-    return () => clearTimeout(timer);
-  }, [value, duration]);
-
-  return debouncedValue;
-}
-
-// Animated Preview Component
-interface AnimatedPreviewProps {
-  imageUrl: string;
-  originalDimensions: { width: number; height: number };
-  targetWidth: number;
-  targetHeight: number;
-  fitMethod: "scale" | "contain" | "cover" | "stretch";
-  backgroundColor: string;
-}
-
-function AnimatedPreview({
-  imageUrl,
-  originalDimensions,
-  targetWidth,
-  targetHeight,
-  fitMethod,
-  backgroundColor,
-}: AnimatedPreviewProps) {
-  const debouncedWidth = useDebouncedState(targetWidth);
-  const debouncedHeight = useDebouncedState(targetHeight);
-
-  // Calculate display dimensions for the preview
-  const maxPreviewWidth = 600;
-  const maxPreviewHeight = 400;
-
-  let containerWidth = debouncedWidth;
-  let containerHeight = debouncedHeight;
-
-  if (fitMethod === "scale") {
-    const aspectRatio = originalDimensions.width / originalDimensions.height;
-    if (debouncedWidth / debouncedHeight > aspectRatio) {
-      containerWidth = Math.round(debouncedHeight * aspectRatio);
-      containerHeight = debouncedHeight;
-    } else {
-      containerWidth = debouncedWidth;
-      containerHeight = Math.round(debouncedWidth / aspectRatio);
-    }
-  }
-
-  const scaleByWidth = maxPreviewWidth / containerWidth;
-  const scaleByHeight = maxPreviewHeight / containerHeight;
-  const scale = Math.min(scaleByWidth, scaleByHeight, 1);
-  const displayWidth = containerWidth * scale;
-  const displayHeight = containerHeight * scale;
-
-  const getObjectFit = () => {
-    switch (fitMethod) {
-      case "contain":
-        return "contain";
-      case "cover":
-        return "cover";
-      case "stretch":
-        return "fill";
-      default:
-        return "contain";
-    }
-  };
-
-  return (
-    <div className="space-y-6">
-      {/* Large animated preview container */}
-      <div className="relative flex min-h-[500px] w-full items-center justify-center overflow-hidden rounded-2xl border-2 border-gray-300 border-dashed bg-gradient-to-br from-gray-50 to-gray-100 dark:border-gray-600 dark:from-gray-900 dark:to-gray-800">
-        <motion.div
-          layout
-          className="relative overflow-hidden rounded-xl border-4 border-white shadow-2xl dark:border-gray-800"
-          style={{
-            width: displayWidth,
-            height: displayHeight,
-            backgroundColor:
-              backgroundColor === "transparent" ? "white" : backgroundColor,
-            backgroundImage:
-              backgroundColor === "transparent"
-                ? `linear-gradient(45deg, #ccc 25%, transparent 25%), 
-                 linear-gradient(-45deg, #ccc 25%, transparent 25%), 
-                 linear-gradient(45deg, transparent 75%, #ccc 75%), 
-                 linear-gradient(-45deg, transparent 75%, #ccc 75%)`
-                : "none",
-            backgroundSize: "20px 20px",
-            backgroundPosition: "0 0, 0 10px, 10px -10px, -10px 0px",
-          }}
-          transition={{
-            type: "spring",
-            stiffness: 300,
-            damping: 30,
-          }}
-        >
-          <img
-            src={imageUrl}
-            alt="Live Preview"
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: getObjectFit() as any,
-            }}
-          />
-
-          {/* Overlay with dimensions */}
-          <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 transition-opacity duration-200 hover:opacity-100">
-            <div className="rounded-lg bg-black/90 px-4 py-2 font-bold text-lg text-white backdrop-blur-sm">
-              {Math.round(containerWidth)} × {Math.round(containerHeight)}
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Background grid pattern for better visual reference */}
-        <div
-          className="absolute inset-0 opacity-10 dark:opacity-5"
-          style={{
-            backgroundImage: `radial-gradient(circle, #666 1px, transparent 1px)`,
-            backgroundSize: "20px 20px",
-          }}
-        ></div>
-      </div>
-
-      {/* Info cards below preview */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        <Card className="border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100 dark:border-blue-800 dark:from-blue-950/30 dark:to-blue-900/30">
-          <CardBody className="p-4 text-center">
-            <div className="mb-1 font-medium text-blue-600 text-sm dark:text-blue-400">
-              Original
-            </div>
-            <div className="font-bold text-blue-800 text-lg dark:text-blue-200">
-              {originalDimensions.width} × {originalDimensions.height}
-            </div>
-          </CardBody>
-        </Card>
-
-        <Card className="border-green-200 bg-gradient-to-br from-green-50 to-green-100 dark:border-green-800 dark:from-green-950/30 dark:to-green-900/30">
-          <CardBody className="p-4 text-center">
-            <div className="mb-1 font-medium text-green-600 text-sm dark:text-green-400">
-              Target
-            </div>
-            <div className="font-bold text-green-800 text-lg dark:text-green-200">
-              {Math.round(containerWidth)} × {Math.round(containerHeight)}
-            </div>
-          </CardBody>
-        </Card>
-
-        <Card className="border-purple-200 bg-gradient-to-br from-purple-50 to-purple-100 dark:border-purple-800 dark:from-purple-950/30 dark:to-purple-900/30">
-          <CardBody className="p-4 text-center">
-            <div className="mb-1 font-medium text-purple-600 text-sm dark:text-purple-400">
-              Scale
-            </div>
-            <div className="font-bold text-lg text-purple-800 dark:text-purple-200">
-              {Math.round((containerWidth / originalDimensions.width) * 100)}%
-            </div>
-          </CardBody>
-        </Card>
-      </div>
-    </div>
-  );
-}
 
 function ResizerPage() {
   const [originalFile, setOriginalFile] = useState<File | null>(null);
@@ -249,72 +41,94 @@ function ResizerPage() {
   const [targetWidth, setTargetWidth] = useState<number>(800);
   const [targetHeight, setTargetHeight] = useState<number>(600);
   const [maintainAspectRatio, setMaintainAspectRatio] = useState<boolean>(true);
-  const [fitMethod, setFitMethod] = useState<
-    "scale" | "contain" | "cover" | "stretch"
-  >("scale");
+  const [fitMethod, setFitMethod] = useState<FitMethod>("scale");
   const [backgroundColor, setBackgroundColor] = useState<string>("transparent");
   const [selectedPreset, setSelectedPreset] = useState<string>("custom");
+  const [targetFormat, setTargetFormat] = useState<string>("image/png");
   const [isProcessing, setIsProcessing] = useState(false);
   const [scalePercentage, setScalePercentage] = useState<number>(100);
 
-  const handleImageSelect = async (file: File, imageUrl: string) => {
-    setOriginalFile(file);
-    setOriginalUrl(imageUrl);
-    setResizedUrl("");
-    setResizedBlob(null);
+  const handleImageSelect = useCallback(
+    async (file: File, imageUrl: string) => {
+      setOriginalFile(file);
+      setOriginalUrl(imageUrl);
+      setResizedUrl("");
+      setResizedBlob(null);
 
-    try {
-      const dims = await getImageDimensions(file);
-      setOriginalDimensions(dims);
-      setTargetWidth(dims.width);
-      setTargetHeight(dims.height);
-    } catch (error) {
-      console.error("Failed to get image dimensions:", error);
-    }
-  };
+      // Default to PNG for SVGs, otherwise original type
+      if (file.type === "image/svg+xml") {
+        setTargetFormat("image/png");
+      } else {
+        setTargetFormat(file.type);
+      }
 
-  const handlePresetChange = (preset: string) => {
+      try {
+        const dims = await getImageDimensions(file);
+        setOriginalDimensions(dims);
+        setTargetWidth(dims.width);
+        setTargetHeight(dims.height);
+      } catch (error) {
+        console.error("Failed to get image dimensions:", error);
+      }
+    },
+    [],
+  );
+
+  const handlePresetChange = useCallback((preset: string) => {
     setSelectedPreset(preset);
     if (preset !== "custom") {
       const [width, height] = preset.split("x").map(Number);
       setTargetWidth(width);
       setTargetHeight(height);
     }
-  };
+  }, []);
 
-  const handleScaleChange = (percentage: number) => {
-    if (!originalDimensions) return;
-    setScalePercentage(percentage);
-    const scale = percentage / 100;
-    setTargetWidth(Math.round(originalDimensions.width * scale));
-    setTargetHeight(Math.round(originalDimensions.height * scale));
-  };
+  const handleScaleChange = useCallback(
+    (percentage: number) => {
+      if (!originalDimensions) return;
+      setScalePercentage(percentage);
+      const scale = percentage / 100;
+      setTargetWidth(Math.round(originalDimensions.width * scale));
+      setTargetHeight(Math.round(originalDimensions.height * scale));
+    },
+    [originalDimensions],
+  );
 
-  const handleWidthChange = (width: number) => {
-    setTargetWidth(width);
-    if (maintainAspectRatio && originalDimensions) {
-      const aspectRatio = originalDimensions.width / originalDimensions.height;
-      setTargetHeight(Math.round(width / aspectRatio));
-    }
-    // Update scale percentage
-    if (originalDimensions) {
-      setScalePercentage(Math.round((width / originalDimensions.width) * 100));
-    }
-  };
+  const handleWidthChange = useCallback(
+    (width: number) => {
+      setTargetWidth(width);
+      if (maintainAspectRatio && originalDimensions) {
+        const aspectRatio =
+          originalDimensions.width / originalDimensions.height;
+        setTargetHeight(Math.round(width / aspectRatio));
+      }
+      // Update scale percentage
+      if (originalDimensions) {
+        setScalePercentage(
+          Math.round((width / originalDimensions.width) * 100),
+        );
+      }
+    },
+    [maintainAspectRatio, originalDimensions],
+  );
 
-  const handleHeightChange = (height: number) => {
-    setTargetHeight(height);
-    if (maintainAspectRatio && originalDimensions) {
-      const aspectRatio = originalDimensions.width / originalDimensions.height;
-      setTargetWidth(Math.round(height * aspectRatio));
-    }
-    // Update scale percentage
-    if (originalDimensions) {
-      setScalePercentage(
-        Math.round((height / originalDimensions.height) * 100),
-      );
-    }
-  };
+  const handleHeightChange = useCallback(
+    (height: number) => {
+      setTargetHeight(height);
+      if (maintainAspectRatio && originalDimensions) {
+        const aspectRatio =
+          originalDimensions.width / originalDimensions.height;
+        setTargetWidth(Math.round(height * aspectRatio));
+      }
+      // Update scale percentage
+      if (originalDimensions) {
+        setScalePercentage(
+          Math.round((height / originalDimensions.height) * 100),
+        );
+      }
+    },
+    [maintainAspectRatio, originalDimensions],
+  );
 
   const updatePreviewDimensions = useCallback(() => {
     if (!originalDimensions) return;
@@ -339,7 +153,7 @@ function ResizerPage() {
     fitMethod,
   ]);
 
-  const handleResize = async () => {
+  const handleResize = useCallback(async () => {
     if (!originalFile) return;
 
     setIsProcessing(true);
@@ -352,6 +166,7 @@ function ResizerPage() {
         0.9,
         fitMethod,
         backgroundColor,
+        targetFormat,
       );
       setResizedBlob(blob);
 
@@ -363,26 +178,34 @@ function ResizerPage() {
     } finally {
       setIsProcessing(false);
     }
-  };
+  }, [
+    originalFile,
+    targetWidth,
+    targetHeight,
+    maintainAspectRatio,
+    fitMethod,
+    backgroundColor,
+    targetFormat,
+  ]);
 
-  const handleDownload = () => {
+  const handleDownload = useCallback(() => {
     if (!resizedBlob || !originalFile) return;
 
     const baseName = originalFile.name.replace(/\.[^/.]+$/, "");
-    const extension = originalFile.name.split(".").pop() || "jpg";
+    const extension = getFileExtension(targetFormat);
     const filename = `${baseName}_resized_${targetWidth}x${targetHeight}.${extension}`;
 
     downloadBlob(resizedBlob, filename);
-  };
+  }, [resizedBlob, originalFile, targetFormat, targetWidth, targetHeight]);
 
-  const handleReset = () => {
+  const handleReset = useCallback(() => {
     setOriginalFile(null);
     setOriginalUrl("");
     setResizedUrl("");
     setResizedBlob(null);
     setOriginalDimensions(null);
     setNewDimensions(null);
-  };
+  }, []);
 
   // Update preview dimensions when values change
   React.useEffect(() => {
@@ -394,7 +217,7 @@ function ResizerPage() {
       <SEO
         title="Image Resizer - Resize Images Online with Smart Presets | Image Tools"
         description="Free online image resizer. Resize images by pixels, percentage, or use smart presets. Maintain aspect ratio or customize dimensions. 100% browser-based."
-        keywords="image resizer, image, scale image, image dimensions, resize photo, image size, aspect ratio, online image resizer"
+        keywords="image resizer, image, scale image, image dimensions, resize photo, image size, aspect ratio, online image resizer, resize svg, svg resizer"
         canonicalUrl="https://image-utilities.netlify.app/tools/resizer"
         structuredData={{
           ...createSoftwareApplicationSchema(
@@ -444,7 +267,16 @@ function ResizerPage() {
         {/* Main Content */}
         {!originalFile ? (
           <div className="mx-auto max-w-2xl">
-            <ImageUpload onImageSelect={handleImageSelect} />
+            <ImageUpload
+              onImageSelect={handleImageSelect}
+              acceptedFormats={[
+                "image/jpeg",
+                "image/png",
+                "image/webp",
+                "image/gif",
+                "image/svg+xml",
+              ]}
+            />
           </div>
         ) : (
           <motion.div
@@ -490,244 +322,40 @@ function ResizerPage() {
                     </div>
 
                     {/* Right: Controls */}
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <h3 className="font-semibold text-gray-700 text-sm dark:text-gray-300">
-                          Resize Settings
-                        </h3>
-                        <Switch
-                          size="sm"
-                          isSelected={maintainAspectRatio}
-                          onValueChange={setMaintainAspectRatio}
-                        >
-                          <span className="text-xs">Lock Aspect</span>
-                        </Switch>
-                      </div>
-
-                      {/* Quick Scale Buttons */}
-                      <div>
-                        <p className="mb-2 font-medium text-gray-600 text-xs dark:text-gray-400">
-                          Quick Scale
-                        </p>
-                        <div className="grid grid-cols-3 gap-2">
-                          {scalePresets.map((preset) => (
-                            <Button
-                              key={preset.value}
-                              size="sm"
-                              variant={
-                                scalePercentage === preset.value
-                                  ? "solid"
-                                  : "bordered"
-                              }
-                              color={
-                                scalePercentage === preset.value
-                                  ? "success"
-                                  : "default"
-                              }
-                              onPress={() => handleScaleChange(preset.value)}
-                              className="text-xs"
-                            >
-                              {preset.label}
-                            </Button>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Fit Method Selection */}
-                      <div>
-                        <label className="mb-2 block font-medium text-gray-600 text-xs dark:text-gray-400">
-                          Fit Method
-                        </label>
-                        <Select
-                          size="sm"
-                          selectedKeys={[fitMethod]}
-                          onChange={(e) => setFitMethod(e.target.value as any)}
-                          aria-label="Fit method"
-                        >
-                          {fitMethods.map((method) => (
-                            <SelectItem
-                              key={method.key}
-                              description={method.description}
-                            >
-                              {method.label}
-                            </SelectItem>
-                          ))}
-                        </Select>
-                      </div>
-
-                      {/* Background Color Selection (only for Contain) */}
-                      {fitMethod === "contain" && (
-                        <div>
-                          <label className="mb-2 block font-medium text-gray-600 text-xs dark:text-gray-400">
-                            Background Color
-                          </label>
-                          <div className="flex flex-wrap gap-2">
-                            {[
-                              "transparent",
-                              "#ffffff",
-                              "#000000",
-                              "#f3f4f6",
-                            ].map((color) => (
-                              <button
-                                key={color}
-                                type="button"
-                                className={`h-8 w-8 rounded-full border-2 ${backgroundColor === color ? "border-green-500" : "border-gray-200"}`}
-                                style={{
-                                  backgroundColor:
-                                    color === "transparent" ? "white" : color,
-                                  backgroundImage:
-                                    color === "transparent"
-                                      ? "linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%)"
-                                      : "none",
-                                  backgroundSize: "8px 8px",
-                                }}
-                                onClick={() => setBackgroundColor(color)}
-                                title={color}
-                              />
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Dimension Inputs */}
-                      <div className="grid grid-cols-2 gap-3">
-                        <div>
-                          <label className="mb-1 block font-medium text-gray-600 text-xs dark:text-gray-400">
-                            Width (px)
-                          </label>
-                          <Input
-                            type="number"
-                            size="sm"
-                            value={targetWidth.toString()}
-                            onChange={(e) =>
-                              handleWidthChange(Number(e.target.value))
-                            }
-                            min={1}
-                          />
-                        </div>
-                        <div>
-                          <label className="mb-1 block font-medium text-gray-600 text-xs dark:text-gray-400">
-                            Height (px)
-                          </label>
-                          <Input
-                            type="number"
-                            size="sm"
-                            value={targetHeight.toString()}
-                            onChange={(e) =>
-                              handleHeightChange(Number(e.target.value))
-                            }
-                            min={1}
-                          />
-                        </div>
-                      </div>
-
-                      {/* Presets */}
-                      <div>
-                        <label className="mb-2 block font-medium text-gray-600 text-xs dark:text-gray-400">
-                          Common Presets
-                        </label>
-                        <Select
-                          size="sm"
-                          selectedKeys={[selectedPreset]}
-                          onChange={(e) => handlePresetChange(e.target.value)}
-                          aria-label="Preset sizes"
-                        >
-                          {presets.map((preset) => (
-                            <SelectItem key={preset.key}>
-                              {preset.label}
-                            </SelectItem>
-                          ))}
-                        </Select>
-                      </div>
-
-                      {/* Target Size Display */}
-                      {newDimensions && originalDimensions && (
-                        <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 dark:border-blue-800 dark:bg-blue-950/20">
-                          <div className="flex items-center justify-between text-xs">
-                            <span className="text-gray-600 dark:text-gray-400">
-                              {originalDimensions.width} ×{" "}
-                              {originalDimensions.height}
-                            </span>
-                            <span className="text-gray-400">→</span>
-                            <span className="font-bold text-blue-600 dark:text-blue-400">
-                              {Math.round(newDimensions.width)} ×{" "}
-                              {Math.round(newDimensions.height)}
-                            </span>
-                          </div>
-                        </div>
-                      )}
-                    </div>
+                    <ResizerControls
+                      maintainAspectRatio={maintainAspectRatio}
+                      setMaintainAspectRatio={setMaintainAspectRatio}
+                      scalePercentage={scalePercentage}
+                      handleScaleChange={handleScaleChange}
+                      fitMethod={fitMethod}
+                      setFitMethod={setFitMethod}
+                      backgroundColor={backgroundColor}
+                      setBackgroundColor={setBackgroundColor}
+                      targetWidth={targetWidth}
+                      handleWidthChange={handleWidthChange}
+                      targetHeight={targetHeight}
+                      handleHeightChange={handleHeightChange}
+                      selectedPreset={selectedPreset}
+                      handlePresetChange={handlePresetChange}
+                      targetFormat={targetFormat}
+                      setTargetFormat={setTargetFormat}
+                      originalDimensions={
+                        originalDimensions || { width: 0, height: 0 }
+                      }
+                      newDimensions={newDimensions}
+                    />
                   </div>
                 </CardBody>
               </Card>
 
               {/* Compact Action Bar */}
-              <Card className="border-2 border-gray-200 dark:border-gray-700">
-                <CardBody className="p-4">
-                  <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
-                    <div className="flex-1 text-gray-600 text-sm dark:text-gray-400">
-                      {resizedUrl ? (
-                        <motion.span
-                          initial={{ opacity: 0, x: -10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ duration: 0.3, ease: "easeOut" }}
-                          className="font-medium text-green-600 dark:text-green-400"
-                        >
-                          ✓ Image resized successfully
-                        </motion.span>
-                      ) : (
-                        <span>Adjust settings and click resize</span>
-                      )}
-                    </div>
-                    <div className="flex gap-2">
-                      <Button
-                        size="lg"
-                        variant="bordered"
-                        onPress={handleReset}
-                        startContent={<RotateCcw className="h-4 w-4" />}
-                        className="flex-1 sm:flex-initial"
-                      >
-                        New
-                      </Button>
-                      <Button
-                        size="lg"
-                        color="primary"
-                        onPress={handleResize}
-                        isLoading={isProcessing}
-                        className="flex-1 font-bold sm:flex-initial"
-                        startContent={
-                          !isProcessing ? (
-                            <Maximize2 className="h-4 w-4" />
-                          ) : undefined
-                        }
-                      >
-                        {isProcessing ? "Resizing..." : "Resize"}
-                      </Button>
-                      {resizedUrl && (
-                        <motion.div
-                          initial={{ opacity: 0, scale: 0.9, x: 20 }}
-                          animate={{ opacity: 1, scale: 1, x: 0 }}
-                          transition={{
-                            duration: 0.3,
-                            ease: "easeOut",
-                          }}
-                          className="flex-1 sm:flex-initial"
-                        >
-                          <Button
-                            size="lg"
-                            color="success"
-                            onPress={handleDownload}
-                            startContent={<Download className="h-4 w-4" />}
-                            className="w-full font-bold"
-                          >
-                            Download
-                          </Button>
-                        </motion.div>
-                      )}
-                    </div>
-                  </div>
-                </CardBody>
-              </Card>
+              <ResizerActions
+                resizedUrl={resizedUrl}
+                isProcessing={isProcessing}
+                handleReset={handleReset}
+                handleResize={handleResize}
+                handleDownload={handleDownload}
+              />
             </motion.div>
           </motion.div>
         )}

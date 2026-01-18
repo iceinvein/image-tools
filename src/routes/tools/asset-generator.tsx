@@ -5,7 +5,13 @@ import { Progress } from "@heroui/progress";
 import { Tab, Tabs } from "@heroui/tabs";
 import { createFileRoute } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
-import { Archive, CheckCircle2, Download, Loader2, Package } from "lucide-react";
+import {
+  Archive,
+  CheckCircle2,
+  Download,
+  Loader2,
+  Package,
+} from "lucide-react";
 import { useState } from "react";
 
 import { ImageUpload } from "@/components/image-upload";
@@ -87,7 +93,7 @@ function AssetGeneratorPage() {
       <SEO
         title="Free Asset Generator - Generate Web & App Icons | Image Tools"
         description="Free online asset generator. Generate all required image assets for web and mobile app development from a single 1024x1024 image. Create favicons, PWA icons, iOS app icons, Android icons, and social media images. 100% browser-based, no uploads required."
-        keywords="free asset generator, favicon generator, app icon generator, pwa icons, ios app icons, android icons, web development, app development"
+        keywords="free asset generator, favicon generator, app icon generator, pwa icons, ios app icons, android icons, web development, app development, svg assets, svg to icons"
         canonicalUrl="https://image-utilities.netlify.app/tools/asset-generator"
         structuredData={{
           ...createSoftwareApplicationSchema(
@@ -142,7 +148,12 @@ function AssetGeneratorPage() {
           <div className="mx-auto max-w-2xl">
             <ImageUpload
               onImageSelect={handleImageSelect}
-              acceptedFormats={["image/png", "image/jpeg", "image/webp"]}
+              acceptedFormats={[
+                "image/png",
+                "image/jpeg",
+                "image/webp",
+                "image/svg+xml",
+              ]}
             />
           </div>
         ) : (

@@ -92,6 +92,7 @@ export async function resizeImage(
   quality: number = 0.9,
   fitMethod: "scale" | "contain" | "cover" | "stretch" = "scale",
   backgroundColor: string = "transparent",
+  format?: string,
 ): Promise<Blob> {
   const img = await loadImage(file);
   const canvas = document.createElement("canvas");
@@ -100,6 +101,8 @@ export async function resizeImage(
   if (!ctx) {
     throw new Error("Could not get canvas context");
   }
+
+  const outputFormat = format || file.type;
 
   let drawWidth = targetWidth;
   let drawHeight = targetHeight;
@@ -173,7 +176,7 @@ export async function resizeImage(
           reject(new Error("Failed to resize image"));
         }
       },
-      file.type,
+      outputFormat,
       quality,
     );
   });

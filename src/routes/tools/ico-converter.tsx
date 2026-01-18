@@ -124,6 +124,7 @@ function IcoConverterPage() {
   };
 
   const getAvailableSizes = () => {
+    if (originalFile?.type === "image/svg+xml") return ALL_SIZES;
     if (!originalDimensions) return ALL_SIZES;
 
     const maxDim = Math.max(
@@ -140,7 +141,7 @@ function IcoConverterPage() {
       <SEO
         title="ICO Converter - Create Favicon & Windows Icons | Image Tools"
         description="Convert images to ICO format with custom size selection. Create favicons, Windows icons, and app icons with multiple resolutions in one file. Free browser-based ICO converter."
-        keywords="ico converter, favicon generator, create favicon, windows icon, app icon, ico file, multi-size icon, favicon maker, icon converter"
+        keywords="ico converter, favicon generator, create favicon, windows icon, app icon, ico file, multi-size icon, favicon maker, icon converter, svg to ico, svg favicon"
         canonicalUrl="https://image-utilities.netlify.app/tools/ico-converter"
         structuredData={{
           ...createSoftwareApplicationSchema(
@@ -188,7 +189,16 @@ function IcoConverterPage() {
         {/* Main Content */}
         {!originalFile ? (
           <div className="mx-auto max-w-2xl">
-            <ImageUpload onImageSelect={handleImageSelect} />
+            <ImageUpload
+              onImageSelect={handleImageSelect}
+              acceptedFormats={[
+                "image/jpeg",
+                "image/png",
+                "image/webp",
+                "image/gif",
+                "image/svg+xml",
+              ]}
+            />
           </div>
         ) : (
           <motion.div

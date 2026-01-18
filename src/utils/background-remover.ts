@@ -302,7 +302,12 @@ async function applyInvertedMask(
   }
 
   maskCtx.drawImage(maskImg, 0, 0);
-  const maskData = maskCtx.getImageData(0, 0, maskCanvas.width, maskCanvas.height);
+  const maskData = maskCtx.getImageData(
+    0,
+    0,
+    maskCanvas.width,
+    maskCanvas.height,
+  );
   const mask = maskData.data;
 
   // Apply inverted mask (keep background, remove foreground)

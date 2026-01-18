@@ -191,7 +191,7 @@ export function ImageUpload({
                 <div className="flex flex-wrap justify-center gap-2">
                   {acceptedFormats.map((format) => (
                     <span key={format} className="brand-chip text-xs">
-                      {format.split("/")[1].toUpperCase()}
+                      {format.split("/")[1].toUpperCase().replace("+XML", "")}
                     </span>
                   ))}
                 </div>
