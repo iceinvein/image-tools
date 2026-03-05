@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export type CropRect = {
   x: number;
@@ -158,11 +158,28 @@ export function CropCanvas({
     [],
   );
 
-  const handleImageLoad = useCallback(() => {
+  const updateDisplaySize = useCallback(() => {
     if (!imgRef.current) return;
     const rect = imgRef.current.getBoundingClientRect();
-    setDisplaySize({ width: rect.width, height: rect.height });
+    if (rect.width > 0 && rect.height > 0) {
+      setDisplaySize({ width: rect.width, height: rect.height });
+    }
   }, []);
+
+  // Handle already-cached images via polling until painted
+  useEffect(() => {
+    const checkImage = () => {
+      if (imgRef.current?.complete && imgRef.current.naturalWidth > 0) {
+        const rect = imgRef.current.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          setDisplaySize({ width: rect.width, height: rect.height });
+          return;
+        }
+      }
+      requestAnimationFrame(checkImage);
+    };
+    requestAnimationFrame(checkImage);
+  }, [imageUrl]);
 
   const handleMouseDown = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
@@ -360,14 +377,15 @@ export function CropCanvas({
       : true;
 
   return (
-    <div className="relative w-full select-none overflow-hidden rounded-lg bg-gray-900">
+    <div className="flex w-full select-none items-center justify-center overflow-hidden rounded-lg bg-gray-900">
+      <div className="relative inline-block">
       {/* Image */}
       <img
         ref={imgRef}
         src={imageUrl}
         alt="Crop preview"
-        className="block max-h-[600px] w-full object-contain"
-        onLoad={handleImageLoad}
+        className="block max-h-[600px] max-w-full"
+        onLoad={updateDisplaySize}
         draggable={false}
       />
 
@@ -496,6 +514,7 @@ export function CropCanvas({
           )}
         </div>
       )}
+      </div>
     </div>
   );
 }
