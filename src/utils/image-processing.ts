@@ -265,3 +265,41 @@ export function getFileExtension(mimeType: string): string {
 
   return extensions[mimeType] || "jpg";
 }
+
+/**
+ * Crop image to a specific region
+ */
+export async function cropImage(
+  file: File,
+  sx: number,
+  sy: number,
+  sw: number,
+  sh: number,
+): Promise<Blob> {
+  const img = await loadImage(file);
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+
+  if (!ctx) {
+    throw new Error("Could not get canvas context");
+  }
+
+  canvas.width = sw;
+  canvas.height = sh;
+
+  ctx.drawImage(img, sx, sy, sw, sh, 0, 0, sw, sh);
+
+  return new Promise((resolve, reject) => {
+    canvas.toBlob(
+      (blob) => {
+        if (blob) {
+          resolve(blob);
+        } else {
+          reject(new Error("Failed to crop image"));
+        }
+      },
+      file.type,
+      0.95,
+    );
+  });
+}
