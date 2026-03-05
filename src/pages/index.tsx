@@ -2,6 +2,7 @@ import { Card, CardBody, CardHeader } from "@heroui/card";
 import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import {
+  Crop,
   Edit3,
   Eraser,
   FileArchive,
@@ -371,6 +372,69 @@ export default function IndexPage() {
                   <p className="px-6 text-center text-gray-700 leading-relaxed dark:text-gray-300">
                     Resize images to specific dimensions while maintaining
                     quality
+                  </p>
+                </CardBody>
+              </Card>
+            </Link>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            whileHover={{ scale: 1.05, y: -8 }}
+            whileTap={{ scale: 0.98 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{
+              duration: 0.5,
+              delay: 0.35,
+              scale: { type: "spring", visualDuration: 0.4, bounce: 0.5 },
+            }}
+          >
+            <Link to="/tools/cropper" className="block">
+              <Card className="group relative h-full cursor-pointer overflow-hidden border-2 border-teal-200/60 bg-gradient-to-br from-white via-teal-50/30 to-cyan-50/30 backdrop-blur-md transition-all ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:border-teal-400/80 hover:shadow-2xl hover:shadow-teal-500/20 dark:border-teal-800/60 dark:from-gray-900 dark:via-teal-950/20 dark:to-cyan-950/20 dark:hover:border-teal-500/80">
+                {/* Animated gradient background */}
+                <div className="absolute inset-0 bg-gradient-to-br from-teal-100/50 via-cyan-100/40 to-teal-50/30 opacity-0 transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-100 dark:from-teal-900/30 dark:via-cyan-900/20 dark:to-teal-950/30" />
+
+                {/* Glow effect */}
+                <div className="-inset-1 absolute rounded-2xl bg-gradient-to-r from-teal-500 to-cyan-600 opacity-0 blur-2xl transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-25" />
+
+                <CardHeader className="relative z-10 justify-center pt-10 pb-6">
+                  <div className="flex flex-col items-center justify-center text-center">
+                    {/* Icon container with animation */}
+                    <div className="relative mb-5 flex items-center justify-center">
+                      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-teal-500 to-cyan-600 opacity-30 blur-xl transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-110 group-hover:opacity-50" />
+                      <div className="relative rounded-2xl bg-gradient-to-br from-teal-500 to-cyan-600 p-5 shadow-lg transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:rotate-2 group-hover:scale-105 group-hover:shadow-2xl">
+                        <motion.div
+                          animate={{ scale: [1, 0.85, 1.1, 1] }}
+                          transition={{
+                            duration: 2.5,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                          }}
+                        >
+                          <Crop className="h-10 w-10 text-white" />
+                        </motion.div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-center justify-center">
+                      <h2 className="mb-2 font-black text-2xl text-white transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-105">
+                        Cropper
+                      </h2>
+                      <motion.div
+                        className="h-1 w-16 rounded-full bg-gradient-to-r from-teal-400 to-cyan-500"
+                        animate={{ width: [64, 72, 64] }}
+                        transition={{
+                          duration: 2.5,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                        }}
+                      />
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardBody className="relative z-10 pt-0 pb-8">
+                  <p className="px-6 text-center text-gray-700 leading-relaxed dark:text-gray-300">
+                    Crop images with an interactive visual selection tool
                   </p>
                 </CardBody>
               </Card>

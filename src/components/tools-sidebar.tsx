@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from "@tanstack/react-router";
 import { motion, type Variants } from "framer-motion";
 import {
+  Crop,
   Edit3,
   Eraser,
   FileArchive,
@@ -48,6 +49,13 @@ const tools = [
     icon: Maximize2,
     path: "/tools/resizer",
     color: "#8B5CF6", // purple
+  },
+  {
+    key: "cropper",
+    label: "Cropper",
+    icon: Crop,
+    path: "/tools/cropper",
+    color: "#14B8A6", // teal
   },
   {
     key: "editor",
