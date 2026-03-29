@@ -1,17 +1,7 @@
 import { Tab, Tabs } from "@heroui/tabs";
 import { useLocation, useNavigate } from "@tanstack/react-router";
-import {
-  Edit3,
-  Eraser,
-  FileArchive,
-  FileImage,
-  Maximize2,
-  Package,
-  Palette,
-  RefreshCw,
-  Smartphone,
-} from "lucide-react";
 import { useMemo } from "react";
+import { allTools } from "@/config/tools";
 
 export function ToolsNav() {
   const location = useLocation();
@@ -19,117 +9,45 @@ export function ToolsNav() {
 
   const pathname = location.pathname;
   const selectedKey = useMemo(() => {
-    if (pathname.includes("/tools/ico-converter")) return "ico-converter";
-    if (pathname.includes("/tools/converter")) return "converter";
-    if (pathname.includes("/tools/compressor")) return "compressor";
-    if (pathname.includes("/tools/background-remover"))
-      return "background-remover";
-    if (pathname.includes("/tools/resizer")) return "resizer";
-    if (pathname.includes("/tools/editor")) return "editor";
-    if (pathname.includes("/tools/asset-generator")) return "asset-generator";
-    if (pathname.includes("/tools/og-designer")) return "og-designer";
-    if (pathname.includes("/tools/playstore-designer"))
-      return "playstore-designer";
-    return "converter";
+    // Find matching tool by checking path inclusion, most specific first
+    const match = allTools.find((t) => pathname.includes(t.path));
+    return match?.key ?? "converter";
   }, [pathname]);
 
   return (
-    <div className="inline-flex animate-scale-in">
-      <Tabs
-        selectedKey={selectedKey}
-        onSelectionChange={(key) => navigate({ to: `/tools/${String(key)}` })}
-        aria-label="Tools navigation"
-        classNames={{
-          tabList: "gap-2 bg-gray-100 dark:bg-gray-900 p-1 rounded-xl w-auto",
-          cursor:
-            "bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg transition-all duration-300",
-          tab: "px-3 py-2 font-semibold text-sm transition-all duration-300 hover:scale-105",
-          tabContent:
-            "group-data-[selected=true]:text-white transition-colors duration-300",
-        }}
-      >
-        <Tab
-          key="converter"
-          title={
-            <div className="flex items-center gap-2">
-              <RefreshCw className="h-4 w-4 transition-transform duration-300 group-hover:rotate-180" />
-              <span>Converter</span>
-            </div>
-          }
-        />
-        <Tab
-          key="ico-converter"
-          title={
-            <div className="flex items-center gap-2">
-              <FileImage className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
-              <span>ICO</span>
-            </div>
-          }
-        />
-        <Tab
-          key="compressor"
-          title={
-            <div className="flex items-center gap-2">
-              <FileArchive className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
-              <span>Compressor</span>
-            </div>
-          }
-        />
-        <Tab
-          key="background-remover"
-          title={
-            <div className="flex items-center gap-2">
-              <Eraser className="h-4 w-4 transition-transform duration-300 group-hover:rotate-12" />
-              <span>BG Remover</span>
-            </div>
-          }
-        />
-        <Tab
-          key="resizer"
-          title={
-            <div className="flex items-center gap-2">
-              <Maximize2 className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
-              <span>Resizer</span>
-            </div>
-          }
-        />
-        <Tab
-          key="editor"
-          title={
-            <div className="flex items-center gap-2">
-              <Edit3 className="h-4 w-4 transition-transform duration-300 group-hover:rotate-12" />
-              <span>Editor</span>
-            </div>
-          }
-        />
-        <Tab
-          key="asset-generator"
-          title={
-            <div className="flex items-center gap-2">
-              <Package className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
-              <span>Asset Generator</span>
-            </div>
-          }
-        />
-        <Tab
-          key="og-designer"
-          title={
-            <div className="flex items-center gap-2">
-              <Palette className="h-4 w-4 transition-transform duration-300 group-hover:rotate-12" />
-              <span>OG Designer</span>
-            </div>
-          }
-        />
-        <Tab
-          key="playstore-designer"
-          title={
-            <div className="flex items-center gap-2">
-              <Smartphone className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
-              <span>Play Store</span>
-            </div>
-          }
-        />
-      </Tabs>
+    <div className="hidden md:block">
+      <div className="relative">
+        {/* Scrollable container — hides the scrollbar while allowing horizontal scroll */}
+        <div className="overflow-x-auto scrollbar-none">
+          <Tabs
+            selectedKey={selectedKey}
+            onSelectionChange={(key) => navigate({ to: `/tools/${String(key)}` })}
+            aria-label="Tools navigation"
+            classNames={{
+              tabList: "gap-1 bg-zinc-100 dark:bg-zinc-900 p-1 rounded-lg w-auto",
+              cursor: "bg-white dark:bg-zinc-800 shadow-sm",
+              tab: "px-3 py-2 text-sm whitespace-nowrap",
+              tabContent:
+                "text-zinc-600 group-data-[selected=true]:text-zinc-900 dark:text-zinc-400 dark:group-data-[selected=true]:text-zinc-100",
+            }}
+          >
+            {allTools.map((tool) => {
+              const Icon = tool.icon;
+              return (
+                <Tab
+                  key={tool.key}
+                  title={
+                    <div className="flex items-center gap-1.5">
+                      <Icon className="h-3.5 w-3.5" />
+                      <span>{tool.label}</span>
+                    </div>
+                  }
+                />
+              );
+            })}
+          </Tabs>
+        </div>
+      </div>
     </div>
   );
 }

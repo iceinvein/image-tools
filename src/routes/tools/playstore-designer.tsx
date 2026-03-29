@@ -341,7 +341,7 @@ function PlayStoreDesigner() {
   };
 
   return (
-    <section className="min-h-screen py-8 md:py-10">
+    <section className="py-8 md:py-10">
       <SEO
         title="Free Play Store Feature Graphic Designer - Create Promotional Images"
         description="Free online Play Store feature graphic designer. Design professional Play Store feature graphics (1024×500) with custom backgrounds, images, and text. Perfect for app store listings. 100% browser-based, no uploads required."
@@ -362,37 +362,21 @@ function PlayStoreDesigner() {
         ]}
       />
 
-      <div className="mx-auto max-w-7xl px-4">
-        {/* Hero Header */}
-        <div className="relative mb-12 text-center">
-          {/* Animated background gradient */}
-          <div className="-z-10 absolute inset-0 overflow-hidden">
-            <div className="absolute top-0 left-1/4 h-96 w-96 animate-pulse rounded-full bg-green-500/10 blur-3xl" />
-            <div className="absolute top-0 right-1/4 h-96 w-96 animate-pulse rounded-full bg-teal-500/10 blur-3xl delay-1000" />
-          </div>
-
-          <div className="mb-6 inline-flex h-20 w-20 animate-float items-center justify-center rounded-2xl bg-gradient-to-br from-green-500 to-teal-600 shadow-green-500/30 shadow-lg">
-            <Smartphone className="h-10 w-10 text-white" />
-          </div>
-
-          <h1 className="mb-4 bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text pb-2 font-black text-4xl text-transparent leading-tight md:text-5xl dark:from-green-400 dark:to-teal-400">
-            Play Store Designer
-          </h1>
-          <p className="mx-auto mb-6 max-w-2xl text-gray-600 text-lg dark:text-gray-400">
-            Design professional Google Play Store feature graphics with custom
-            backgrounds, images, and text.
-          </p>
-
-          <div className="flex flex-wrap items-center justify-center gap-2">
-            <Chip color="success" variant="flat" size="sm">
-              Feature Graphic
-            </Chip>
-            <Chip color="warning" variant="flat" size="sm">
-              Text & Images
-            </Chip>
-            <Chip color="secondary" variant="flat" size="sm">
-              1024×500
-            </Chip>
+      <div className="">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
+              <Smartphone className="h-5 w-5" />
+            </div>
+            <div>
+              <h1 className="font-bold text-xl text-zinc-900 dark:text-zinc-50">
+                Play Store Designer
+              </h1>
+              <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                Design professional Google Play Store feature graphics (1024×500)
+              </p>
+            </div>
           </div>
         </div>
 
@@ -409,12 +393,12 @@ function PlayStoreDesigner() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.1 }}
           >
-            <Card className="border-2 border-gray-200 dark:border-gray-700">
-              <CardHeader className="border-gray-200 border-b bg-gradient-to-r from-green-50 to-teal-50 dark:border-gray-700 dark:from-green-950/30 dark:to-teal-950/30">
+            <Card className="border border-zinc-200 dark:border-zinc-800">
+              <CardHeader className="border-b border-zinc-200 dark:border-zinc-800">
                 <h2 className="font-bold text-xl">Preview</h2>
               </CardHeader>
               <CardBody className="p-6">
-                <div className="relative aspect-[1024/500] w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
+                <div className="relative aspect-[1024/500] w-full overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-900">
                   <canvas
                     ref={canvasRef}
                     className="h-full w-full object-contain"
@@ -425,7 +409,7 @@ function PlayStoreDesigner() {
                     1024 × 500 px
                   </Chip>
                   <Button
-                    color="success"
+                    color="primary"
                     size="lg"
                     startContent={<Download className="h-5 w-5" />}
                     onPress={handleDownload}
@@ -443,8 +427,8 @@ function PlayStoreDesigner() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.2 }}
           >
-            <Card className="border-2 border-gray-200 dark:border-gray-700">
-              <CardHeader className="border-gray-200 border-b bg-gradient-to-r from-green-50 to-teal-50 dark:border-gray-700 dark:from-green-950/30 dark:to-teal-950/30">
+            <Card className="border border-zinc-200 dark:border-zinc-800">
+              <CardHeader className="border-b border-zinc-200 dark:border-zinc-800">
                 <h2 className="font-bold text-xl">Design Controls</h2>
               </CardHeader>
               <CardBody className="p-6">
@@ -550,7 +534,7 @@ function PlayStoreDesigner() {
                                     onChange={(e) =>
                                       updateConfig({ bgColor1: e.target.value })
                                     }
-                                    className="h-12 w-full cursor-pointer rounded-lg"
+                                    className="h-12 w-full cursor-pointer rounded-lg border border-zinc-300 dark:border-zinc-600"
                                   />
                                 </div>
                               )}
@@ -574,7 +558,7 @@ function PlayStoreDesigner() {
                                             bgColor1: e.target.value,
                                           })
                                         }
-                                        className="h-12 w-full cursor-pointer rounded-lg"
+                                        className="h-12 w-full cursor-pointer rounded-lg border border-zinc-300 dark:border-zinc-600"
                                       />
                                     </div>
                                     <div>
@@ -593,7 +577,7 @@ function PlayStoreDesigner() {
                                             bgColor2: e.target.value,
                                           })
                                         }
-                                        className="h-12 w-full cursor-pointer rounded-lg"
+                                        className="h-12 w-full cursor-pointer rounded-lg border border-zinc-300 dark:border-zinc-600"
                                       />
                                     </div>
                                   </div>
@@ -638,12 +622,15 @@ function PlayStoreDesigner() {
                                               bgColor2: preset.color2,
                                             })
                                           }
-                                          className="h-12 rounded-lg border-2 border-gray-700 transition-colors hover:border-gray-500"
+                                          className="group relative h-12 overflow-hidden rounded-lg border border-zinc-300 transition-all hover:scale-105 hover:border-primary dark:border-zinc-600"
                                           style={{
                                             background: `linear-gradient(to right, ${preset.color1}, ${preset.color2})`,
                                           }}
-                                          title={preset.name}
-                                        />
+                                        >
+                                          <span className="absolute inset-0 flex items-center justify-center bg-black/0 font-medium text-transparent text-xs transition-all group-hover:bg-black/50 group-hover:text-white">
+                                            {preset.name}
+                                          </span>
+                                        </button>
                                       ))}
                                     </div>
                                   </div>
@@ -679,22 +666,23 @@ function PlayStoreDesigner() {
                                     <SelectItem key="left">Left</SelectItem>
                                     <SelectItem key="right">Right</SelectItem>
                                     <SelectItem key="center">Center</SelectItem>
-                                    <SelectItem key="none">None</SelectItem>
+                                    <SelectItem key="none">
+                                      None (Hidden)
+                                    </SelectItem>
                                   </Select>
 
                                   <div>
-                                    <div className="mb-2 block font-semibold text-sm">
-                                      Size: {config.imageSize}%
-                                    </div>
                                     <Slider
-                                      aria-label="Image size"
+                                      label="Size"
                                       value={config.imageSize}
                                       onChange={(value) =>
                                         updateConfig({
-                                          imageSize: value as number,
+                                          imageSize: Array.isArray(value)
+                                            ? value[0]
+                                            : value,
                                         })
                                       }
-                                      minValue={20}
+                                      minValue={10}
                                       maxValue={80}
                                       step={5}
                                       className="w-full"
@@ -883,7 +871,7 @@ function PlayStoreDesigner() {
                                 onChange={(e) =>
                                   updateConfig({ bgColor1: e.target.value })
                                 }
-                                className="h-12 w-full cursor-pointer rounded-lg border-2 border-gray-300 dark:border-gray-600"
+                                className="h-12 w-full cursor-pointer rounded-lg border border-zinc-300 dark:border-zinc-600"
                               />
                             </div>
                           )}
@@ -904,7 +892,7 @@ function PlayStoreDesigner() {
                                   onChange={(e) =>
                                     updateConfig({ bgColor1: e.target.value })
                                   }
-                                  className="h-12 w-full cursor-pointer rounded-lg border-2 border-gray-300 dark:border-gray-600"
+                                  className="h-12 w-full cursor-pointer rounded-lg border border-zinc-300 dark:border-zinc-600"
                                 />
                               </div>
 
@@ -922,7 +910,7 @@ function PlayStoreDesigner() {
                                   onChange={(e) =>
                                     updateConfig({ bgColor2: e.target.value })
                                   }
-                                  className="h-12 w-full cursor-pointer rounded-lg border-2 border-gray-300 dark:border-gray-600"
+                                  className="h-12 w-full cursor-pointer rounded-lg border border-zinc-300 dark:border-zinc-600"
                                 />
                               </div>
 
@@ -960,7 +948,7 @@ function PlayStoreDesigner() {
                                           bgColor2: preset.color2,
                                         })
                                       }
-                                      className="group relative h-12 overflow-hidden rounded-lg border-2 border-gray-300 transition-all hover:scale-105 hover:border-primary dark:border-gray-600"
+                                      className="group relative h-12 overflow-hidden rounded-lg border border-zinc-300 transition-all hover:scale-105 hover:border-primary dark:border-zinc-600"
                                       style={{
                                         background: `linear-gradient(to right, ${preset.color1}, ${preset.color2})`,
                                       }}
@@ -1071,7 +1059,7 @@ function PlayStoreDesigner() {
                               onChange={(e) =>
                                 updateConfig({ titleColor: e.target.value })
                               }
-                              className="h-12 w-full cursor-pointer rounded-lg border-2 border-gray-300 dark:border-gray-600"
+                              className="h-12 w-full cursor-pointer rounded-lg border border-zinc-300 dark:border-zinc-600"
                             />
                           </div>
 
@@ -1116,7 +1104,7 @@ function PlayStoreDesigner() {
                               onChange={(e) =>
                                 updateConfig({ subtitleColor: e.target.value })
                               }
-                              className="h-12 w-full cursor-pointer rounded-lg border-2 border-gray-300 dark:border-gray-600"
+                              className="h-12 w-full cursor-pointer rounded-lg border border-zinc-300 dark:border-zinc-600"
                             />
                           </div>
 
@@ -1148,15 +1136,15 @@ function PlayStoreDesigner() {
         </motion.div>
 
         {/* Info Section */}
-        <Card className="mt-6 border-green-800/50 bg-green-900/20">
+        <Card className="mt-6 border border-zinc-200 dark:border-zinc-800">
           <CardBody>
             <div className="flex gap-3">
-              <Smartphone className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-400" />
+              <Smartphone className="mt-0.5 h-5 w-5 flex-shrink-0 text-zinc-500 dark:text-zinc-400" />
               <div>
-                <h3 className="mb-2 font-semibold text-green-400">
+                <h3 className="mb-2 font-semibold text-zinc-900 dark:text-zinc-100">
                   Google Play Store Feature Graphic
                 </h3>
-                <p className="text-gray-300 text-sm">
+                <p className="text-sm text-zinc-600 dark:text-zinc-400">
                   The Google Play Store feature graphic (1024×500) appears at
                   the top of your app's Play Store listing. It's the first
                   visual element users see and is crucial for making a strong

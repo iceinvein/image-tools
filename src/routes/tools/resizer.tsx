@@ -47,6 +47,7 @@ function ResizerPage() {
   const [targetFormat, setTargetFormat] = useState<string>("image/png");
   const [isProcessing, setIsProcessing] = useState(false);
   const [scalePercentage, setScalePercentage] = useState<number>(100);
+  const [resizeError, setResizeError] = useState<string>("");
 
   const handleImageSelect = useCallback(
     async (file: File, imageUrl: string) => {
@@ -54,6 +55,7 @@ function ResizerPage() {
       setOriginalUrl(imageUrl);
       setResizedUrl("");
       setResizedBlob(null);
+      setResizeError("");
 
       // Default to PNG for SVGs, otherwise original type
       if (file.type === "image/svg+xml") {
@@ -157,6 +159,7 @@ function ResizerPage() {
     if (!originalFile) return;
 
     setIsProcessing(true);
+    setResizeError("");
     try {
       const blob = await resizeImage(
         originalFile,
@@ -174,7 +177,7 @@ function ResizerPage() {
       setResizedUrl(url);
     } catch (error) {
       console.error("Resize failed:", error);
-      alert("Failed to resize image. Please try again.");
+      setResizeError("Failed to resize image. Please try again.");
     } finally {
       setIsProcessing(false);
     }
@@ -205,6 +208,7 @@ function ResizerPage() {
     setResizedBlob(null);
     setOriginalDimensions(null);
     setNewDimensions(null);
+    setResizeError("");
   }, []);
 
   // Update preview dimensions when values change
@@ -213,7 +217,7 @@ function ResizerPage() {
   }, [updatePreviewDimensions]);
 
   return (
-    <section className="min-h-screen py-8 md:py-10">
+    <section className="py-8 md:py-10">
       <SEO
         title="Image Resizer - Resize Images Online with Smart Presets | Image Tools"
         description="Free online image resizer. Resize images by pixels, percentage, or use smart presets. Maintain aspect ratio or customize dimensions. 100% browser-based."
@@ -233,32 +237,27 @@ function ResizerPage() {
           ]),
         }}
       />
-      <div className="mx-auto max-w-7xl px-4">
-        {/* Hero Header */}
-        <div className="relative mb-12 text-center">
-          {/* Animated background gradient */}
-          <div className="-z-10 absolute inset-0 overflow-hidden">
-            <div className="absolute top-0 left-1/4 h-96 w-96 animate-pulse rounded-full bg-green-500/10 blur-3xl" />
-            <div className="absolute top-0 right-1/4 h-96 w-96 animate-pulse rounded-full bg-emerald-500/10 blur-3xl delay-1000" />
+      <div className="">
+        {/* Page Header */}
+        <div className="mb-8">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
+              <Maximize2 className="h-5 w-5" />
+            </div>
+            <div>
+              <h1 className="font-bold text-xl text-zinc-900 dark:text-zinc-50">
+                Image Resizer
+              </h1>
+              <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                Scale your images to perfect dimensions with aspect ratio lock
+              </p>
+            </div>
           </div>
-
-          <div className="mb-6 inline-flex h-20 w-20 animate-float items-center justify-center rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600 shadow-green-500/30 shadow-lg">
-            <Maximize2 className="h-10 w-10 text-white" />
-          </div>
-
-          <h1 className="mb-4 bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text pb-2 font-black text-4xl text-transparent leading-tight md:text-5xl dark:from-green-400 dark:to-emerald-400">
-            Image Resizer
-          </h1>
-          <p className="mx-auto mb-6 max-w-2xl text-gray-600 text-lg dark:text-gray-400">
-            Scale your images to perfect dimensions. Smart presets and custom
-            sizing with aspect ratio lock.
-          </p>
-
-          <div className="flex flex-wrap items-center justify-center gap-2">
-            <Chip color="success" variant="flat" size="sm">
+          <div className="mt-4 flex flex-wrap gap-2">
+            <Chip variant="flat" size="sm">
               Precision control
             </Chip>
-            <Chip color="primary" variant="flat" size="sm">
+            <Chip variant="flat" size="sm">
               Aspect ratio lock
             </Chip>
           </div>
@@ -266,7 +265,7 @@ function ResizerPage() {
 
         {/* Main Content */}
         {!originalFile ? (
-          <div className="mx-auto max-w-2xl">
+          <div>
             <ImageUpload
               onImageSelect={handleImageSelect}
               acceptedFormats={[
@@ -283,80 +282,80 @@ function ResizerPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
-            className="mx-auto max-w-7xl space-y-6"
+            className="space-y-6"
           >
-            {/* Compact Side-by-Side Layout */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.1 }}
-            >
-              <Card className="border-2 border-gray-200 dark:border-gray-700">
-                <CardBody className="p-6">
-                  <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-                    {/* Left: Live Preview */}
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <h3 className="font-semibold text-gray-700 text-sm dark:text-gray-300">
-                          Live Preview
-                        </h3>
-                        <div className="flex items-center gap-2">
-                          <Chip size="sm" variant="flat" color="success">
-                            {Math.round(newDimensions?.width || targetWidth)} ×{" "}
-                            {Math.round(newDimensions?.height || targetHeight)}
-                          </Chip>
-                        </div>
-                      </div>
-                      <div className="relative overflow-hidden rounded-lg border-2 border-gray-200 bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
-                        {originalDimensions && (
-                          <AnimatedPreview
-                            imageUrl={originalUrl}
-                            originalDimensions={originalDimensions}
-                            targetWidth={targetWidth}
-                            targetHeight={targetHeight}
-                            fitMethod={fitMethod}
-                            backgroundColor={backgroundColor}
-                          />
-                        )}
+            <Card className="border border-zinc-200 dark:border-zinc-800">
+              <CardBody className="p-6">
+                <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                  {/* Left: Live Preview */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-semibold text-sm text-zinc-700 dark:text-zinc-300">
+                        Live Preview
+                      </h3>
+                      <div className="flex items-center gap-2">
+                        <Chip size="sm" variant="flat">
+                          {Math.round(newDimensions?.width || targetWidth)} x{" "}
+                          {Math.round(newDimensions?.height || targetHeight)}
+                        </Chip>
                       </div>
                     </div>
-
-                    {/* Right: Controls */}
-                    <ResizerControls
-                      maintainAspectRatio={maintainAspectRatio}
-                      setMaintainAspectRatio={setMaintainAspectRatio}
-                      scalePercentage={scalePercentage}
-                      handleScaleChange={handleScaleChange}
-                      fitMethod={fitMethod}
-                      setFitMethod={setFitMethod}
-                      backgroundColor={backgroundColor}
-                      setBackgroundColor={setBackgroundColor}
-                      targetWidth={targetWidth}
-                      handleWidthChange={handleWidthChange}
-                      targetHeight={targetHeight}
-                      handleHeightChange={handleHeightChange}
-                      selectedPreset={selectedPreset}
-                      handlePresetChange={handlePresetChange}
-                      targetFormat={targetFormat}
-                      setTargetFormat={setTargetFormat}
-                      originalDimensions={
-                        originalDimensions || { width: 0, height: 0 }
-                      }
-                      newDimensions={newDimensions}
-                    />
+                    <div className="relative overflow-hidden rounded-lg border border-zinc-200 bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900">
+                      {originalDimensions && (
+                        <AnimatedPreview
+                          imageUrl={originalUrl}
+                          originalDimensions={originalDimensions}
+                          targetWidth={targetWidth}
+                          targetHeight={targetHeight}
+                          fitMethod={fitMethod}
+                          backgroundColor={backgroundColor}
+                        />
+                      )}
+                    </div>
                   </div>
-                </CardBody>
-              </Card>
 
-              {/* Compact Action Bar */}
-              <ResizerActions
-                resizedUrl={resizedUrl}
-                isProcessing={isProcessing}
-                handleReset={handleReset}
-                handleResize={handleResize}
-                handleDownload={handleDownload}
-              />
-            </motion.div>
+                  {/* Right: Controls */}
+                  <ResizerControls
+                    maintainAspectRatio={maintainAspectRatio}
+                    setMaintainAspectRatio={setMaintainAspectRatio}
+                    scalePercentage={scalePercentage}
+                    handleScaleChange={handleScaleChange}
+                    fitMethod={fitMethod}
+                    setFitMethod={setFitMethod}
+                    backgroundColor={backgroundColor}
+                    setBackgroundColor={setBackgroundColor}
+                    targetWidth={targetWidth}
+                    handleWidthChange={handleWidthChange}
+                    targetHeight={targetHeight}
+                    handleHeightChange={handleHeightChange}
+                    selectedPreset={selectedPreset}
+                    handlePresetChange={handlePresetChange}
+                    targetFormat={targetFormat}
+                    setTargetFormat={setTargetFormat}
+                    originalDimensions={
+                      originalDimensions || { width: 0, height: 0 }
+                    }
+                    newDimensions={newDimensions}
+                  />
+                </div>
+              </CardBody>
+            </Card>
+
+            {/* Inline error state */}
+            {resizeError && (
+              <p className="text-sm text-red-600 dark:text-red-400">
+                {resizeError}
+              </p>
+            )}
+
+            {/* Action Bar */}
+            <ResizerActions
+              resizedUrl={resizedUrl}
+              isProcessing={isProcessing}
+              handleReset={handleReset}
+              handleResize={handleResize}
+              handleDownload={handleDownload}
+            />
           </motion.div>
         )}
       </div>

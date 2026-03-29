@@ -1,6 +1,5 @@
 import { Button } from "@heroui/button";
 import { Card, CardBody, CardHeader } from "@heroui/card";
-import { Chip } from "@heroui/chip";
 import { Input } from "@heroui/input";
 import { Select, SelectItem } from "@heroui/select";
 import { Slider } from "@heroui/slider";
@@ -344,7 +343,7 @@ function OGDesignerPage() {
   };
 
   return (
-    <section className="min-h-screen py-8 md:py-10">
+    <section className="py-8 md:py-10">
       <SEO
         title="Free OG Image Designer - Create Custom Open Graph Images | Image Tools"
         description="Free online OG image designer. Design beautiful Open Graph images for social media. Customize backgrounds, add text, images, and gradients. Perfect for Twitter Cards, Facebook, and LinkedIn. 100% browser-based, no uploads required."
@@ -364,48 +363,33 @@ function OGDesignerPage() {
           ]),
         }}
       />
-      <div className="mx-auto max-w-7xl px-4">
-        {/* Hero Header */}
-        <div className="relative mb-12 text-center">
-          <div className="-z-10 absolute inset-0 overflow-hidden">
-            <div className="absolute top-0 left-1/4 h-96 w-96 animate-pulse rounded-full bg-pink-500/10 blur-3xl" />
-            <div className="absolute top-0 right-1/4 h-96 w-96 animate-pulse rounded-full bg-purple-500/10 blur-3xl delay-1000" />
-          </div>
-
-          <div className="mb-6 inline-flex h-20 w-20 animate-float items-center justify-center rounded-2xl bg-gradient-to-br from-pink-500 to-purple-600 shadow-lg shadow-pink-500/30">
-            <Palette className="h-10 w-10 text-white" />
-          </div>
-
-          <h1 className="mb-4 bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text pb-2 font-black text-4xl text-transparent leading-tight md:text-5xl dark:from-pink-400 dark:to-purple-400">
-            OG Image Designer
-          </h1>
-          <p className="mx-auto mb-6 max-w-2xl text-gray-600 text-lg dark:text-gray-400">
-            Design beautiful Open Graph images for social media with full
-            control over layout, text, and backgrounds.
-          </p>
-
-          <div className="flex flex-wrap items-center justify-center gap-2">
-            <Chip color="secondary" variant="flat" size="sm">
-              Custom Design
-            </Chip>
-            <Chip color="warning" variant="flat" size="sm">
-              Text & Images
-            </Chip>
-            <Chip color="success" variant="flat" size="sm">
-              1200×630
-            </Chip>
+      <div className="">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
+              <Palette className="h-5 w-5" />
+            </div>
+            <div>
+              <h1 className="font-bold text-xl text-zinc-900 dark:text-zinc-50">
+                OG Image Designer
+              </h1>
+              <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                Design Open Graph images for social media with full layout control
+              </p>
+            </div>
           </div>
         </div>
 
         {/* Main Content */}
         <div className="grid gap-8 lg:grid-cols-2">
           {/* Canvas Preview */}
-          <Card className="border-2 border-gray-200 dark:border-gray-700">
-            <CardHeader className="border-gray-200 border-b bg-gradient-to-r from-pink-50 to-purple-50 dark:border-gray-700 dark:from-pink-950/30 dark:to-purple-950/30">
+          <Card className="border border-zinc-200 dark:border-zinc-800">
+            <CardHeader className="border-b border-zinc-200 dark:border-zinc-800">
               <h2 className="font-bold text-xl">Preview</h2>
             </CardHeader>
             <CardBody className="p-6">
-              <div className="relative aspect-[1200/630] w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
+              <div className="relative aspect-[1200/630] w-full overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-900">
                 <canvas
                   ref={canvasRef}
                   className="h-full w-full object-contain"
@@ -424,8 +408,8 @@ function OGDesignerPage() {
           </Card>
 
           {/* Controls */}
-          <Card className="border-2 border-gray-200 dark:border-gray-700">
-            <CardHeader className="border-gray-200 border-b bg-gradient-to-r from-pink-50 to-purple-50 dark:border-gray-700 dark:from-pink-950/30 dark:to-purple-950/30">
+          <Card className="border border-zinc-200 dark:border-zinc-800">
+            <CardHeader className="border-b border-zinc-200 dark:border-zinc-800">
               <h2 className="font-bold text-xl">Design Controls</h2>
             </CardHeader>
             <CardBody className="p-6">
@@ -614,7 +598,7 @@ function OGDesignerPage() {
                                             bgColor2: preset.color2,
                                           })
                                         }
-                                        className="h-12 rounded-lg border-2 border-gray-300 transition-colors hover:border-primary dark:border-gray-600"
+                                        className="h-12 rounded-lg border border-zinc-300 transition-colors hover:border-primary dark:border-zinc-600"
                                         style={{
                                           background: `linear-gradient(to right, ${preset.color1}, ${preset.color2})`,
                                         }}
@@ -874,7 +858,7 @@ function OGDesignerPage() {
                               onChange={(e) =>
                                 updateConfig({ bgColor1: e.target.value })
                               }
-                              className="h-12 w-full cursor-pointer rounded-lg border-2 border-gray-300 dark:border-gray-600"
+                              className="h-12 w-full cursor-pointer rounded-lg border border-zinc-300 dark:border-zinc-600"
                             />
                           </div>
                         )}
@@ -895,7 +879,7 @@ function OGDesignerPage() {
                                 onChange={(e) =>
                                   updateConfig({ bgColor1: e.target.value })
                                 }
-                                className="h-12 w-full cursor-pointer rounded-lg border-2 border-gray-300 dark:border-gray-600"
+                                className="h-12 w-full cursor-pointer rounded-lg border border-zinc-300 dark:border-zinc-600"
                               />
                             </div>
 
@@ -913,7 +897,7 @@ function OGDesignerPage() {
                                 onChange={(e) =>
                                   updateConfig({ bgColor2: e.target.value })
                                 }
-                                className="h-12 w-full cursor-pointer rounded-lg border-2 border-gray-300 dark:border-gray-600"
+                                className="h-12 w-full cursor-pointer rounded-lg border border-zinc-300 dark:border-zinc-600"
                               />
                             </div>
 
@@ -951,7 +935,7 @@ function OGDesignerPage() {
                                         bgColor2: preset.color2,
                                       })
                                     }
-                                    className="group relative h-12 overflow-hidden rounded-lg border-2 border-gray-300 transition-all hover:scale-105 hover:border-primary dark:border-gray-600"
+                                    className="group relative h-12 overflow-hidden rounded-lg border border-zinc-300 transition-all hover:scale-105 hover:border-primary dark:border-zinc-600"
                                     style={{
                                       background: `linear-gradient(to right, ${preset.color1}, ${preset.color2})`,
                                     }}
@@ -1086,7 +1070,7 @@ function OGDesignerPage() {
                             onChange={(e) =>
                               updateConfig({ titleColor: e.target.value })
                             }
-                            className="h-12 w-full cursor-pointer rounded-lg border-2 border-gray-300 dark:border-gray-600"
+                            className="h-12 w-full cursor-pointer rounded-lg border border-zinc-300 dark:border-zinc-600"
                           />
                         </div>
 
@@ -1131,7 +1115,7 @@ function OGDesignerPage() {
                             onChange={(e) =>
                               updateConfig({ subtitleColor: e.target.value })
                             }
-                            className="h-12 w-full cursor-pointer rounded-lg border-2 border-gray-300 dark:border-gray-600"
+                            className="h-12 w-full cursor-pointer rounded-lg border border-zinc-300 dark:border-zinc-600"
                           />
                         </div>
 

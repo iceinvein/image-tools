@@ -75,12 +75,12 @@ export function AnimatedPreview({
   };
 
   return (
-    <div className="space-y-6">
-      {/* Large animated preview container */}
-      <div className="relative flex min-h-[500px] w-full items-center justify-center overflow-hidden rounded-2xl border-2 border-gray-300 border-dashed bg-gradient-to-br from-gray-50 to-gray-100 dark:border-gray-600 dark:from-gray-900 dark:to-gray-800">
+    <div className="space-y-4">
+      {/* Preview container */}
+      <div className="relative flex min-h-[300px] w-full items-center justify-center overflow-hidden rounded-lg border border-zinc-200 border-dashed bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
         <motion.div
           layout
-          className="relative overflow-hidden rounded-xl border-4 border-white shadow-2xl dark:border-gray-800"
+          className="relative overflow-hidden rounded-md border border-zinc-300 shadow-md dark:border-zinc-700"
           style={{
             width: displayWidth,
             height: displayHeight,
@@ -88,9 +88,9 @@ export function AnimatedPreview({
               backgroundColor === "transparent" ? "white" : backgroundColor,
             backgroundImage:
               backgroundColor === "transparent"
-                ? `linear-gradient(45deg, #ccc 25%, transparent 25%), 
-                 linear-gradient(-45deg, #ccc 25%, transparent 25%), 
-                 linear-gradient(45deg, transparent 75%, #ccc 75%), 
+                ? `linear-gradient(45deg, #ccc 25%, transparent 25%),
+                 linear-gradient(-45deg, #ccc 25%, transparent 25%),
+                 linear-gradient(45deg, transparent 75%, #ccc 75%),
                  linear-gradient(-45deg, transparent 75%, #ccc 75%)`
                 : "none",
             backgroundSize: "20px 20px",
@@ -114,52 +114,43 @@ export function AnimatedPreview({
 
           {/* Overlay with dimensions */}
           <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 transition-opacity duration-200 hover:opacity-100">
-            <div className="rounded-lg bg-black/90 px-4 py-2 font-bold text-lg text-white backdrop-blur-sm">
-              {Math.round(containerWidth)} × {Math.round(containerHeight)}
+            <div className="rounded-md bg-black/80 px-3 py-1.5 font-medium text-sm text-white">
+              {Math.round(containerWidth)} x {Math.round(containerHeight)}
             </div>
           </div>
         </motion.div>
-
-        {/* Background grid pattern for better visual reference */}
-        <div
-          className="absolute inset-0 opacity-10 dark:opacity-5"
-          style={{
-            backgroundImage: `radial-gradient(circle, #666 1px, transparent 1px)`,
-            backgroundSize: "20px 20px",
-          }}
-        ></div>
       </div>
 
       {/* Info cards below preview */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        <Card className="border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100 dark:border-blue-800 dark:from-blue-950/30 dark:to-blue-900/30">
-          <CardBody className="p-4 text-center">
-            <div className="mb-1 font-medium text-blue-600 text-sm dark:text-blue-400">
+      <div className="grid grid-cols-3 gap-3">
+        <Card className="border border-zinc-200 dark:border-zinc-800">
+          <CardBody className="p-3 text-center">
+            <div className="mb-0.5 font-medium text-xs text-zinc-500 dark:text-zinc-400">
               Original
             </div>
-            <div className="font-bold text-blue-800 text-lg dark:text-blue-200">
-              {originalDimensions.width} × {originalDimensions.height}
+            <div className="font-semibold text-sm text-zinc-900 dark:text-zinc-50">
+              {originalDimensions.width} x {originalDimensions.height}
             </div>
           </CardBody>
         </Card>
 
-        <Card className="border-green-200 bg-gradient-to-br from-green-50 to-green-100 dark:border-green-800 dark:from-green-950/30 dark:to-green-900/30">
-          <CardBody className="p-4 text-center">
-            <div className="mb-1 font-medium text-green-600 text-sm dark:text-green-400">
+        <Card className="border border-zinc-200 dark:border-zinc-800">
+          <CardBody className="p-3 text-center">
+            <div className="mb-0.5 font-medium text-xs text-zinc-500 dark:text-zinc-400">
               Target
             </div>
-            <div className="font-bold text-green-800 text-lg dark:text-green-200">
-              {Math.round(containerWidth)} × {Math.round(containerHeight)}
+            <div className="font-semibold text-sm text-zinc-900 dark:text-zinc-50">
+              {Math.round(containerWidth)} x {Math.round(containerHeight)}
             </div>
           </CardBody>
         </Card>
 
-        <Card className="border-purple-200 bg-gradient-to-br from-purple-50 to-purple-100 dark:border-purple-800 dark:from-purple-950/30 dark:to-purple-900/30">
-          <CardBody className="p-4 text-center">
-            <div className="mb-1 font-medium text-purple-600 text-sm dark:text-purple-400">
+        <Card className="border border-zinc-200 dark:border-zinc-800">
+          <CardBody className="p-3 text-center">
+            <div className="mb-0.5 font-medium text-xs text-zinc-500 dark:text-zinc-400">
               Scale
             </div>
-            <div className="font-bold text-lg text-purple-800 dark:text-purple-200">
+            <div className="font-semibold text-sm text-zinc-900 dark:text-zinc-50">
               {Math.round((containerWidth / originalDimensions.width) * 100)}%
             </div>
           </CardBody>

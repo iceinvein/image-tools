@@ -2,140 +2,36 @@
 
 @config "../../tailwind.config.js";
 
-/* Custom animations */
-@keyframes pulse-slow {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -1000px 0;
-  }
-  100% {
-    background-position: 1000px 0;
-  }
-}
-
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
-
-.animate-pulse-slow {
-  animation: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-/* Smooth transitions for all interactive elements */
-* {
-  @apply transition-colors duration-200;
-}
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-::-webkit-scrollbar-track {
-  @apply bg-gray-100 dark:bg-gray-900;
-}
-
-::-webkit-scrollbar-thumb {
-  @apply bg-gradient-to-b from-blue-500 to-purple-500 rounded-full;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  @apply from-blue-600 to-purple-600;
-}
-
-/* Checkerboard background (no inline styles) */
+/* Checkerboard background for transparency preview */
 .checkerboard {
   background-image: repeating-conic-gradient(#808080 0% 25%, transparent 0% 50%);
   background-position: 50%;
   background-size: 20px 20px;
 }
 
-/* Enhanced button animations */
-button, .button {
-  @apply transition-all duration-300;
+/* Subtle scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
 
-button:hover, .button:hover {
-  @apply transform;
+::-webkit-scrollbar-track {
+  @apply bg-zinc-100 dark:bg-zinc-900;
 }
 
-button:active, .button:active {
-  @apply scale-95;
+::-webkit-scrollbar-thumb {
+  @apply bg-zinc-300 dark:bg-zinc-700 rounded-full;
 }
 
-/* Card hover effects */
-.card-hover {
-  @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-zinc-400 dark:bg-zinc-600;
 }
 
-/* Shimmer effect for loading states */
-.shimmer {
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.1) 50%,
-    transparent 100%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 2s linear infinite;
+/* Hide scrollbar for horizontal tab navigation */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
-
-/* Pulse glow effect */
-.pulse-glow {
-  animation: pulse-glow 2s ease-in-out infinite;
-}
-
-@keyframes pulse-glow {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 40px rgba(59, 130, 246, 0.6);
-  }
-}
-
-/* Animation delay utilities */
-.delay-100 { animation-delay: 100ms; }
-.delay-200 { animation-delay: 200ms; }
-.delay-300 { animation-delay: 300ms; }
-.delay-500 { animation-delay: 500ms; }
-.delay-700 { animation-delay: 700ms; }
-.delay-1000 { animation-delay: 1000ms; }
-.delay-1200 { animation-delay: 1200ms; }
-.delay-1400 { animation-delay: 1400ms; }
-.delay-1600 { animation-delay: 1600ms; }
-.delay-2000 { animation-delay: 2000ms; }
-
-/* Grid stagger animation */
-@keyframes grid-item-fade-in {
-  0% {
-    opacity: 0;
-    transform: translateY(30px) scale(0.95);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.grid-item-animate {
-  animation: grid-item-fade-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
 }

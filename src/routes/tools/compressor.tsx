@@ -5,10 +5,11 @@ import { Select, SelectItem } from "@heroui/select";
 import { Slider } from "@heroui/slider";
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { ArrowDown, Download, FileArchive, RotateCcw } from "lucide-react";
-import { useState } from "react";
+import { ArrowDown, Check, Download, FileArchive, RotateCcw } from "lucide-react";
+import { useCallback, useState } from "react";
 import { ImageUpload } from "@/components/image-upload";
 import { SEO } from "@/components/seo";
+import { useKeyboardShortcut } from "@/hooks/use-keyboard-shortcut";
 import {
   type CompressionOptions,
   type CompressionResult,
@@ -27,8 +28,8 @@ function CompressorPage() {
   const [originalUrl, setOriginalUrl] = useState<string>("");
   const [result, setResult] = useState<CompressionResult | null>(null);
   const [isCompressing, setIsCompressing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  // Compression options
   const [format, setFormat] =
     useState<CompressionOptions["format"]>("image/jpeg");
   const [quality, setQuality] = useState(85);
@@ -40,8 +41,7 @@ function CompressorPage() {
     setOriginalFile(file);
     setOriginalUrl(imageUrl);
     setResult(null);
-
-    // Auto-compress with default settings
+    setError(null);
     handleCompress(file);
   };
 
@@ -50,6 +50,7 @@ function CompressorPage() {
     if (!fileToCompress) return;
 
     setIsCompressing(true);
+    setError(null);
     try {
       const options: CompressionOptions = {
         quality: quality / 100,
@@ -63,8 +64,9 @@ function CompressorPage() {
 
       const compressed = await compressImage(fileToCompress, options);
       setResult(compressed);
-    } catch (error) {
-      console.error("Compression failed:", error);
+    } catch (err) {
+      console.error("Compression failed:", err);
+      setError("Compression failed. Please try a different format or quality setting.");
     } finally {
       setIsCompressing(false);
     }
@@ -72,7 +74,6 @@ function CompressorPage() {
 
   const handleDownload = () => {
     if (!result || !originalFile) return;
-
     const link = document.createElement("a");
     link.href = result.url;
     const extension = getFileExtension(format);
@@ -87,6 +88,35 @@ function CompressorPage() {
     setQuality(Math.round(getRecommendedQuality(newFormat) * 100));
   };
 
+  const handleReset = useCallback(() => {
+    setOriginalFile(null);
+    setOriginalUrl("");
+    setResult(null);
+    setError(null);
+  }, []);
+
+  const handleCompressCallback = useCallback(() => {
+    handleCompress();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [originalFile, format, quality]);
+
+  const handleDownloadCallback = useCallback(() => {
+    handleDownload();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [result, originalFile, format]);
+
+  useKeyboardShortcut("Enter", handleCompressCallback, {
+    meta: true,
+    disabled: !originalFile || isCompressing,
+  });
+  useKeyboardShortcut("s", handleDownloadCallback, {
+    meta: true,
+    disabled: !result,
+  });
+  useKeyboardShortcut("n", handleReset, {
+    meta: true,
+  });
+
   return (
     <>
       <SEO
@@ -94,44 +124,27 @@ function CompressorPage() {
         description="Compress images online with quality control. Reduce JPEG, PNG, and WebP file sizes while maintaining visual quality. Free browser-based image compression tool."
         canonicalUrl="https://image-utilities.netlify.app/tools/compressor"
       />
-      <section className="min-h-screen py-8 md:py-10">
-        <div className="mx-auto max-w-7xl px-4">
-          {/* Hero Header */}
-          <div className="relative mb-12 text-center">
-            {/* Animated background gradient */}
-            <div className="-z-10 absolute inset-0 overflow-hidden">
-              <div className="absolute top-0 left-1/4 h-96 w-96 animate-pulse rounded-full bg-orange-500/10 blur-3xl" />
-              <div className="absolute top-0 right-1/4 h-96 w-96 animate-pulse rounded-full bg-red-500/10 blur-3xl delay-1000" />
-            </div>
-
-            <div className="mb-6 inline-flex h-20 w-20 animate-float items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 to-red-600 shadow-lg shadow-orange-500/30">
-              <FileArchive className="h-10 w-10 text-white" />
-            </div>
-
-            <h1 className="mb-4 bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text pb-2 font-black text-4xl text-transparent leading-tight md:text-5xl dark:from-orange-400 dark:to-red-400">
-              Image Compressor
-            </h1>
-            <p className="mx-auto mb-6 max-w-2xl text-gray-600 text-lg dark:text-gray-400">
-              Reduce image file sizes while maintaining quality. Perfect for web
-              optimization and faster loading times.
-            </p>
-
-            <div className="flex flex-wrap items-center justify-center gap-2">
-              <Chip color="warning" variant="flat" size="sm">
-                Quality Control
-              </Chip>
-              <Chip color="danger" variant="flat" size="sm">
-                Before/After
-              </Chip>
-              <Chip color="default" variant="flat" size="sm">
-                Multiple Formats
-              </Chip>
+      <section className="py-8 md:py-10">
+        <div className="">
+          {/* Header */}
+          <div className="mb-8">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
+                <FileArchive className="h-5 w-5" />
+              </div>
+              <div>
+                <h1 className="font-bold text-xl text-zinc-900 dark:text-zinc-50">
+                  Image Compressor
+                </h1>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                  Reduce file sizes while preserving visual quality
+                </p>
+              </div>
             </div>
           </div>
 
-          {/* Main Content */}
           {!originalFile ? (
-            <div className="mx-auto max-w-2xl">
+            <div>
               <ImageUpload
                 onImageSelect={handleImageSelect}
                 acceptedFormats={["image/jpeg", "image/png", "image/webp"]}
@@ -139,207 +152,216 @@ function CompressorPage() {
             </div>
           ) : (
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-              className="mx-auto max-w-6xl space-y-6"
+              transition={{ duration: 0.3 }}
+              className="space-y-4"
             >
-              {/* Compact Image Comparison */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.1 }}
-              >
-                <Card className="border-2 border-gray-200 dark:border-gray-700">
-                  <CardBody className="p-6">
-                    <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-                      {/* Original Image */}
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                          <h3 className="font-semibold text-gray-700 text-sm dark:text-gray-300">
-                            Original
-                          </h3>
-                          <Chip size="sm" variant="flat" color="default">
-                            {formatFileSize(originalFile.size)}
+              {/* Image Comparison */}
+              <Card className="border border-zinc-200 dark:border-zinc-800">
+                <CardBody className="p-5">
+                  <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+                    {/* Original */}
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium text-sm text-zinc-700 dark:text-zinc-300">
+                          Original
+                        </span>
+                        <Chip size="sm" variant="flat">
+                          {formatFileSize(originalFile.size)}
+                        </Chip>
+                      </div>
+                      <div className="relative aspect-video overflow-hidden rounded-lg border border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
+                        <img
+                          src={originalUrl}
+                          alt="Original"
+                          className="h-full w-full object-contain"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Compressed */}
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium text-sm text-zinc-700 dark:text-zinc-300">
+                          {result ? "Compressed" : "Output"}
+                        </span>
+                        {result && (
+                          <Chip size="sm" variant="flat" color="success">
+                            {formatFileSize(result.compressedSize)}
                           </Chip>
-                        </div>
-                        <div className="relative aspect-video overflow-hidden rounded-lg border-2 border-gray-200 bg-gray-100 dark:border-gray-700 dark:bg-gray-800">
+                        )}
+                      </div>
+                      <div className="relative aspect-video overflow-hidden rounded-lg border border-dashed border-zinc-300 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
+                        {result ? (
                           <img
-                            src={originalUrl}
-                            alt="Original"
+                            src={result.url}
+                            alt="Compressed"
                             className="h-full w-full object-contain"
                           />
-                        </div>
-                      </div>
-
-                      {/* Compressed Image */}
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                          <h3 className="font-semibold text-gray-700 text-sm dark:text-gray-300">
-                            {result ? "Compressed" : "Preview"}
-                          </h3>
-                          {result && (
-                            <Chip size="sm" variant="flat" color="success">
-                              {formatFileSize(result.compressedSize)}
-                            </Chip>
-                          )}
-                        </div>
-                        <div className="relative aspect-video overflow-hidden rounded-lg border-2 border-gray-300 border-dashed bg-gray-100 dark:border-gray-600 dark:bg-gray-800">
-                          {result ? (
-                            <motion.img
-                              key={result.url}
-                              src={result.url}
-                              alt="Compressed"
-                              className="h-full w-full object-contain"
-                              initial={{ opacity: 0, scale: 0.95 }}
-                              animate={{ opacity: 1, scale: 1 }}
-                              transition={{ duration: 0.3, ease: "easeOut" }}
-                            />
-                          ) : (
-                            <div className="flex h-full w-full items-center justify-center text-gray-400">
-                              <div className="text-center">
-                                <FileArchive className="mx-auto mb-2 h-12 w-12 opacity-50" />
-                                <p className="text-sm">
-                                  Adjust settings and compress
-                                </p>
-                              </div>
+                        ) : (
+                          <div className="flex h-full items-center justify-center text-zinc-400">
+                            <div className="text-center">
+                              <FileArchive className="mx-auto mb-2 h-8 w-8 opacity-40" />
+                              <p className="text-sm">Auto-compressing...</p>
                             </div>
-                          )}
-                        </div>
-                        {result && (
-                          <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{
-                              duration: 0.3,
-                              delay: 0.1,
-                              ease: "easeOut",
-                            }}
-                            className="flex items-center justify-center"
-                          >
-                            <Chip
-                              size="sm"
-                              variant="flat"
-                              color="success"
-                              startContent={<ArrowDown className="h-3 w-3" />}
-                            >
-                              Saved{" "}
-                              {((1 - result.compressionRatio) * 100).toFixed(1)}
-                              %
-                            </Chip>
-                          </motion.div>
+                          </div>
                         )}
                       </div>
-                    </div>
-                  </CardBody>
-                </Card>
-              </motion.div>
-
-              {/* Compact Controls Bar */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.2 }}
-              >
-                <Card className="border-2 border-gray-200 dark:border-gray-700">
-                  <CardBody className="p-4">
-                    <div className="flex flex-col items-stretch gap-4 lg:flex-row lg:items-end">
-                      {/* Format Selection */}
-                      <div className="min-w-[200px] flex-1">
-                        <Select
-                          label="Output Format"
-                          labelPlacement="outside"
-                          size="sm"
-                          selectedKeys={[format]}
-                          onChange={(e) => handleFormatChange(e.target.value)}
-                        >
-                          <SelectItem key="image/jpeg">JPEG</SelectItem>
-                          <SelectItem key="image/webp">WebP</SelectItem>
-                          <SelectItem key="image/png">PNG</SelectItem>
-                        </Select>
-                      </div>
-
-                      {/* Quality Slider */}
-                      {format !== "image/png" && (
-                        <div className="min-w-[200px] flex-1">
-                          <div className="space-y-2">
-                            <div className="flex items-center justify-between">
-                              <span className="font-medium text-gray-700 text-xs dark:text-gray-300">
-                                Quality
-                              </span>
-                              <span className="bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text font-bold text-sm text-transparent">
-                                {quality}%
-                              </span>
-                            </div>
-                            <Slider
-                              aria-label="Quality"
-                              value={quality}
-                              onChange={(value) => setQuality(value as number)}
-                              minValue={1}
-                              maxValue={100}
-                              step={1}
-                              size="sm"
-                              className="w-full"
-                            />
-                          </div>
+                      {result && (
+                        <div className="flex justify-center">
+                          <Chip
+                            size="sm"
+                            variant="flat"
+                            color="success"
+                            startContent={<ArrowDown className="h-3 w-3" />}
+                          >
+                            Saved{" "}
+                            {((1 - result.compressionRatio) * 100).toFixed(1)}%
+                          </Chip>
                         </div>
                       )}
+                    </div>
+                  </div>
+                </CardBody>
+              </Card>
 
-                      {/* Action Buttons */}
-                      <div className="flex gap-2 lg:min-w-fit">
-                        <Button
-                          size="lg"
-                          variant="bordered"
-                          onPress={() => {
-                            setOriginalFile(null);
-                            setOriginalUrl("");
-                            setResult(null);
-                          }}
-                          startContent={<RotateCcw className="h-4 w-4" />}
-                          className="flex-1 lg:flex-initial"
+              {/* Success message */}
+              {result && (
+                <motion.div
+                  initial={{ opacity: 0, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="flex items-center gap-2 text-sm text-emerald-600 dark:text-emerald-400"
+                >
+                  <Check className="h-4 w-4" />
+                  <span>
+                    Compressed — saved{" "}
+                    {((1 - result.compressionRatio) * 100).toFixed(1)}%
+                  </span>
+                </motion.div>
+              )}
+
+              {/* Controls */}
+              <Card className="border border-zinc-200 dark:border-zinc-800">
+                <CardBody className="p-4">
+                  <div className="flex flex-col items-stretch gap-4 lg:flex-row lg:items-end">
+                    {/* Format */}
+                    <div className="min-w-[200px] flex-1">
+                      <Select
+                        label="Output Format"
+                        labelPlacement="outside"
+                        size="sm"
+                        selectedKeys={[format]}
+                        onChange={(e) => handleFormatChange(e.target.value)}
+                        description={
+                          format === "image/jpeg"
+                            ? "Best compression for photos"
+                            : format === "image/webp"
+                              ? "Modern format, smallest files"
+                              : "Lossless, larger files"
+                        }
+                      >
+                        <SelectItem key="image/jpeg">JPEG</SelectItem>
+                        <SelectItem key="image/webp">WebP</SelectItem>
+                        <SelectItem key="image/png">PNG</SelectItem>
+                      </Select>
+                    </div>
+
+                    {/* Quality */}
+                    {format !== "image/png" && (
+                      <div className="min-w-[200px] flex-1">
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs text-zinc-600 dark:text-zinc-400">
+                              Quality
+                            </span>
+                            <span className="font-semibold text-sm text-zinc-900 dark:text-zinc-100">
+                              {quality}%
+                            </span>
+                          </div>
+                          <Slider
+                            aria-label="Quality"
+                            value={quality}
+                            onChange={(value) => setQuality(value as number)}
+                            minValue={1}
+                            maxValue={100}
+                            step={1}
+                            size="sm"
+                            className="w-full"
+                          />
+                          <p className="text-[11px] text-zinc-400">
+                            {quality >= 85 ? "High quality, moderate compression" : quality >= 50 ? "Good balance of quality and size" : "Maximum compression, quality may degrade"}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Actions */}
+                    <div className="flex gap-2 lg:min-w-fit">
+                      <Button
+                        size="lg"
+                        variant="bordered"
+                        onPress={handleReset}
+                        startContent={<RotateCcw className="h-4 w-4" />}
+                        className="flex-1 lg:flex-initial"
+                      >
+                        New
+                        <kbd className="ml-1.5 hidden rounded bg-zinc-100 px-1 py-0.5 font-mono text-[10px] text-zinc-400 dark:bg-zinc-800 lg:inline-block">
+                          ⌘N
+                        </kbd>
+                      </Button>
+                      <Button
+                        size="lg"
+                        color="primary"
+                        onPress={() => handleCompress()}
+                        isLoading={isCompressing}
+                        className="flex-1 lg:flex-initial"
+                        startContent={
+                          !isCompressing ? (
+                            <FileArchive className="h-4 w-4" />
+                          ) : undefined
+                        }
+                      >
+                        {isCompressing ? "Compressing..." : (
+                          <>
+                            Compress
+                            <kbd className="ml-1.5 hidden rounded bg-zinc-100 px-1 py-0.5 font-mono text-[10px] text-zinc-400 dark:bg-zinc-800 lg:inline-block">
+                              ⌘↵
+                            </kbd>
+                          </>
+                        )}
+                      </Button>
+                      {result && (
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0.95 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ duration: 0.15 }}
                         >
-                          New
-                        </Button>
-                        <Button
-                          size="lg"
-                          color="warning"
-                          onPress={() => handleCompress()}
-                          isLoading={isCompressing}
-                          className="flex-1 font-bold lg:flex-initial"
-                          startContent={
-                            !isCompressing ? (
-                              <FileArchive className="h-4 w-4" />
-                            ) : undefined
-                          }
-                        >
-                          {isCompressing ? "Compressing..." : "Compress"}
-                        </Button>
-                        {result && (
-                          <motion.div
-                            initial={{ opacity: 0, scale: 0.9, x: 20 }}
-                            animate={{ opacity: 1, scale: 1, x: 0 }}
-                            transition={{
-                              duration: 0.3,
-                              ease: "easeOut",
-                            }}
+                          <Button
+                            size="lg"
+                            color="success"
+                            onPress={handleDownload}
+                            startContent={<Download className="h-4 w-4" />}
                             className="flex-1 lg:flex-initial"
                           >
-                            <Button
-                              size="lg"
-                              color="success"
-                              onPress={handleDownload}
-                              startContent={<Download className="h-4 w-4" />}
-                              className="w-full font-bold"
-                            >
-                              Download
-                            </Button>
-                          </motion.div>
-                        )}
-                      </div>
+                            Download
+                            <kbd className="ml-1.5 hidden rounded bg-zinc-100 px-1 py-0.5 font-mono text-[10px] text-zinc-400 dark:bg-zinc-800 lg:inline-block">
+                              ⌘S
+                            </kbd>
+                          </Button>
+                        </motion.div>
+                      )}
                     </div>
-                  </CardBody>
-                </Card>
-              </motion.div>
+                  </div>
+                </CardBody>
+              </Card>
+
+              {error && (
+                <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-800/50 dark:bg-red-900/20 dark:text-red-400">
+                  {error}
+                </div>
+              )}
             </motion.div>
           )}
         </div>

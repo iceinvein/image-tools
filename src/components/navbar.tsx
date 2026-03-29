@@ -17,30 +17,25 @@ export const Navbar = () => {
 
   return (
     <>
-      <HeroUINavbar
-        maxWidth="xl"
-        position="sticky"
-        className="animate-fade-in-down"
-      >
+      <HeroUINavbar maxWidth="lg" position="sticky">
         <NavbarContent justify="start">
           {isToolPage && (
             <NavbarItem>
               <button
                 type="button"
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                className="rounded-lg p-2 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
+                className="rounded-lg p-2 text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
                 aria-label="Toggle tools menu"
               >
                 <svg
-                  width="24"
-                  height="24"
+                  width="20"
+                  height="20"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="text-foreground"
                 >
                   <line x1="3" y1="12" x2="21" y2="12" />
                   <line x1="3" y1="6" x2="21" y2="6" />
@@ -49,27 +44,23 @@ export const Navbar = () => {
               </button>
             </NavbarItem>
           )}
-          <NavbarBrand className="animate-slide-in-right">
-            <RouterLink to="/" className="group">
-              <p className="font-bold text-inherit transition-all duration-300 group-hover:scale-105 group-hover:text-primary">
+          <NavbarBrand>
+            <RouterLink to="/" className="flex items-center gap-2">
+              <div className="h-5 w-5 rounded bg-primary" />
+              <span className="font-bold text-lg tracking-tight text-zinc-900 dark:text-zinc-100">
                 {siteConfig.name}
-              </p>
+              </span>
             </RouterLink>
           </NavbarBrand>
           {siteConfig.navItems.length > 0 && (
             <div className="ml-4 hidden gap-4 sm:flex">
-              {siteConfig.navItems.map((item, index) => (
-                <NavbarItem
-                  key={item.href}
-                  className="animate-fade-in-up"
-                  style={{ animationDelay: `${(index + 1) * 100}ms` }}
-                >
+              {siteConfig.navItems.map((item) => (
+                <NavbarItem key={item.href}>
                   <RouterLink
                     to={item.href}
-                    className="group relative text-foreground transition-all duration-300 hover:scale-105 hover:text-primary"
+                    className="text-sm text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
                   >
                     {item.label}
-                    <span className="absolute bottom-0 left-0 h-0.5 w-0 bg-primary transition-all duration-300 group-hover:w-full" />
                   </RouterLink>
                 </NavbarItem>
               ))}
@@ -78,13 +69,12 @@ export const Navbar = () => {
         </NavbarContent>
 
         <NavbarContent justify="end">
-          <NavbarItem className="animate-slide-in-left">
+          <NavbarItem>
             <ThemeSwitch />
           </NavbarItem>
         </NavbarContent>
       </HeroUINavbar>
 
-      {/* Sidebar - only show on tool pages */}
       {isToolPage && (
         <ToolsSidebar
           isOpen={isSidebarOpen}

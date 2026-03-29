@@ -377,7 +377,7 @@ export function CropCanvas({
       : true;
 
   return (
-    <div className="flex w-full select-none items-center justify-center overflow-hidden rounded-lg bg-gray-900">
+    <div className="flex w-full select-none items-center justify-center overflow-hidden rounded-lg bg-zinc-900">
       <div className="relative inline-block">
       {/* Image */}
       <img
@@ -482,7 +482,7 @@ export function CropCanvas({
               ).map((handle) => (
                 <div
                   key={handle.state}
-                  className="absolute border border-gray-400 bg-white"
+                  className="absolute border border-zinc-400 bg-white"
                   style={{
                     left: handle.x - HANDLE_SIZE / 2,
                     top: handle.y - HANDLE_SIZE / 2,

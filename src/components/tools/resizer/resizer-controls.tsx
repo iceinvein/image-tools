@@ -99,7 +99,7 @@ export const ResizerControls = memo(function ResizerControls({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="font-semibold text-gray-700 text-sm dark:text-gray-300">
+        <h3 className="font-semibold text-sm text-zinc-700 dark:text-zinc-300">
           Resize Settings
         </h3>
         <Switch
@@ -113,7 +113,7 @@ export const ResizerControls = memo(function ResizerControls({
 
       {/* Quick Scale Buttons */}
       <div>
-        <p className="mb-2 font-medium text-gray-600 text-xs dark:text-gray-400">
+        <p className="mb-2 font-medium text-xs text-zinc-500 dark:text-zinc-400">
           Quick Scale
         </p>
         <div className="grid grid-cols-3 gap-2">
@@ -122,7 +122,7 @@ export const ResizerControls = memo(function ResizerControls({
               key={preset.value}
               size="sm"
               variant={scalePercentage === preset.value ? "solid" : "bordered"}
-              color={scalePercentage === preset.value ? "success" : "default"}
+              color={scalePercentage === preset.value ? "primary" : "default"}
               onPress={() => handleScaleChange(preset.value)}
               className="text-xs"
             >
@@ -134,7 +134,7 @@ export const ResizerControls = memo(function ResizerControls({
 
       {/* Fit Method Selection */}
       <div>
-        <label className="mb-2 block font-medium text-gray-600 text-xs dark:text-gray-400">
+        <label className="mb-2 block font-medium text-xs text-zinc-500 dark:text-zinc-400">
           Fit Method
         </label>
         <Select
@@ -154,7 +154,7 @@ export const ResizerControls = memo(function ResizerControls({
       {/* Background Color Selection (only for Contain) */}
       {fitMethod === "contain" && (
         <div>
-          <label className="mb-2 block font-medium text-gray-600 text-xs dark:text-gray-400">
+          <label className="mb-2 block font-medium text-xs text-zinc-500 dark:text-zinc-400">
             Background Color
           </label>
           <div className="flex flex-wrap gap-2">
@@ -162,7 +162,7 @@ export const ResizerControls = memo(function ResizerControls({
               <button
                 key={color}
                 type="button"
-                className={`h-8 w-8 rounded-full border-2 ${backgroundColor === color ? "border-green-500" : "border-gray-200"}`}
+                className={`h-8 w-8 rounded-full border ${backgroundColor === color ? "border-zinc-500 dark:border-zinc-400" : "border-zinc-200 dark:border-zinc-700"}`}
                 style={{
                   backgroundColor: color === "transparent" ? "white" : color,
                   backgroundImage:
@@ -182,7 +182,7 @@ export const ResizerControls = memo(function ResizerControls({
       {/* Dimension Inputs */}
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="mb-1 block font-medium text-gray-600 text-xs dark:text-gray-400">
+          <label className="mb-1 block font-medium text-xs text-zinc-500 dark:text-zinc-400">
             Width (px)
           </label>
           <Input
@@ -194,7 +194,7 @@ export const ResizerControls = memo(function ResizerControls({
           />
         </div>
         <div>
-          <label className="mb-1 block font-medium text-gray-600 text-xs dark:text-gray-400">
+          <label className="mb-1 block font-medium text-xs text-zinc-500 dark:text-zinc-400">
             Height (px)
           </label>
           <Input
@@ -209,7 +209,7 @@ export const ResizerControls = memo(function ResizerControls({
 
       {/* Presets */}
       <div>
-        <label className="mb-2 block font-medium text-gray-600 text-xs dark:text-gray-400">
+        <label className="mb-2 block font-medium text-xs text-zinc-500 dark:text-zinc-400">
           Common Presets
         </label>
         <Select
@@ -226,7 +226,7 @@ export const ResizerControls = memo(function ResizerControls({
 
       {/* Target Format selection (useful for SVGs) */}
       <div>
-        <label className="mb-2 block font-medium text-gray-600 text-xs dark:text-gray-400">
+        <label className="mb-2 block font-medium text-xs text-zinc-500 dark:text-zinc-400">
           Output Format
         </label>
         <Select
@@ -243,14 +243,14 @@ export const ResizerControls = memo(function ResizerControls({
 
       {/* Target Size Display */}
       {newDimensions && originalDimensions && (
-        <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 dark:border-blue-800 dark:bg-blue-950/20">
+        <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-3 dark:border-zinc-800 dark:bg-zinc-900">
           <div className="flex items-center justify-between text-xs">
-            <span className="text-gray-600 dark:text-gray-400">
-              {originalDimensions.width} × {originalDimensions.height}
+            <span className="text-zinc-500 dark:text-zinc-400">
+              {originalDimensions.width} x {originalDimensions.height}
             </span>
-            <span className="text-gray-400">→</span>
-            <span className="font-bold text-blue-600 dark:text-blue-400">
-              {Math.round(newDimensions.width)} ×{" "}
+            <span className="text-zinc-400">→</span>
+            <span className="font-bold text-zinc-900 dark:text-zinc-50">
+              {Math.round(newDimensions.width)} x{" "}
               {Math.round(newDimensions.height)}
             </span>
           </div>

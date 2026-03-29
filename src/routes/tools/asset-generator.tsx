@@ -1,6 +1,5 @@
 import { Button } from "@heroui/button";
 import { Card, CardBody, CardHeader } from "@heroui/card";
-import { Chip } from "@heroui/chip";
 import { Progress } from "@heroui/progress";
 import { Tab, Tabs } from "@heroui/tabs";
 import { createFileRoute } from "@tanstack/react-router";
@@ -35,10 +34,12 @@ function AssetGeneratorPage() {
   const [generatedAssets, setGeneratedAssets] = useState<GeneratedAsset[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [progress, setProgress] = useState({ current: 0, total: 0 });
+  const [error, setError] = useState<string | null>(null);
 
   const handleImageSelect = (file: File) => {
     setOriginalFile(file);
     setGeneratedAssets([]);
+    setError(null);
   };
 
   const handleGenerate = async () => {
@@ -46,6 +47,7 @@ function AssetGeneratorPage() {
 
     setIsGenerating(true);
     setGeneratedAssets([]);
+    setError(null);
 
     try {
       const assets = await generateAssetPack(
@@ -57,9 +59,9 @@ function AssetGeneratorPage() {
       );
 
       setGeneratedAssets(assets);
-    } catch (error) {
-      console.error("Generation failed:", error);
-      alert("Failed to generate assets. Please try again.");
+    } catch (err) {
+      console.error("Generation failed:", err);
+      setError("Failed to generate assets. Please try again.");
     } finally {
       setIsGenerating(false);
     }
@@ -83,13 +85,14 @@ function AssetGeneratorPage() {
     setOriginalFile(null);
     setGeneratedAssets([]);
     setProgress({ current: 0, total: 0 });
+    setError(null);
   };
 
   const progressPercent =
     progress.total > 0 ? (progress.current / progress.total) * 100 : 0;
 
   return (
-    <section className="min-h-screen py-8 md:py-10">
+    <section className="py-8 md:py-10">
       <SEO
         title="Free Asset Generator - Generate Web & App Icons | Image Tools"
         description="Free online asset generator. Generate all required image assets for web and mobile app development from a single 1024x1024 image. Create favicons, PWA icons, iOS app icons, Android icons, and social media images. 100% browser-based, no uploads required."
@@ -109,43 +112,27 @@ function AssetGeneratorPage() {
           ]),
         }}
       />
-      <div className="mx-auto max-w-7xl px-4">
-        {/* Hero Header */}
-        <div className="relative mb-12 text-center">
-          {/* Animated background gradient */}
-          <div className="-z-10 absolute inset-0 overflow-hidden">
-            <div className="absolute top-0 left-1/4 h-96 w-96 animate-pulse rounded-full bg-orange-500/10 blur-3xl" />
-            <div className="absolute top-0 right-1/4 h-96 w-96 animate-pulse rounded-full bg-pink-500/10 blur-3xl delay-1000" />
-          </div>
-
-          <div className="mb-6 inline-flex h-20 w-20 animate-float items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 to-pink-600 shadow-lg shadow-orange-500/30">
-            <Package className="h-10 w-10 text-white" />
-          </div>
-
-          <h1 className="mb-4 bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text pb-2 font-black text-4xl text-transparent leading-tight md:text-5xl dark:from-orange-400 dark:to-pink-400">
-            Asset Generator
-          </h1>
-          <p className="mx-auto mb-6 max-w-2xl text-gray-600 text-lg dark:text-gray-400">
-            Upload a 1024×1024 image and generate all required assets for web
-            and mobile app development in one click.
-          </p>
-
-          <div className="flex flex-wrap items-center justify-center gap-2">
-            <Chip color="warning" variant="flat" size="sm">
-              Web Assets
-            </Chip>
-            <Chip color="secondary" variant="flat" size="sm">
-              iOS & Android
-            </Chip>
-            <Chip color="success" variant="flat" size="sm">
-              One-Stop Shop
-            </Chip>
+      <div className="">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
+              <Package className="h-5 w-5" />
+            </div>
+            <div>
+              <h1 className="font-bold text-xl text-zinc-900 dark:text-zinc-50">
+                Asset Generator
+              </h1>
+              <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                Generate all required web and app icon assets from a single image
+              </p>
+            </div>
           </div>
         </div>
 
         {/* Main Content */}
         {!originalFile ? (
-          <div className="mx-auto max-w-2xl">
+          <div>
             <ImageUpload
               onImageSelect={handleImageSelect}
               acceptedFormats={[
@@ -169,8 +156,8 @@ function AssetGeneratorPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.1 }}
             >
-              <Card className="border-2 border-gray-200 dark:border-gray-700">
-                <CardHeader className="border-gray-200 border-b bg-gradient-to-r from-orange-50 to-pink-50 dark:border-gray-700 dark:from-orange-950/30 dark:to-pink-950/30">
+              <Card className="border border-zinc-200 dark:border-zinc-800">
+                <CardHeader className="border-b border-zinc-200 dark:border-zinc-800">
                   <h2 className="font-bold text-xl">Select Asset Pack</h2>
                 </CardHeader>
                 <CardBody className="p-6">
@@ -228,18 +215,18 @@ function AssetGeneratorPage() {
                               opacity: { duration: 0.2 },
                             }}
                           >
-                            <div className="rounded-lg bg-gray-50 p-4 dark:bg-gray-800/50">
-                              <p className="mb-3 text-gray-600 text-sm dark:text-gray-300">
+                            <div className="rounded-lg bg-zinc-50 p-4 dark:bg-zinc-900">
+                              <p className="mb-3 text-sm text-zinc-600 dark:text-zinc-300">
                                 {prevPack.description}
                               </p>
-                              <p className="mb-3 text-gray-500 text-xs dark:text-gray-400">
+                              <p className="mb-3 text-xs text-zinc-500 dark:text-zinc-400">
                                 Generates {prevPack.sizes.length} images
                                 {prevPack.includeIco && " + 1 ICO file"}
                               </p>
                               {(prevPack.id === "web" ||
                                 prevPack.id === "complete") && (
                                 <div className="mt-3 rounded-lg border border-blue-200 bg-blue-50 p-3 dark:border-blue-800 dark:bg-blue-950/30">
-                                  <p className="text-gray-600 text-xs dark:text-gray-400">
+                                  <p className="text-xs text-zinc-600 dark:text-zinc-400">
                                     <span className="font-semibold text-blue-600 dark:text-blue-400">
                                       Note:
                                     </span>{" "}
@@ -280,18 +267,18 @@ function AssetGeneratorPage() {
                           opacity: { duration: 0.25 },
                         }}
                       >
-                        <div className="rounded-lg bg-gray-50 p-4 dark:bg-gray-800/50">
-                          <p className="mb-3 text-gray-600 text-sm dark:text-gray-300">
+                        <div className="rounded-lg bg-zinc-50 p-4 dark:bg-zinc-900">
+                          <p className="mb-3 text-sm text-zinc-600 dark:text-zinc-300">
                             {selectedPack.description}
                           </p>
-                          <p className="mb-3 text-gray-500 text-xs dark:text-gray-400">
+                          <p className="mb-3 text-xs text-zinc-500 dark:text-zinc-400">
                             Generates {selectedPack.sizes.length} images
                             {selectedPack.includeIco && " + 1 ICO file"}
                           </p>
                           {(selectedPack.id === "web" ||
                             selectedPack.id === "complete") && (
                             <div className="mt-3 rounded-lg border border-blue-200 bg-blue-50 p-3 dark:border-blue-800 dark:bg-blue-950/30">
-                              <p className="text-gray-600 text-xs dark:text-gray-400">
+                              <p className="text-xs text-zinc-600 dark:text-zinc-400">
                                 <span className="font-semibold text-blue-600 dark:text-blue-400">
                                   Note:
                                 </span>{" "}
@@ -306,6 +293,15 @@ function AssetGeneratorPage() {
                       </motion.div>
                     </div>
                   </div>
+
+                  {/* Error message */}
+                  {error && (
+                    <div className="mt-4 rounded-lg border border-red-200 bg-red-50 p-3 dark:border-red-800 dark:bg-red-950/20">
+                      <p className="font-medium text-red-600 text-sm dark:text-red-400">
+                        {error}
+                      </p>
+                    </div>
+                  )}
 
                   <div className="mt-6 flex gap-3">
                     <Button
@@ -343,9 +339,7 @@ function AssetGeneratorPage() {
                         label={`Generating ${progress.current} of ${progress.total}...`}
                         showValueLabel
                         classNames={{
-                          track: "bg-gray-200 dark:bg-gray-700",
-                          indicator:
-                            "bg-gradient-to-r from-blue-500 to-purple-500",
+                          track: "bg-zinc-200 dark:bg-zinc-700",
                         }}
                       />
                     </div>
@@ -361,8 +355,8 @@ function AssetGeneratorPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.2 }}
               >
-                <Card className="border-2 border-green-200 dark:border-green-800">
-                  <CardHeader className="flex items-center justify-between border-green-200 border-b bg-gradient-to-r from-green-50 to-emerald-50 dark:border-green-700 dark:from-green-950/30 dark:to-emerald-950/30">
+                <Card className="border border-zinc-200 dark:border-zinc-800">
+                  <CardHeader className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800">
                     <div className="flex items-center gap-2">
                       <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-400" />
                       <h2 className="font-bold text-xl">
@@ -390,20 +384,20 @@ function AssetGeneratorPage() {
                             delay: index * 0.05,
                             ease: "easeOut",
                           }}
-                          className="flex flex-col gap-3 rounded-lg border border-gray-200 p-4 transition-colors hover:border-primary dark:border-gray-700"
+                          className="flex flex-col gap-3 rounded-lg border border-zinc-200 p-4 transition-colors hover:border-primary dark:border-zinc-800"
                         >
                           <div className="flex flex-col gap-1">
                             <p className="break-words font-semibold text-sm leading-tight">
                               {asset.name}
                             </p>
                             {asset.description && (
-                              <p className="text-gray-500 text-xs dark:text-gray-400">
+                              <p className="text-xs text-zinc-500 dark:text-zinc-400">
                                 {asset.description}
                               </p>
                             )}
                           </div>
                           <div className="flex items-center justify-between gap-2">
-                            <span className="text-gray-500 text-xs dark:text-gray-400">
+                            <span className="text-xs text-zinc-500 dark:text-zinc-400">
                               {asset.size}
                             </span>
                             <Button

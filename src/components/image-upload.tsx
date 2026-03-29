@@ -1,15 +1,14 @@
 import { Button } from "@heroui/button";
 import { Card, CardBody } from "@heroui/card";
-import { motion } from "framer-motion";
-import { Image as ImageIcon, Sparkles, Upload } from "lucide-react";
-import { useCallback, useRef, useState } from "react";
+import { Image as ImageIcon, Loader2, Upload } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
-interface ImageUploadProps {
+type ImageUploadProps = {
   onImageSelect: (file: File, imageUrl: string) => void;
   acceptedFormats?: string[];
-  maxSize?: number; // in MB
+  maxSize?: number;
   className?: string;
-}
+};
 
 export function ImageUpload({
   onImageSelect,
@@ -50,12 +49,11 @@ export function ImageUpload({
       setError(null);
       setIsProcessing(true);
 
-      // Simulate a brief processing delay for animation
       setTimeout(() => {
         const imageUrl = URL.createObjectURL(file);
         onImageSelect(file, imageUrl);
         setIsProcessing(false);
-      }, 300);
+      }, 150);
     },
     [onImageSelect, validateFile],
   );
@@ -93,87 +91,88 @@ export function ImageUpload({
     [handleFile],
   );
 
+  useEffect(() => {
+    const handlePaste = (e: ClipboardEvent) => {
+      const items = e.clipboardData?.items;
+      if (!items) return;
+      for (const item of Array.from(items)) {
+        if (item.kind === "file" && item.type.startsWith("image/")) {
+          const file = item.getAsFile();
+          if (file) {
+            handleFile(file);
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener("paste", handlePaste);
+    return () => window.removeEventListener("paste", handlePaste);
+  }, [handleFile]);
+
   return (
-    <div className={`${className} animate-scale-in`}>
+    <div className={className}>
       <Card
-        className={`relative overflow-hidden border-2 border-dashed transition-all duration-300 ${
+        className={`border border-dashed transition-colors ${
           isDragOver
-            ? "scale-[1.02] animate-pulse border-primary bg-gradient-to-br from-primary/10 via-secondary/10 to-primary/10 shadow-xl"
-            : "border-gray-300 hover:scale-[1.01] hover:border-primary/50 hover:shadow-lg dark:border-gray-600 dark:hover:border-primary/50"
+            ? "border-primary bg-primary/5"
+            : "border-zinc-300 hover:border-zinc-400 dark:border-zinc-700 dark:hover:border-zinc-600"
         }`}
       >
-        {/* Animated background gradient */}
-        <div
-          className={`absolute inset-0 bg-gradient-to-br from-blue-50/50 via-purple-50/50 to-pink-50/50 transition-opacity duration-300 dark:from-blue-950/20 dark:via-purple-950/20 dark:to-pink-950/20 ${isDragOver ? "opacity-100" : "opacity-0"}`}
-        />
-
         <CardBody
-          className="relative p-12 text-center"
+          className="p-12 text-center"
           onDrop={handleDrop}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
         >
           {isProcessing ? (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="space-y-6"
-            >
-              <div className="relative inline-block">
-                <div className="absolute inset-0 animate-pulse rounded-full bg-gradient-to-r from-blue-500 to-purple-500 opacity-30 blur-xl" />
-                <motion.div
-                  className="relative rounded-2xl border border-blue-200/50 bg-gradient-to-br from-blue-500/10 to-purple-500/10 p-6 dark:border-blue-700/50 dark:from-blue-500/20 dark:to-purple-500/20"
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                >
-                  <Sparkles className="h-12 w-12 text-primary" />
-                </motion.div>
+            <div className="flex flex-col items-center gap-4">
+              <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-zinc-100 dark:bg-zinc-800">
+                <Loader2 className="h-6 w-6 animate-spin text-zinc-500" />
               </div>
               <div>
-                <h3 className="brand-text-gradient mb-2 font-bold text-2xl">
+                <p className="font-semibold text-zinc-900 dark:text-zinc-100">
                   Processing...
-                </h3>
-                <p className="text-gray-600 dark:text-gray-400">
+                </p>
+                <p className="mt-1 text-sm text-zinc-500">
                   Loading your image
                 </p>
               </div>
-            </motion.div>
+            </div>
           ) : (
-            <div className="space-y-6">
-              {/* Icon with animation */}
-              <div className="relative inline-block">
-                <div
-                  className={`absolute inset-0 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 opacity-20 blur-xl transition-all duration-300 ${isDragOver ? "scale-150 opacity-40" : "scale-100"}`}
-                />
-                <div
-                  className={`relative rounded-2xl border border-blue-200/50 bg-gradient-to-br from-blue-500/10 to-purple-500/10 p-6 transition-all duration-300 dark:border-blue-700/50 dark:from-blue-500/20 dark:to-purple-500/20 ${isDragOver ? "rotate-6 scale-110" : "rotate-0 scale-100"}`}
-                >
-                  {isDragOver ? (
-                    <Sparkles className="h-12 w-12 animate-pulse text-primary" />
-                  ) : (
-                    <Upload className="h-12 w-12 text-primary" />
-                  )}
-                </div>
+            <div className="flex flex-col items-center gap-5">
+              <div
+                className={`flex h-14 w-14 items-center justify-center rounded-xl transition-colors ${
+                  isDragOver
+                    ? "bg-primary/10 text-primary"
+                    : "bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500"
+                }`}
+              >
+                {isDragOver ? (
+                  <ImageIcon className="h-6 w-6" />
+                ) : (
+                  <Upload className="h-6 w-6" />
+                )}
               </div>
 
               <div>
-                <h3 className="brand-text-gradient mb-2 font-bold text-2xl">
-                  {isDragOver
-                    ? "Drop it like it's hot! 🔥"
-                    : "Upload Your Image"}
-                </h3>
-                <p className="mb-6 text-gray-600 dark:text-gray-400">
-                  Drag and drop your image here, or click to browse
+                <p className="font-semibold text-zinc-900 dark:text-zinc-100">
+                  {isDragOver ? "Drop your image" : "Upload an image"}
+                </p>
+                <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+                  Drag and drop, or click to browse
+                </p>
+                <p className="mt-0.5 text-xs text-zinc-400 dark:text-zinc-500">
+                  You can also paste from clipboard
                 </p>
               </div>
 
               <Button
-                size="lg"
-                className="brand-btn px-8 font-semibold transition-all duration-300 hover:scale-105 hover:shadow-xl active:scale-95"
+                size="md"
+                color="primary"
+                variant="flat"
                 onPress={() => inputRef.current?.click()}
-                startContent={
-                  <ImageIcon className="h-5 w-5 transition-transform group-hover:rotate-12" />
-                }
+                startContent={<ImageIcon className="h-4 w-4" />}
               >
                 Choose File
               </Button>
@@ -187,16 +186,17 @@ export function ImageUpload({
                 className="hidden"
               />
 
-              <div className="flex items-center justify-center gap-2 border-gray-200 border-t pt-4 text-gray-500 text-sm dark:border-gray-700 dark:text-gray-400">
-                <div className="flex flex-wrap justify-center gap-2">
-                  {acceptedFormats.map((format) => (
-                    <span key={format} className="brand-chip text-xs">
-                      {format.split("/")[1].toUpperCase().replace("+XML", "")}
-                    </span>
-                  ))}
-                </div>
-                <span className="mx-2">•</span>
-                <span className="font-medium">Max {maxSize}MB</span>
+              <div className="flex flex-wrap items-center justify-center gap-1.5 text-xs text-zinc-400 dark:text-zinc-500">
+                {acceptedFormats.map((format) => (
+                  <span
+                    key={format}
+                    className="rounded bg-zinc-100 px-1.5 py-0.5 dark:bg-zinc-800"
+                  >
+                    {format.split("/")[1].toUpperCase().replace("+XML", "")}
+                  </span>
+                ))}
+                <span className="mx-1 text-zinc-300 dark:text-zinc-600">|</span>
+                <span>Max {maxSize}MB</span>
               </div>
             </div>
           )}
@@ -204,8 +204,8 @@ export function ImageUpload({
       </Card>
 
       {error && (
-        <div className="slide-in-from-top-2 mt-4 animate-in rounded-lg border-red-500 border-l-4 bg-red-50 p-4 text-red-700 duration-300 dark:bg-red-900/20 dark:text-red-400">
-          <p className="font-medium">{error}</p>
+        <div className="mt-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-800/50 dark:bg-red-900/20 dark:text-red-400">
+          {error}
         </div>
       )}
     </div>

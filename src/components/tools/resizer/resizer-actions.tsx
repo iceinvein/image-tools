@@ -20,18 +20,18 @@ export const ResizerActions = memo(function ResizerActions({
   handleDownload,
 }: ResizerActionsProps) {
   return (
-    <Card className="border-2 border-gray-200 dark:border-gray-700">
+    <Card className="border border-zinc-200 dark:border-zinc-800">
       <CardBody className="p-4">
         <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
-          <div className="flex-1 text-gray-600 text-sm dark:text-gray-400">
+          <div className="flex-1 text-sm text-zinc-500 dark:text-zinc-400">
             {resizedUrl ? (
               <motion.span
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
-                className="font-medium text-green-600 dark:text-green-400"
+                className="font-medium text-zinc-900 dark:text-zinc-50"
               >
-                ✓ Image resized successfully
+                Image resized successfully
               </motion.span>
             ) : (
               <span>Adjust settings and click resize</span>
@@ -63,15 +63,13 @@ export const ResizerActions = memo(function ResizerActions({
               <motion.div
                 initial={{ opacity: 0, scale: 0.9, x: 20 }}
                 animate={{ opacity: 1, scale: 1, x: 0 }}
-                transition={{
-                  duration: 0.3,
-                  ease: "easeOut",
-                }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
                 className="flex-1 sm:flex-initial"
               >
                 <Button
                   size="lg"
-                  color="success"
+                  color="primary"
+                  variant="bordered"
                   onPress={handleDownload}
                   startContent={<Download className="h-4 w-4" />}
                   className="w-full font-bold"
