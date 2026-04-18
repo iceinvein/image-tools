@@ -186,7 +186,7 @@ function BackgroundRemoverPage() {
                         )}
                       </div>
                       <div
-                        className="relative aspect-video overflow-hidden rounded-lg border border-dashed border-zinc-300 dark:border-zinc-700"
+                        className="relative aspect-video overflow-hidden rounded-lg border border-zinc-300 border-dashed dark:border-zinc-700"
                         style={
                           result && settings.outputType !== "mask"
                             ? {

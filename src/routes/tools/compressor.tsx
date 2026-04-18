@@ -5,10 +5,17 @@ import { Select, SelectItem } from "@heroui/select";
 import { Slider } from "@heroui/slider";
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { ArrowDown, Check, Download, FileArchive, RotateCcw } from "lucide-react";
-import { useCallback, useState } from "react";
+import {
+  ArrowDown,
+  Check,
+  Download,
+  FileArchive,
+  RotateCcw,
+} from "lucide-react";
+import { useCallback, useId, useState } from "react";
 import { ImageUpload } from "@/components/image-upload";
 import { SEO } from "@/components/seo";
+import { Shortcut } from "@/components/shortcut";
 import { useKeyboardShortcut } from "@/hooks/use-keyboard-shortcut";
 import {
   type CompressionOptions,
@@ -24,6 +31,7 @@ export const Route = createFileRoute("/tools/compressor")({
 });
 
 function CompressorPage() {
+  const outputFormatId = useId();
   const [originalFile, setOriginalFile] = useState<File | null>(null);
   const [originalUrl, setOriginalUrl] = useState<string>("");
   const [result, setResult] = useState<CompressionResult | null>(null);
@@ -37,42 +45,50 @@ function CompressorPage() {
   const [maxWidth] = useState(1920);
   const [maxHeight] = useState(1080);
 
-  const handleImageSelect = (file: File, imageUrl: string) => {
-    setOriginalFile(file);
-    setOriginalUrl(imageUrl);
-    setResult(null);
-    setError(null);
-    handleCompress(file);
-  };
+  const handleCompress = useCallback(
+    async (file?: File) => {
+      const fileToCompress = file || originalFile;
+      if (!fileToCompress) return;
 
-  const handleCompress = async (file?: File) => {
-    const fileToCompress = file || originalFile;
-    if (!fileToCompress) return;
+      setIsCompressing(true);
+      setError(null);
+      try {
+        const options: CompressionOptions = {
+          quality: quality / 100,
+          format,
+          ...(resizeEnabled && {
+            maxWidth,
+            maxHeight,
+            maintainAspectRatio: true,
+          }),
+        };
 
-    setIsCompressing(true);
-    setError(null);
-    try {
-      const options: CompressionOptions = {
-        quality: quality / 100,
-        format,
-        ...(resizeEnabled && {
-          maxWidth,
-          maxHeight,
-          maintainAspectRatio: true,
-        }),
-      };
+        const compressed = await compressImage(fileToCompress, options);
+        setResult(compressed);
+      } catch (err) {
+        console.error("Compression failed:", err);
+        setError(
+          "Compression failed. Please try a different format or quality setting.",
+        );
+      } finally {
+        setIsCompressing(false);
+      }
+    },
+    [format, maxHeight, maxWidth, originalFile, quality, resizeEnabled],
+  );
 
-      const compressed = await compressImage(fileToCompress, options);
-      setResult(compressed);
-    } catch (err) {
-      console.error("Compression failed:", err);
-      setError("Compression failed. Please try a different format or quality setting.");
-    } finally {
-      setIsCompressing(false);
-    }
-  };
+  const handleImageSelect = useCallback(
+    (file: File, imageUrl: string) => {
+      setOriginalFile(file);
+      setOriginalUrl(imageUrl);
+      setResult(null);
+      setError(null);
+      void handleCompress(file);
+    },
+    [handleCompress],
+  );
 
-  const handleDownload = () => {
+  const handleDownload = useCallback(() => {
     if (!result || !originalFile) return;
     const link = document.createElement("a");
     link.href = result.url;
@@ -80,7 +96,7 @@ function CompressorPage() {
     const baseName = originalFile.name.replace(/\.[^/.]+$/, "");
     link.download = `${baseName}-compressed.${extension}`;
     link.click();
-  };
+  }, [format, originalFile, result]);
 
   const handleFormatChange = (value: string) => {
     const newFormat = value as CompressionOptions["format"];
@@ -95,21 +111,15 @@ function CompressorPage() {
     setError(null);
   }, []);
 
-  const handleCompressCallback = useCallback(() => {
-    handleCompress();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [originalFile, format, quality]);
+  const handleCompressShortcut = useCallback(() => {
+    void handleCompress();
+  }, [handleCompress]);
 
-  const handleDownloadCallback = useCallback(() => {
-    handleDownload();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [result, originalFile, format]);
-
-  useKeyboardShortcut("Enter", handleCompressCallback, {
+  useKeyboardShortcut("Enter", handleCompressShortcut, {
     meta: true,
     disabled: !originalFile || isCompressing,
   });
-  useKeyboardShortcut("s", handleDownloadCallback, {
+  useKeyboardShortcut("s", handleDownload, {
     meta: true,
     disabled: !result,
   });
@@ -192,7 +202,7 @@ function CompressorPage() {
                           </Chip>
                         )}
                       </div>
-                      <div className="relative aspect-video overflow-hidden rounded-lg border border-dashed border-zinc-300 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
+                      <div className="relative aspect-video overflow-hidden rounded-lg border border-zinc-300 border-dashed bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
                         {result ? (
                           <img
                             src={result.url}
@@ -216,8 +226,7 @@ function CompressorPage() {
                             color="success"
                             startContent={<ArrowDown className="h-3 w-3" />}
                           >
-                            Saved{" "}
-                            {((1 - result.compressionRatio) * 100).toFixed(1)}%
+                            Saved {result.compressionRatio.toFixed(1)}%
                           </Chip>
                         </div>
                       )}
@@ -232,12 +241,11 @@ function CompressorPage() {
                   initial={{ opacity: 0, y: -4 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.2 }}
-                  className="flex items-center gap-2 text-sm text-emerald-600 dark:text-emerald-400"
+                  className="flex items-center gap-2 text-emerald-600 text-sm dark:text-emerald-400"
                 >
                   <Check className="h-4 w-4" />
                   <span>
-                    Compressed — saved{" "}
-                    {((1 - result.compressionRatio) * 100).toFixed(1)}%
+                    Compressed, saved {result.compressionRatio.toFixed(1)}%
                   </span>
                 </motion.div>
               )}
@@ -245,27 +253,34 @@ function CompressorPage() {
               {/* Controls */}
               <Card className="border border-zinc-200 dark:border-zinc-800">
                 <CardBody className="p-4">
-                  <div className="flex flex-col items-stretch gap-4 lg:flex-row lg:items-end">
+                  <div className="flex flex-col items-stretch gap-4 lg:flex-row lg:flex-wrap lg:items-end">
                     {/* Format */}
                     <div className="min-w-[200px] flex-1">
-                      <Select
-                        label="Output Format"
-                        labelPlacement="outside"
-                        size="sm"
-                        selectedKeys={[format]}
-                        onChange={(e) => handleFormatChange(e.target.value)}
-                        description={
-                          format === "image/jpeg"
-                            ? "Best compression for photos"
-                            : format === "image/webp"
-                              ? "Modern format, smallest files"
-                              : "Lossless, larger files"
-                        }
-                      >
-                        <SelectItem key="image/jpeg">JPEG</SelectItem>
-                        <SelectItem key="image/webp">WebP</SelectItem>
-                        <SelectItem key="image/png">PNG</SelectItem>
-                      </Select>
+                      <div className="space-y-2">
+                        <label
+                          htmlFor={outputFormatId}
+                          className="block font-medium text-sm text-zinc-700 dark:text-zinc-300"
+                        >
+                          Output Format
+                        </label>
+                        <Select
+                          id={outputFormatId}
+                          size="sm"
+                          selectedKeys={[format]}
+                          onChange={(e) => handleFormatChange(e.target.value)}
+                          description={
+                            format === "image/jpeg"
+                              ? "Best compression for photos"
+                              : format === "image/webp"
+                                ? "Modern format, smallest files"
+                                : "Lossless, larger files"
+                          }
+                        >
+                          <SelectItem key="image/jpeg">JPEG</SelectItem>
+                          <SelectItem key="image/webp">WebP</SelectItem>
+                          <SelectItem key="image/png">PNG</SelectItem>
+                        </Select>
+                      </div>
                     </div>
 
                     {/* Quality */}
@@ -291,7 +306,11 @@ function CompressorPage() {
                             className="w-full"
                           />
                           <p className="text-[11px] text-zinc-400">
-                            {quality >= 85 ? "High quality, moderate compression" : quality >= 50 ? "Good balance of quality and size" : "Maximum compression, quality may degrade"}
+                            {quality >= 85
+                              ? "High quality, moderate compression"
+                              : quality >= 50
+                                ? "Good balance of quality and size"
+                                : "Maximum compression, quality may degrade"}
                           </p>
                         </div>
                       </div>
@@ -307,9 +326,7 @@ function CompressorPage() {
                         className="flex-1 lg:flex-initial"
                       >
                         New
-                        <kbd className="ml-1.5 hidden rounded bg-zinc-100 px-1 py-0.5 font-mono text-[10px] text-zinc-400 dark:bg-zinc-800 lg:inline-block">
-                          ⌘N
-                        </kbd>
+                        <Shortcut keys={["⌘", "N"]} />
                       </Button>
                       <Button
                         size="lg"
@@ -323,12 +340,12 @@ function CompressorPage() {
                           ) : undefined
                         }
                       >
-                        {isCompressing ? "Compressing..." : (
+                        {isCompressing ? (
+                          "Compressing..."
+                        ) : (
                           <>
                             Compress
-                            <kbd className="ml-1.5 hidden rounded bg-zinc-100 px-1 py-0.5 font-mono text-[10px] text-zinc-400 dark:bg-zinc-800 lg:inline-block">
-                              ⌘↵
-                            </kbd>
+                            <Shortcut keys={["⌘", "↵"]} />
                           </>
                         )}
                       </Button>
@@ -346,9 +363,7 @@ function CompressorPage() {
                             className="flex-1 lg:flex-initial"
                           >
                             Download
-                            <kbd className="ml-1.5 hidden rounded bg-zinc-100 px-1 py-0.5 font-mono text-[10px] text-zinc-400 dark:bg-zinc-800 lg:inline-block">
-                              ⌘S
-                            </kbd>
+                            <Shortcut keys={["⌘", "S"]} />
                           </Button>
                         </motion.div>
                       )}
@@ -358,7 +373,7 @@ function CompressorPage() {
               </Card>
 
               {error && (
-                <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-800/50 dark:bg-red-900/20 dark:text-red-400">
+                <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-700 text-sm dark:border-red-800/50 dark:bg-red-900/20 dark:text-red-400">
                   {error}
                 </div>
               )}

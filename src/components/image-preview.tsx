@@ -31,7 +31,7 @@ export function ImagePreview({
 
   return (
     <Card className={`${className} border border-zinc-200 dark:border-zinc-800`}>
-      <CardHeader className="flex items-center justify-between border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
+      <CardHeader className="flex items-center justify-between border-zinc-200 border-b px-4 py-3 dark:border-zinc-800">
         <h3 className="font-semibold text-sm text-zinc-900 dark:text-zinc-100">
           {title}
         </h3>

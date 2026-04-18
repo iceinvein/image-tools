@@ -18,7 +18,7 @@ export function ToolsNav() {
     <div className="hidden md:block">
       <div className="relative">
         {/* Scrollable container — hides the scrollbar while allowing horizontal scroll */}
-        <div className="overflow-x-auto scrollbar-none">
+        <div className="scrollbar-none overflow-x-auto">
           <Tabs
             selectedKey={selectedKey}
             onSelectionChange={(key) => navigate({ to: `/tools/${String(key)}` })}

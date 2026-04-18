@@ -204,7 +204,7 @@ export function ImageUpload({
       </Card>
 
       {error && (
-        <div className="mt-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-800/50 dark:bg-red-900/20 dark:text-red-400">
+        <div className="mt-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-700 text-sm dark:border-red-800/50 dark:bg-red-900/20 dark:text-red-400">
           {error}
         </div>
       )}

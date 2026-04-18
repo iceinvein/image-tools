@@ -35,9 +35,9 @@ export function ToolsSidebar({ isOpen, onClose }: ToolsSidebarProps) {
             animate={{ x: 0 }}
             exit={{ x: -280 }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className="fixed top-0 left-0 z-50 h-full w-[280px] border-r border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950"
+            className="fixed top-0 left-0 z-50 h-full w-[280px] border-zinc-200 border-r bg-white dark:border-zinc-800 dark:bg-zinc-950"
           >
-            <div className="flex h-16 items-center border-b border-zinc-200 px-6 dark:border-zinc-800">
+            <div className="flex h-16 items-center border-zinc-200 border-b px-6 dark:border-zinc-800">
               <span className="font-semibold text-sm text-zinc-900 dark:text-zinc-100">
                 Tools
               </span>
@@ -46,7 +46,7 @@ export function ToolsSidebar({ isOpen, onClose }: ToolsSidebarProps) {
             <div className="overflow-y-auto p-4" style={{ height: "calc(100% - 4rem)" }}>
               {toolGroups.map((group) => (
                 <div key={group.label} className="mb-6">
-                  <span className="mb-2 block px-3 font-medium text-[11px] uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+                  <span className="mb-2 block px-3 font-medium text-[11px] text-zinc-400 uppercase tracking-wider dark:text-zinc-500">
                     {group.label}
                   </span>
                   <ul className="space-y-0.5">

@@ -375,17 +375,18 @@ function OGDesignerPage() {
                 OG Image Designer
               </h1>
               <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                Design Open Graph images for social media with full layout control
+                Design Open Graph images for social media with full layout
+                control
               </p>
             </div>
           </div>
         </div>
 
         {/* Main Content */}
-        <div className="grid gap-8 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
           {/* Canvas Preview */}
           <Card className="border border-zinc-200 dark:border-zinc-800">
-            <CardHeader className="border-b border-zinc-200 dark:border-zinc-800">
+            <CardHeader className="border-zinc-200 border-b dark:border-zinc-800">
               <h2 className="font-bold text-xl">Preview</h2>
             </CardHeader>
             <CardBody className="p-6">
@@ -409,7 +410,7 @@ function OGDesignerPage() {
 
           {/* Controls */}
           <Card className="border border-zinc-200 dark:border-zinc-800">
-            <CardHeader className="border-b border-zinc-200 dark:border-zinc-800">
+            <CardHeader className="border-zinc-200 border-b dark:border-zinc-800">
               <h2 className="font-bold text-xl">Design Controls</h2>
             </CardHeader>
             <CardBody className="p-6">

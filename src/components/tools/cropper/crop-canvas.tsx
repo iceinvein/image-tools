@@ -168,6 +168,10 @@ export function CropCanvas({
 
   // Handle already-cached images via polling until painted
   useEffect(() => {
+    setDisplaySize(null);
+    if (!imageUrl) return;
+
+    let frameId = 0;
     const checkImage = () => {
       if (imgRef.current?.complete && imgRef.current.naturalWidth > 0) {
         const rect = imgRef.current.getBoundingClientRect();
@@ -176,9 +180,14 @@ export function CropCanvas({
           return;
         }
       }
-      requestAnimationFrame(checkImage);
+      frameId = requestAnimationFrame(checkImage);
     };
-    requestAnimationFrame(checkImage);
+
+    frameId = requestAnimationFrame(checkImage);
+
+    return () => {
+      cancelAnimationFrame(frameId);
+    };
   }, [imageUrl]);
 
   const handleMouseDown = useCallback(

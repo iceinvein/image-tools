@@ -47,7 +47,7 @@ export const Navbar = () => {
           <NavbarBrand>
             <RouterLink to="/" className="flex items-center gap-2">
               <div className="h-5 w-5 rounded bg-primary" />
-              <span className="font-bold text-lg tracking-tight text-zinc-900 dark:text-zinc-100">
+              <span className="font-bold text-lg text-zinc-900 tracking-tight dark:text-zinc-100">
                 {siteConfig.name}
               </span>
             </RouterLink>

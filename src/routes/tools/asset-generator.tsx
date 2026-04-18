@@ -157,7 +157,7 @@ function AssetGeneratorPage() {
               transition={{ duration: 0.4, delay: 0.1 }}
             >
               <Card className="border border-zinc-200 dark:border-zinc-800">
-                <CardHeader className="border-b border-zinc-200 dark:border-zinc-800">
+                <CardHeader className="border-zinc-200 border-b dark:border-zinc-800">
                   <h2 className="font-bold text-xl">Select Asset Pack</h2>
                 </CardHeader>
                 <CardBody className="p-6">
@@ -356,7 +356,7 @@ function AssetGeneratorPage() {
                 transition={{ duration: 0.4, delay: 0.2 }}
               >
                 <Card className="border border-zinc-200 dark:border-zinc-800">
-                  <CardHeader className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800">
+                  <CardHeader className="flex items-center justify-between border-zinc-200 border-b dark:border-zinc-800">
                     <div className="flex items-center gap-2">
                       <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-400" />
                       <h2 className="font-bold text-xl">

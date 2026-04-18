@@ -6,13 +6,14 @@ import { Slider } from "@heroui/slider";
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { Check, Download, RefreshCw, RotateCcw } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useCallback, useId, useState } from "react";
 import { ImageUpload } from "@/components/image-upload";
 import {
   createBreadcrumbSchema,
   createSoftwareApplicationSchema,
   SEO,
 } from "@/components/seo";
+import { Shortcut } from "@/components/shortcut";
 import { useKeyboardShortcut } from "@/hooks/use-keyboard-shortcut";
 import {
   convertImage,
@@ -22,12 +23,25 @@ import {
 } from "@/utils/image-processing";
 
 const formats = [
-  { key: "image/jpeg", label: "JPEG", description: "Best for photos. Lossy compression with quality control." },
-  { key: "image/png", label: "PNG", description: "Lossless. Best for graphics, screenshots, and transparency." },
-  { key: "image/webp", label: "WebP", description: "Modern format. Smaller files with good quality for the web." },
+  {
+    key: "image/jpeg",
+    label: "JPEG",
+    description: "Best for photos. Lossy compression with quality control.",
+  },
+  {
+    key: "image/png",
+    label: "PNG",
+    description: "Lossless. Best for graphics, screenshots, and transparency.",
+  },
+  {
+    key: "image/webp",
+    label: "WebP",
+    description: "Modern format. Smaller files with good quality for the web.",
+  },
 ];
 
 function ConverterPage() {
+  const targetFormatId = useId();
   const [originalFile, setOriginalFile] = useState<File | null>(null);
   const [originalUrl, setOriginalUrl] = useState<string>("");
   const [convertedUrl, setConvertedUrl] = useState<string>("");
@@ -41,49 +55,50 @@ function ConverterPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleImageSelect = async (file: File, imageUrl: string) => {
-    setOriginalFile(file);
-    setOriginalUrl(imageUrl);
-    setConvertedUrl("");
-    setConvertedBlob(null);
-    setError(null);
+  const handleImageSelect = useCallback(
+    async (file: File, imageUrl: string) => {
+      setOriginalFile(file);
+      setOriginalUrl(imageUrl);
+      setConvertedUrl("");
+      setConvertedBlob(null);
+      setError(null);
 
-    try {
-      const dims = await getImageDimensions(file);
-      setDimensions(dims);
-    } catch (err) {
-      console.error("Failed to get image dimensions:", err);
-    }
-  };
+      try {
+        const dims = await getImageDimensions(file);
+        setDimensions(dims);
+      } catch (err) {
+        console.error("Failed to get image dimensions:", err);
+      }
+    },
+    [],
+  );
 
-  const handleConvert = async () => {
+  const handleConvert = useCallback(async () => {
     if (!originalFile) return;
 
     setIsProcessing(true);
     setError(null);
     try {
-      const blob = await convertImage(
-        originalFile,
-        targetFormat,
-        quality / 100,
-      );
+      const blob = await convertImage(originalFile, targetFormat, quality / 100);
       setConvertedBlob(blob);
       const url = URL.createObjectURL(blob);
       setConvertedUrl(url);
     } catch (err) {
       console.error("Conversion failed:", err);
-      setError("Conversion failed. The image format may not be supported. Please try a different file.");
+      setError(
+        "Conversion failed. The image format may not be supported. Please try a different file.",
+      );
     } finally {
       setIsProcessing(false);
     }
-  };
+  }, [originalFile, quality, targetFormat]);
 
-  const handleDownload = () => {
+  const handleDownload = useCallback(() => {
     if (!convertedBlob || !originalFile) return;
     const extension = getFileExtension(targetFormat);
     const baseName = originalFile.name.replace(/\.[^/.]+$/, "");
     downloadBlob(convertedBlob, `${baseName}_converted.${extension}`);
-  };
+  }, [convertedBlob, originalFile, targetFormat]);
 
   const handleReset = useCallback(() => {
     setOriginalFile(null);
@@ -94,21 +109,15 @@ function ConverterPage() {
     setError(null);
   }, []);
 
-  const handleConvertCallback = useCallback(() => {
-    handleConvert();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [originalFile, targetFormat, quality]);
+  const handleConvertShortcut = useCallback(() => {
+    void handleConvert();
+  }, [handleConvert]);
 
-  const handleDownloadCallback = useCallback(() => {
-    handleDownload();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [convertedBlob, originalFile, targetFormat]);
-
-  useKeyboardShortcut("Enter", handleConvertCallback, {
+  useKeyboardShortcut("Enter", handleConvertShortcut, {
     meta: true,
     disabled: !originalFile || isProcessing,
   });
-  useKeyboardShortcut("s", handleDownloadCallback, {
+  useKeyboardShortcut("s", handleDownload, {
     meta: true,
     disabled: !convertedUrl,
   });
@@ -221,7 +230,7 @@ function ConverterPage() {
                         </Chip>
                       )}
                     </div>
-                    <div className="relative aspect-video overflow-hidden rounded-lg border border-dashed border-zinc-300 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
+                    <div className="relative aspect-video overflow-hidden rounded-lg border border-zinc-300 border-dashed bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
                       {convertedUrl ? (
                         <img
                           src={convertedUrl}
@@ -241,9 +250,7 @@ function ConverterPage() {
                     </div>
                     {convertedUrl && convertedBlob ? (
                       <div className="flex items-center justify-between text-xs text-zinc-500">
-                        <span>
-                          converted.{getFileExtension(targetFormat)}
-                        </span>
+                        <span>converted.{getFileExtension(targetFormat)}</span>
                         <span
                           className={
                             convertedBlob.size < originalFile.size
@@ -251,7 +258,9 @@ function ConverterPage() {
                               : "text-amber-600 dark:text-amber-400"
                           }
                         >
-                          {convertedBlob.size < originalFile.size ? "\u2193" : "\u2191"}{" "}
+                          {convertedBlob.size < originalFile.size
+                            ? "\u2193"
+                            : "\u2191"}{" "}
                           {Math.abs(
                             ((convertedBlob.size - originalFile.size) /
                               originalFile.size) *
@@ -274,7 +283,7 @@ function ConverterPage() {
                 initial={{ opacity: 0, y: -4 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.2 }}
-                className="flex items-center gap-2 text-sm text-emerald-600 dark:text-emerald-400"
+                className="flex items-center gap-2 text-emerald-600 text-sm dark:text-emerald-400"
               >
                 <Check className="h-4 w-4" />
                 <span>Converted successfully</span>
@@ -284,26 +293,33 @@ function ConverterPage() {
             {/* Controls */}
             <Card className="border border-zinc-200 dark:border-zinc-800">
               <CardBody className="p-4">
-                <div className="flex flex-col items-stretch gap-4 lg:flex-row lg:items-end">
+                <div className="flex flex-col items-stretch gap-4 lg:flex-row lg:flex-wrap lg:items-end">
                   {/* Format */}
                   <div className="min-w-[200px] flex-1">
-                    <Select
-                      label="Target Format"
-                      labelPlacement="outside"
-                      size="sm"
-                      selectedKeys={[targetFormat]}
-                      onSelectionChange={(keys) => {
-                        const selected = Array.from(keys)[0] as string;
-                        setTargetFormat(selected);
-                      }}
-                      description={formats.find((f) => f.key === targetFormat)?.description}
-                    >
-                      {formats.map((format) => (
-                        <SelectItem key={format.key}>
-                          {format.label}
-                        </SelectItem>
-                      ))}
-                    </Select>
+                    <div className="space-y-2">
+                      <label
+                        htmlFor={targetFormatId}
+                        className="block font-medium text-sm text-zinc-700 dark:text-zinc-300"
+                      >
+                        Target Format
+                      </label>
+                      <Select
+                        id={targetFormatId}
+                        size="sm"
+                        selectedKeys={[targetFormat]}
+                        onSelectionChange={(keys) => {
+                          const selected = Array.from(keys)[0] as string;
+                          setTargetFormat(selected);
+                        }}
+                        description={
+                          formats.find((f) => f.key === targetFormat)?.description
+                        }
+                      >
+                        {formats.map((format) => (
+                          <SelectItem key={format.key}>{format.label}</SelectItem>
+                        ))}
+                      </Select>
+                    </div>
                   </div>
 
                   {/* Quality */}
@@ -329,7 +345,11 @@ function ConverterPage() {
                           className="w-full"
                         />
                         <p className="text-[11px] text-zinc-400">
-                          {quality >= 90 ? "High quality, larger file" : quality >= 60 ? "Balanced quality and size" : "Smaller file, visible compression"}
+                          {quality >= 90
+                            ? "High quality, larger file"
+                            : quality >= 60
+                              ? "Balanced quality and size"
+                              : "Smaller file, visible compression"}
                         </p>
                       </div>
                     </div>
@@ -345,9 +365,7 @@ function ConverterPage() {
                       className="flex-1 lg:flex-initial"
                     >
                       New
-                      <kbd className="ml-1.5 hidden rounded bg-zinc-100 px-1 py-0.5 font-mono text-[10px] text-zinc-400 dark:bg-zinc-800 lg:inline-block">
-                        ⌘N
-                      </kbd>
+                      <Shortcut keys={["⌘", "N"]} />
                     </Button>
                     <Button
                       size="lg"
@@ -361,12 +379,12 @@ function ConverterPage() {
                         ) : undefined
                       }
                     >
-                      {isProcessing ? "Converting..." : (
+                      {isProcessing ? (
+                        "Converting..."
+                      ) : (
                         <>
                           Convert
-                          <kbd className="ml-1.5 hidden rounded bg-zinc-100 px-1 py-0.5 font-mono text-[10px] text-zinc-400 dark:bg-zinc-800 lg:inline-block">
-                            ⌘↵
-                          </kbd>
+                          <Shortcut keys={["⌘", "↵"]} />
                         </>
                       )}
                     </Button>
@@ -384,9 +402,7 @@ function ConverterPage() {
                           className="flex-1 lg:flex-initial"
                         >
                           Download
-                          <kbd className="ml-1.5 hidden rounded bg-zinc-100 px-1 py-0.5 font-mono text-[10px] text-zinc-400 dark:bg-zinc-800 lg:inline-block">
-                            ⌘S
-                          </kbd>
+                          <Shortcut keys={["⌘", "S"]} />
                         </Button>
                       </motion.div>
                     )}
@@ -397,7 +413,7 @@ function ConverterPage() {
 
             {/* Inline error */}
             {error && (
-              <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-800/50 dark:bg-red-900/20 dark:text-red-400">
+              <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-700 text-sm dark:border-red-800/50 dark:bg-red-900/20 dark:text-red-400">
                 {error}
               </div>
             )}

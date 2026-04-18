@@ -253,14 +253,6 @@ function ResizerPage() {
               </p>
             </div>
           </div>
-          <div className="mt-4 flex flex-wrap gap-2">
-            <Chip variant="flat" size="sm">
-              Precision control
-            </Chip>
-            <Chip variant="flat" size="sm">
-              Aspect ratio lock
-            </Chip>
-          </div>
         </div>
 
         {/* Main Content */}
@@ -343,7 +335,7 @@ function ResizerPage() {
 
             {/* Inline error state */}
             {resizeError && (
-              <p className="text-sm text-red-600 dark:text-red-400">
+              <p className="text-red-600 text-sm dark:text-red-400">
                 {resizeError}
               </p>
             )}

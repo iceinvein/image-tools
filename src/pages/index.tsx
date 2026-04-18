@@ -27,7 +27,7 @@ export default function IndexPage() {
             transition={{ duration: 0.4 }}
             className="max-w-xl"
           >
-            <h1 className="font-extrabold text-4xl tracking-tight text-zinc-900 md:text-5xl dark:text-zinc-50">
+            <h1 className="font-extrabold text-4xl text-zinc-900 tracking-tight md:text-5xl dark:text-zinc-50">
               Image tools that respect your privacy
             </h1>
             <p className="mt-4 text-lg text-zinc-500 dark:text-zinc-400">
@@ -64,10 +64,10 @@ export default function IndexPage() {
                       <h2 className="font-semibold text-zinc-900 dark:text-zinc-100">
                         {tool.label}
                       </h2>
-                      <p className="mt-1.5 text-sm leading-relaxed text-zinc-500 dark:text-zinc-400">
+                      <p className="mt-1.5 text-sm text-zinc-500 leading-relaxed dark:text-zinc-400">
                         {tool.description}
                       </p>
-                      <div className="mt-4 flex items-center gap-1 text-sm font-medium text-primary opacity-0 transition-opacity group-hover:opacity-100">
+                      <div className="mt-4 flex items-center gap-1 font-medium text-primary text-sm opacity-0 transition-opacity group-hover:opacity-100">
                         Open tool
                         <ArrowRight className="h-3.5 w-3.5" />
                       </div>
@@ -80,7 +80,7 @@ export default function IndexPage() {
 
           {/* All Tools by Category */}
           <div className="mt-16">
-            <h2 className="mb-6 font-semibold text-sm uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+            <h2 className="mb-6 font-semibold text-sm text-zinc-400 uppercase tracking-wider dark:text-zinc-500">
               All tools
             </h2>
 
@@ -93,7 +93,7 @@ export default function IndexPage() {
                   viewport={{ once: true, margin: "-40px" }}
                   transition={{ duration: 0.3, delay: groupIndex * 0.05 }}
                 >
-                  <h3 className="mb-2 font-medium text-xs uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+                  <h3 className="mb-2 font-medium text-xs text-zinc-400 uppercase tracking-wider dark:text-zinc-500">
                     {group.label}
                   </h3>
                   <div className="grid grid-cols-1 gap-1 sm:grid-cols-2 lg:grid-cols-3">
