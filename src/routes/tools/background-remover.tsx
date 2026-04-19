@@ -9,6 +9,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { BackgroundRemovalSettings as SettingsComponent } from "@/components/BackgroundRemovalSettings";
 import { ImageUpload } from "@/components/image-upload";
 import { SEO } from "@/components/seo";
+import { ToolOutputActions } from "@/components/tool-output-actions";
 import {
   type BackgroundRemovalSettings,
   defaultSettings,
@@ -110,6 +111,17 @@ function BackgroundRemoverPage() {
     handleRemoveBackground,
   ]);
 
+  const outputFilename =
+    result && originalFile
+      ? `${getFileNameWithoutExtension(originalFile.name)}-${
+          settings.outputType === "foreground"
+            ? "no-bg"
+            : settings.outputType === "background"
+              ? "bg-only"
+              : "mask"
+        }.${getFileExtension(settings.outputFormat)}`
+      : "";
+
   return (
     <>
       <SEO
@@ -130,7 +142,8 @@ function BackgroundRemoverPage() {
                   Background Remover
                 </h1>
                 <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Remove image backgrounds automatically with AI, entirely in your browser
+                  Remove image backgrounds automatically with AI, entirely in
+                  your browser
                 </p>
               </div>
             </div>
@@ -333,6 +346,15 @@ function BackgroundRemoverPage() {
                         >
                           Download
                         </Button>
+                      )}
+                      {result && (
+                        <ToolOutputActions
+                          currentToolKey="background-remover"
+                          fileName={outputFilename}
+                          mimeType={settings.outputFormat}
+                          getBlob={async () => result.blob}
+                          className="flex-1 font-bold sm:flex-initial"
+                        />
                       )}
                     </div>
                   </div>

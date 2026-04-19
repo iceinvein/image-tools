@@ -3,25 +3,71 @@ import { Card, CardBody, CardHeader } from "@heroui/card";
 import { Chip } from "@heroui/chip";
 import { createFileRoute } from "@tanstack/react-router";
 import { Crop, Download, Image as ImageIcon, RotateCcw } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { ImageUpload } from "@/components/image-upload";
-import { createBreadcrumbSchema, createSoftwareApplicationSchema, SEO } from "@/components/seo";
-import { CropCanvas } from "@/components/tools/cropper/crop-canvas";
+import {
+  createBreadcrumbSchema,
+  createSoftwareApplicationSchema,
+  SEO,
+} from "@/components/seo";
+import { ToolOutputActions } from "@/components/tool-output-actions";
 import type { CropRect } from "@/components/tools/cropper/crop-canvas";
-import { cropImage, downloadBlob, getImageDimensions } from "@/utils/image-processing";
+import { CropCanvas } from "@/components/tools/cropper/crop-canvas";
+import {
+  cropImage,
+  downloadBlob,
+  getImageDimensions,
+} from "@/utils/image-processing";
 
 function CropperPage() {
   const [originalFile, setOriginalFile] = useState<File | null>(null);
   const [originalUrl, setOriginalUrl] = useState<string>("");
-  const [dimensions, setDimensions] = useState<{ width: number; height: number } | null>(null);
+  const [dimensions, setDimensions] = useState<{
+    width: number;
+    height: number;
+  } | null>(null);
   const [cropRect, setCropRect] = useState<CropRect | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [croppedBlob, setCroppedBlob] = useState<Blob | null>(null);
   const [cropError, setCropError] = useState<string | null>(null);
+
+  const getCroppedFilename = useCallback(() => {
+    if (!originalFile) return "cropped-image.png";
+
+    const baseName = originalFile.name.replace(/\.[^/.]+$/, "");
+    const extension = originalFile.name.split(".").pop() || "jpg";
+    return `${baseName}_cropped.${extension}`;
+  }, [originalFile]);
+
+  const createCroppedBlob = useCallback(async () => {
+    if (!originalFile || !cropRect || !dimensions) {
+      throw new Error("Crop selection is incomplete");
+    }
+
+    const imgEl = document.querySelector<HTMLImageElement>(
+      "[alt='Crop preview']",
+    );
+    if (!imgEl) {
+      throw new Error("Image element not found");
+    }
+
+    const displayWidth = imgEl.getBoundingClientRect().width;
+    const scale = dimensions.width / displayWidth;
+
+    return cropImage(
+      originalFile,
+      Math.round(cropRect.x * scale),
+      Math.round(cropRect.y * scale),
+      Math.round(cropRect.width * scale),
+      Math.round(cropRect.height * scale),
+    );
+  }, [cropRect, dimensions, originalFile]);
 
   const handleImageSelect = async (file: File, imageUrl: string) => {
     setOriginalFile(file);
     setOriginalUrl(imageUrl);
     setCropRect(null);
+    setCroppedBlob(null);
     setCropError(null);
     try {
       const dims = await getImageDimensions(file);
@@ -36,23 +82,8 @@ function CropperPage() {
     setIsProcessing(true);
     setCropError(null);
     try {
-      // Get the displayed image element to compute scale
-      const imgEl = document.querySelector<HTMLImageElement>("[alt='Crop preview']");
-      if (!imgEl) throw new Error("Image element not found");
-      const displayWidth = imgEl.getBoundingClientRect().width;
-      const scale = dimensions.width / displayWidth;
-
-      const blob = await cropImage(
-        originalFile,
-        Math.round(cropRect.x * scale),
-        Math.round(cropRect.y * scale),
-        Math.round(cropRect.width * scale),
-        Math.round(cropRect.height * scale),
-      );
-
-      const baseName = originalFile.name.replace(/\.[^/.]+$/, "");
-      const extension = originalFile.name.split(".").pop() || "jpg";
-      downloadBlob(blob, `${baseName}_cropped.${extension}`);
+      const blob = await createCroppedBlob();
+      setCroppedBlob(blob);
     } catch (error) {
       console.error("Crop failed:", error);
       setCropError("Failed to crop image. Please try again.");
@@ -61,12 +92,24 @@ function CropperPage() {
     }
   };
 
+  const handleCropChange = useCallback((nextCropRect: CropRect | null) => {
+    setCropRect(nextCropRect);
+    setCroppedBlob(null);
+    setCropError(null);
+  }, []);
+
   const handleReset = () => {
     setOriginalFile(null);
     setOriginalUrl("");
     setDimensions(null);
     setCropRect(null);
+    setCroppedBlob(null);
     setCropError(null);
+  };
+
+  const handleDownload = () => {
+    if (!croppedBlob) return;
+    downloadBlob(croppedBlob, getCroppedFilename());
   };
 
   return (
@@ -83,7 +126,10 @@ function CropperPage() {
           ),
           ...createBreadcrumbSchema([
             { name: "Home", url: "https://image-utilities.netlify.app/" },
-            { name: "Image Cropper", url: "https://image-utilities.netlify.app/tools/cropper" },
+            {
+              name: "Image Cropper",
+              url: "https://image-utilities.netlify.app/tools/cropper",
+            },
           ]),
         }}
       />
@@ -121,15 +167,26 @@ function CropperPage() {
                     <ImageIcon className="h-5 w-5 flex-shrink-0 text-zinc-500 dark:text-zinc-400" />
                     {dimensions && (
                       <div className="flex items-center gap-3 truncate text-xs text-zinc-500 dark:text-zinc-400">
-                        <span className="truncate font-medium">{originalFile.name}</span>
-                        <span className="text-zinc-400 dark:text-zinc-600">•</span>
+                        <span className="truncate font-medium">
+                          {originalFile.name}
+                        </span>
+                        <span className="text-zinc-400 dark:text-zinc-600">
+                          •
+                        </span>
                         <span className="whitespace-nowrap">
                           {dimensions.width} &times; {dimensions.height}
                         </span>
                         {cropRect && (
                           <>
-                            <span className="text-zinc-400 dark:text-zinc-600">•</span>
-                            <Chip size="sm" color="success" variant="flat" className="h-5">
+                            <span className="text-zinc-400 dark:text-zinc-600">
+                              •
+                            </span>
+                            <Chip
+                              size="sm"
+                              color="success"
+                              variant="flat"
+                              className="h-5"
+                            >
                               Selection active
                             </Chip>
                           </>
@@ -147,11 +204,32 @@ function CropperPage() {
                       isDisabled={!cropRect}
                       isLoading={isProcessing}
                       startContent={
-                        !isProcessing ? <Download className="h-4 w-4" /> : undefined
+                        !isProcessing ? <Crop className="h-4 w-4" /> : undefined
                       }
                     >
-                      Crop &amp; Download
+                      {croppedBlob ? "Re-crop" : "Crop"}
                     </Button>
+                    {croppedBlob && (
+                      <>
+                        <Button
+                          size="sm"
+                          color="success"
+                          variant="flat"
+                          onPress={handleDownload}
+                          startContent={<Download className="h-4 w-4" />}
+                        >
+                          Download
+                        </Button>
+                        <ToolOutputActions
+                          currentToolKey="cropper"
+                          fileName={getCroppedFilename()}
+                          mimeType={originalFile.type}
+                          getBlob={async () => croppedBlob}
+                          size="sm"
+                          variant="flat"
+                        />
+                      </>
+                    )}
                     <Button
                       size="sm"
                       variant="flat"
@@ -175,7 +253,7 @@ function CropperPage() {
                   imageUrl={originalUrl}
                   imageDimensions={dimensions ?? { width: 0, height: 0 }}
                   cropRect={cropRect}
-                  onCropChange={setCropRect}
+                  onCropChange={handleCropChange}
                 />
               </CardBody>
             </Card>
@@ -186,7 +264,7 @@ function CropperPage() {
                 variant="flat"
                 color="default"
                 isDisabled={!cropRect}
-                onPress={() => setCropRect(null)}
+                onPress={() => handleCropChange(null)}
               >
                 Reset Selection
               </Button>
@@ -203,10 +281,30 @@ function CropperPage() {
                 isDisabled={!cropRect}
                 isLoading={isProcessing}
                 onPress={handleCrop}
-                startContent={!isProcessing ? <Download className="h-4 w-4" /> : undefined}
+                startContent={
+                  !isProcessing ? <Crop className="h-4 w-4" /> : undefined
+                }
               >
-                Crop &amp; Download
+                {croppedBlob ? "Re-crop" : "Crop"}
               </Button>
+              {croppedBlob && (
+                <>
+                  <Button
+                    color="success"
+                    variant="flat"
+                    onPress={handleDownload}
+                    startContent={<Download className="h-4 w-4" />}
+                  >
+                    Download
+                  </Button>
+                  <ToolOutputActions
+                    currentToolKey="cropper"
+                    fileName={getCroppedFilename()}
+                    mimeType={originalFile.type}
+                    getBlob={async () => croppedBlob}
+                  />
+                </>
+              )}
             </div>
           </div>
         )}

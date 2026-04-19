@@ -11,6 +11,7 @@ import {
   createSoftwareApplicationSchema,
   SEO,
 } from "@/components/seo";
+import { ToolOutputActions } from "@/components/tool-output-actions";
 import { AnimatedPreview } from "@/components/tools/resizer/animated-preview";
 import { ResizerActions } from "@/components/tools/resizer/resizer-actions";
 import {
@@ -216,6 +217,11 @@ function ResizerPage() {
     updatePreviewDimensions();
   }, [updatePreviewDimensions]);
 
+  const resizedFilename =
+    resizedBlob && originalFile
+      ? `${originalFile.name.replace(/\.[^/.]+$/, "")}_resized_${targetWidth}x${targetHeight}.${getFileExtension(targetFormat)}`
+      : "";
+
   return (
     <section className="py-8 md:py-10">
       <SEO
@@ -347,6 +353,17 @@ function ResizerPage() {
               handleReset={handleReset}
               handleResize={handleResize}
               handleDownload={handleDownload}
+              extraActions={
+                resizedBlob ? (
+                  <ToolOutputActions
+                    currentToolKey="resizer"
+                    fileName={resizedFilename}
+                    mimeType={targetFormat}
+                    getBlob={async () => resizedBlob}
+                    className="w-full sm:w-auto"
+                  />
+                ) : null
+              }
             />
           </motion.div>
         )}

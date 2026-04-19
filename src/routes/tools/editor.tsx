@@ -24,6 +24,7 @@ import {
   createSoftwareApplicationSchema,
   SEO,
 } from "@/components/seo";
+import { ToolOutputActions } from "@/components/tool-output-actions";
 import {
   downloadBlob,
   getImageDimensions,
@@ -199,24 +200,11 @@ function EditorPage() {
   ]);
 
   const handleDownload = async () => {
-    if (!canvasRef.current || !originalFile) return;
-
     setIsProcessing(true);
     setDownloadError(null);
     try {
-      const blob = await new Promise<Blob>((resolve, reject) => {
-        canvasRef.current?.toBlob(
-          (blob) => {
-            if (blob) {
-              resolve(blob);
-            } else {
-              reject(new Error("Failed to process image"));
-            }
-          },
-          originalFile.type,
-          0.95,
-        );
-      });
+      const blob = await getEditedBlob();
+      if (!blob || !originalFile) return;
 
       const baseName = originalFile.name.replace(/\.[^/.]+$/, "");
       const extension = originalFile.name.split(".").pop() || "jpg";
@@ -248,6 +236,32 @@ function EditorPage() {
       saturation !== 100
     );
   };
+
+  const getEditedBlob = async () => {
+    if (!canvasRef.current || !originalFile) {
+      return null;
+    }
+
+    return new Promise<Blob>((resolve, reject) => {
+      canvasRef.current?.toBlob(
+        (blob) => {
+          if (blob) {
+            resolve(blob);
+          } else {
+            reject(new Error("Failed to process image"));
+          }
+        },
+        originalFile.type,
+        0.95,
+      );
+    });
+  };
+
+  const editedFilename = originalFile
+    ? `${originalFile.name.replace(/\.[^/.]+$/, "")}_edited.${
+        originalFile.name.split(".").pop() || "jpg"
+      }`
+    : "";
 
   return (
     <section className="py-8 md:py-10">
@@ -307,7 +321,9 @@ function EditorPage() {
                         <span className="truncate font-medium">
                           {originalFile.name}
                         </span>
-                        <span className="text-zinc-400 dark:text-zinc-600">•</span>
+                        <span className="text-zinc-400 dark:text-zinc-600">
+                          •
+                        </span>
                         <span className="whitespace-nowrap">
                           {getCurrentDimensions()?.width} &times;{" "}
                           {getCurrentDimensions()?.height}
@@ -319,7 +335,9 @@ function EditorPage() {
                         </span>
                         {hasAnyAdjustments() && (
                           <>
-                            <span className="text-zinc-400 dark:text-zinc-600">•</span>
+                            <span className="text-zinc-400 dark:text-zinc-600">
+                              •
+                            </span>
                             <Chip
                               size="sm"
                               color="warning"
@@ -412,6 +430,21 @@ function EditorPage() {
                     >
                       Download
                     </Button>
+                    {originalFile && (
+                      <ToolOutputActions
+                        currentToolKey="editor"
+                        fileName={editedFilename}
+                        mimeType={originalFile.type}
+                        getBlob={async () => {
+                          const blob = await getEditedBlob();
+                          if (!blob) {
+                            throw new Error("Edited image is not ready yet");
+                          }
+                          return blob;
+                        }}
+                        size="sm"
+                      />
+                    )}
                     <Button
                       size="sm"
                       variant="flat"

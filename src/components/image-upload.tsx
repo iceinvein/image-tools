@@ -1,7 +1,8 @@
 import { Button } from "@heroui/button";
 import { Card, CardBody } from "@heroui/card";
 import { Image as ImageIcon, Loader2, Upload } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useToolImageTransfer } from "@/provider";
 
 type ImageUploadProps = {
   onImageSelect: (file: File, imageUrl: string) => void;
@@ -19,12 +20,20 @@ export function ImageUpload({
   const [isDragOver, setIsDragOver] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const hasHandledTransferRef = useRef(false);
+  const onImageSelectRef = useRef(onImageSelect);
   const [error, setError] = useState<string | null>(null);
+  const { clearImageTransfer, peekImageTransfer } = useToolImageTransfer();
+  const acceptedFormatsKey = acceptedFormats.join(",");
+  const acceptedFormatsList = useMemo(
+    () => acceptedFormatsKey.split(","),
+    [acceptedFormatsKey],
+  );
 
   const validateFile = useCallback(
     (file: File): string | null => {
-      if (!acceptedFormats.includes(file.type)) {
-        return `Unsupported format. Please use: ${acceptedFormats
+      if (!acceptedFormatsList.includes(file.type)) {
+        return `Unsupported format. Please use: ${acceptedFormatsList
           .map((format) => format.split("/")[1].toUpperCase())
           .join(", ")}`;
       }
@@ -35,8 +44,12 @@ export function ImageUpload({
 
       return null;
     },
-    [acceptedFormats, maxSize],
+    [acceptedFormatsList, maxSize],
   );
+
+  useEffect(() => {
+    onImageSelectRef.current = onImageSelect;
+  }, [onImageSelect]);
 
   const handleFile = useCallback(
     (file: File) => {
@@ -110,6 +123,34 @@ export function ImageUpload({
     return () => window.removeEventListener("paste", handlePaste);
   }, [handleFile]);
 
+  useEffect(() => {
+    if (hasHandledTransferRef.current) return;
+
+    const pendingFile = peekImageTransfer();
+    if (!pendingFile) return;
+
+    const validationError = validateFile(pendingFile);
+    if (validationError) {
+      setError(validationError);
+      hasHandledTransferRef.current = true;
+      clearImageTransfer();
+      return;
+    }
+
+    setError(null);
+    setIsProcessing(true);
+
+    const timeoutId = window.setTimeout(() => {
+      hasHandledTransferRef.current = true;
+      const imageUrl = URL.createObjectURL(pendingFile);
+      onImageSelectRef.current(pendingFile, imageUrl);
+      clearImageTransfer();
+      setIsProcessing(false);
+    }, 150);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [clearImageTransfer, peekImageTransfer, validateFile]);
+
   return (
     <div className={className}>
       <Card
@@ -134,9 +175,7 @@ export function ImageUpload({
                 <p className="font-semibold text-zinc-900 dark:text-zinc-100">
                   Processing...
                 </p>
-                <p className="mt-1 text-sm text-zinc-500">
-                  Loading your image
-                </p>
+                <p className="mt-1 text-sm text-zinc-500">Loading your image</p>
               </div>
             </div>
           ) : (
@@ -180,14 +219,14 @@ export function ImageUpload({
               <input
                 ref={inputRef}
                 type="file"
-                accept={acceptedFormats.join(",")}
+                accept={acceptedFormatsList.join(",")}
                 onChange={handleFileInput}
                 aria-label="Upload image file"
                 className="hidden"
               />
 
               <div className="flex flex-wrap items-center justify-center gap-1.5 text-xs text-zinc-400 dark:text-zinc-500">
-                {acceptedFormats.map((format) => (
+                {acceptedFormatsList.map((format) => (
                   <span
                     key={format}
                     className="rounded bg-zinc-100 px-1.5 py-0.5 dark:bg-zinc-800"

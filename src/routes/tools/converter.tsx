@@ -14,6 +14,7 @@ import {
   SEO,
 } from "@/components/seo";
 import { Shortcut } from "@/components/shortcut";
+import { ToolOutputActions } from "@/components/tool-output-actions";
 import { useKeyboardShortcut } from "@/hooks/use-keyboard-shortcut";
 import {
   convertImage,
@@ -79,7 +80,11 @@ function ConverterPage() {
     setIsProcessing(true);
     setError(null);
     try {
-      const blob = await convertImage(originalFile, targetFormat, quality / 100);
+      const blob = await convertImage(
+        originalFile,
+        targetFormat,
+        quality / 100,
+      );
       setConvertedBlob(blob);
       const url = URL.createObjectURL(blob);
       setConvertedUrl(url);
@@ -127,6 +132,9 @@ function ConverterPage() {
 
   const supportsQuality =
     targetFormat === "image/jpeg" || targetFormat === "image/webp";
+  const convertedFilename = originalFile
+    ? `${originalFile.name.replace(/\.[^/.]+$/, "")}_converted.${getFileExtension(targetFormat)}`
+    : "";
 
   return (
     <section className="py-8 md:py-10">
@@ -312,11 +320,14 @@ function ConverterPage() {
                           setTargetFormat(selected);
                         }}
                         description={
-                          formats.find((f) => f.key === targetFormat)?.description
+                          formats.find((f) => f.key === targetFormat)
+                            ?.description
                         }
                       >
                         {formats.map((format) => (
-                          <SelectItem key={format.key}>{format.label}</SelectItem>
+                          <SelectItem key={format.key}>
+                            {format.label}
+                          </SelectItem>
                         ))}
                       </Select>
                     </div>
@@ -405,6 +416,15 @@ function ConverterPage() {
                           <Shortcut keys={["⌘", "S"]} />
                         </Button>
                       </motion.div>
+                    )}
+                    {convertedBlob && (
+                      <ToolOutputActions
+                        currentToolKey="converter"
+                        fileName={convertedFilename}
+                        mimeType={targetFormat}
+                        getBlob={async () => convertedBlob}
+                        className="flex-1 lg:flex-initial"
+                      />
                     )}
                   </div>
                 </div>

@@ -16,6 +16,7 @@ import { useCallback, useId, useState } from "react";
 import { ImageUpload } from "@/components/image-upload";
 import { SEO } from "@/components/seo";
 import { Shortcut } from "@/components/shortcut";
+import { ToolOutputActions } from "@/components/tool-output-actions";
 import { useKeyboardShortcut } from "@/hooks/use-keyboard-shortcut";
 import {
   type CompressionOptions,
@@ -126,6 +127,11 @@ function CompressorPage() {
   useKeyboardShortcut("n", handleReset, {
     meta: true,
   });
+
+  const compressedFilename =
+    result && originalFile
+      ? `${originalFile.name.replace(/\.[^/.]+$/, "")}-compressed.${getFileExtension(format)}`
+      : "";
 
   return (
     <>
@@ -366,6 +372,15 @@ function CompressorPage() {
                             <Shortcut keys={["⌘", "S"]} />
                           </Button>
                         </motion.div>
+                      )}
+                      {result && (
+                        <ToolOutputActions
+                          currentToolKey="compressor"
+                          fileName={compressedFilename}
+                          mimeType={format}
+                          getBlob={async () => result.blob}
+                          className="flex-1 lg:flex-initial"
+                        />
                       )}
                     </div>
                   </div>

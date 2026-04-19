@@ -2,7 +2,7 @@ import { Button } from "@heroui/button";
 import { Card, CardBody } from "@heroui/card";
 import { motion } from "framer-motion";
 import { Download, Maximize2, RotateCcw } from "lucide-react";
-import { memo } from "react";
+import { memo, type ReactNode } from "react";
 
 interface ResizerActionsProps {
   resizedUrl: string;
@@ -10,6 +10,7 @@ interface ResizerActionsProps {
   handleReset: () => void;
   handleResize: () => void;
   handleDownload: () => void;
+  extraActions?: ReactNode;
 }
 
 export const ResizerActions = memo(function ResizerActions({
@@ -18,6 +19,7 @@ export const ResizerActions = memo(function ResizerActions({
   handleReset,
   handleResize,
   handleDownload,
+  extraActions,
 }: ResizerActionsProps) {
   return (
     <Card className="border border-zinc-200 dark:border-zinc-800">
@@ -78,6 +80,7 @@ export const ResizerActions = memo(function ResizerActions({
                 </Button>
               </motion.div>
             )}
+            {resizedUrl && extraActions}
           </div>
         </div>
       </CardBody>

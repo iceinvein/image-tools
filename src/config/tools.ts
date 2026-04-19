@@ -19,6 +19,8 @@ export type ToolDef = {
   description?: string;
   icon: LucideIcon;
   path: string;
+  acceptsImageTransfer?: boolean;
+  acceptedFormats?: string[];
 };
 
 export type ToolGroup = {
@@ -30,26 +32,145 @@ export const toolGroups: ToolGroup[] = [
   {
     label: "Convert & Export",
     tools: [
-      { key: "converter", label: "Converter", hint: "JPEG, PNG, WebP", description: "Convert between JPEG, PNG, and WebP with quality control and real-time before/after comparison.", icon: RefreshCw, path: "/tools/converter" },
-      { key: "ico-converter", label: "ICO Converter", hint: "Favicons & icons", description: "Create multi-resolution ICO files for favicons and Windows icons from any image.", icon: FileImage, path: "/tools/ico-converter" },
-      { key: "asset-generator", label: "Asset Generator", hint: "App icons & splash", description: "Generate platform-ready icon sets and splash screens for iOS, Android, and web.", icon: Package, path: "/tools/asset-generator" },
+      {
+        key: "converter",
+        label: "Converter",
+        hint: "JPEG, PNG, WebP",
+        description:
+          "Convert between JPEG, PNG, and WebP with quality control and real-time before/after comparison.",
+        icon: RefreshCw,
+        path: "/tools/converter",
+        acceptsImageTransfer: true,
+        acceptedFormats: [
+          "image/jpeg",
+          "image/png",
+          "image/webp",
+          "image/gif",
+          "image/svg+xml",
+        ],
+      },
+      {
+        key: "ico-converter",
+        label: "ICO Converter",
+        hint: "Favicons & icons",
+        description:
+          "Create multi-resolution ICO files for favicons and Windows icons from any image.",
+        icon: FileImage,
+        path: "/tools/ico-converter",
+        acceptsImageTransfer: true,
+        acceptedFormats: [
+          "image/jpeg",
+          "image/png",
+          "image/webp",
+          "image/gif",
+          "image/svg+xml",
+        ],
+      },
+      {
+        key: "asset-generator",
+        label: "Asset Generator",
+        hint: "App icons & splash",
+        description:
+          "Generate platform-ready icon sets and splash screens for iOS, Android, and web.",
+        icon: Package,
+        path: "/tools/asset-generator",
+        acceptsImageTransfer: true,
+        acceptedFormats: [
+          "image/png",
+          "image/jpeg",
+          "image/webp",
+          "image/svg+xml",
+        ],
+      },
     ],
   },
   {
     label: "Edit & Transform",
     tools: [
-      { key: "compressor", label: "Compressor", hint: "Reduce file size", description: "Reduce file sizes for web-optimized images while preserving visual quality.", icon: FileArchive, path: "/tools/compressor" },
-      { key: "resizer", label: "Resizer", hint: "Dimensions & scale", description: "Scale images by pixel dimensions, percentage, or preset sizes. Aspect ratio lock and multiple fit methods.", icon: Maximize2, path: "/tools/resizer" },
-      { key: "cropper", label: "Cropper", hint: "Trim & reframe", description: "Crop and reframe images with interactive selection and preset aspect ratios.", icon: Crop, path: "/tools/cropper" },
-      { key: "editor", label: "Editor", hint: "Rotate, flip, adjust", description: "Rotate, flip, and apply filters to your images with real-time preview.", icon: Edit3, path: "/tools/editor" },
-      { key: "background-remover", label: "BG Remover", hint: "AI-powered removal", description: "Remove image backgrounds automatically with AI, entirely in your browser.", icon: Eraser, path: "/tools/background-remover" },
+      {
+        key: "compressor",
+        label: "Compressor",
+        hint: "Reduce file size",
+        description:
+          "Reduce file sizes for web-optimized images while preserving visual quality.",
+        icon: FileArchive,
+        path: "/tools/compressor",
+        acceptsImageTransfer: true,
+        acceptedFormats: ["image/jpeg", "image/png", "image/webp"],
+      },
+      {
+        key: "resizer",
+        label: "Resizer",
+        hint: "Dimensions & scale",
+        description:
+          "Scale images by pixel dimensions, percentage, or preset sizes. Aspect ratio lock and multiple fit methods.",
+        icon: Maximize2,
+        path: "/tools/resizer",
+        acceptsImageTransfer: true,
+        acceptedFormats: [
+          "image/jpeg",
+          "image/png",
+          "image/webp",
+          "image/gif",
+          "image/svg+xml",
+        ],
+      },
+      {
+        key: "cropper",
+        label: "Cropper",
+        hint: "Trim & reframe",
+        description:
+          "Crop and reframe images with interactive selection and preset aspect ratios.",
+        icon: Crop,
+        path: "/tools/cropper",
+        acceptsImageTransfer: true,
+        acceptedFormats: ["image/jpeg", "image/png", "image/webp", "image/gif"],
+      },
+      {
+        key: "editor",
+        label: "Editor",
+        hint: "Rotate, flip, adjust",
+        description:
+          "Rotate, flip, and apply filters to your images with real-time preview.",
+        icon: Edit3,
+        path: "/tools/editor",
+        acceptsImageTransfer: true,
+        acceptedFormats: ["image/jpeg", "image/png", "image/webp", "image/gif"],
+      },
+      {
+        key: "background-remover",
+        label: "BG Remover",
+        hint: "AI-powered removal",
+        description:
+          "Remove image backgrounds automatically with AI, entirely in your browser.",
+        icon: Eraser,
+        path: "/tools/background-remover",
+        acceptsImageTransfer: true,
+        acceptedFormats: ["image/jpeg", "image/png", "image/webp"],
+      },
     ],
   },
   {
     label: "Design",
     tools: [
-      { key: "og-designer", label: "OG Designer", hint: "Open Graph images", description: "Design Open Graph images for social media with templates and customization.", icon: Palette, path: "/tools/og-designer" },
-      { key: "playstore-designer", label: "Play Store", hint: "Feature graphics", description: "Create Google Play Store feature graphics (1024x500) with professional templates.", icon: Smartphone, path: "/tools/playstore-designer" },
+      {
+        key: "og-designer",
+        label: "OG Designer",
+        hint: "Open Graph images",
+        description:
+          "Design Open Graph images for social media with templates and customization.",
+        icon: Palette,
+        path: "/tools/og-designer",
+      },
+      {
+        key: "playstore-designer",
+        label: "Play Store",
+        hint: "Feature graphics",
+        description:
+          "Create Google Play Store feature graphics (1024x500) with professional templates.",
+        icon: Smartphone,
+        path: "/tools/playstore-designer",
+      },
     ],
   },
 ];
